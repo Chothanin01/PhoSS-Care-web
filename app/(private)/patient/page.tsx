@@ -4,7 +4,6 @@ import { Button } from "@/shadcn/ui/button";
 import { UserRoundPlus } from "lucide-react";
 
 export default function Page() {
-
   return (
     <div className="ml-14 px-6 py-28">
       <div className="w-full bg-white p-6 rounded-lg shadow">
