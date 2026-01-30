@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export function DropdownMenuDemo() {
+export function CreatePatient() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
