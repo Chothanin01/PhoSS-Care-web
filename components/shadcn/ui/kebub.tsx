@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/kebub-button";
+import { Button } from "@/components/shadcn/ui/kebub-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/kebub-dropdown";
+} from "@/components/shadcn/ui/kebub-dropdown";
 import {
   FileText,
   Book,
