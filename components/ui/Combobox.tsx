@@ -30,7 +30,7 @@ export function CreatePatient() {
           rounded-[9px]
           cursor-pointer
           shadow-[0_6px_16px_rgba(5,84,141,0.3)]
-          text-md font-semibold
+          text-md
           hover:bg-[#05548D]
   "
         >
@@ -38,19 +38,6 @@ export function CreatePatient() {
           <UserRoundPlus className="h-10 w-10 " strokeWidth={3} />
         </Button>
       </DropdownMenuTrigger>
-
-      <DropdownMenuContent className="w-40" align="start">
-        <DropdownMenuGroup>
-          <DropdownMenuLabel className="font-medium">
-            โรคทั้งหมด
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>โรคเบาหวาน</DropdownMenuItem>
-          <DropdownMenuItem>โรคความดันโลหิตสูง</DropdownMenuItem>
-          <DropdownMenuItem>วัณโรค</DropdownMenuItem>
-          <DropdownMenuItem>วัคซีนเด็ก</DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
     </DropdownMenu>
   );
 }
