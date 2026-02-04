@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shadcn/ui/button";
 import { UserRoundPlus } from "lucide-react";
 import { IBM_Plex_Sans_Thai } from "next/font/google";
 
@@ -15,7 +15,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/shadcn/ui/dropdown-menu";
 
 export function CreatePatient() {
   return (
