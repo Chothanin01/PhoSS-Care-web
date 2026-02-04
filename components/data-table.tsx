@@ -84,7 +84,7 @@ export function DataTable<T>({
               <TableHead
                 key={column.id as string}
                 className={cn(
-                  "px-2 py-2 text-sm max-w-[200px] text-Bamboo-100",
+                  "px-2 py-2 text-sm max-w-[200px] text-Bamboo-100 font-semibold",
                   column.className,
                   {
                     "text-center": column.align === "center" || !column.align,

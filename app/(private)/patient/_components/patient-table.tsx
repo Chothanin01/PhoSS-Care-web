@@ -61,14 +61,14 @@ export function SortTablePatient() {
       cell: (patient: Patient) => <div className="whitespace-nowrap text-xs">{patient.firstName} {patient.lastName}</div>,
     },
     {
-      id: "idCard",
-      header: "หมายเลขที่บัตรประชาชน",
-      cell: (patient: Patient) => <div className="whitespace-nowrap text-xs">{patient.idCard || "-"}</div>,
-    },
-    {
       id: "hnId",
       header: "หมายเลขประจำตัวผู้ป่วย",
       cell: (patient: Patient) => <div className="whitespace-nowrap text-xs">{patient.hnId || "-"}</div>,
+    },
+    {
+      id: "idCard",
+      header: "หมายเลขที่บัตรประชาชน",
+      cell: (patient: Patient) => <div className="whitespace-nowrap text-xs">{patient.idCard || "-"}</div>,
     },
     {
       id: "diseases",
