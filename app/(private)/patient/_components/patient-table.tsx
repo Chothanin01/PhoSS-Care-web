@@ -7,6 +7,8 @@ import { Edit, EllipsisVertical, FileText, Server } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/shadcn/ui/dropdown-menu";
 import { DataTable } from "@/components/data-table";
 import { mockPatients } from "@/app/utils/patient.mock";
+import { PatientFilter } from "@/components/filter";
+import type { PatientFilters } from "@/components/filter";
 
 const diseaseColorMap: Record<string, string> = {
   "โรคเบาหวาน": "bg-red-100 text-red-600",
@@ -40,6 +42,53 @@ export function SortTablePatient() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  const [filters, setFilters] = useState<PatientFilters>({
+    diseases: [],
+    appointmentStatus: undefined,
+  });
+
+  const diseaseOptions = Array.from(
+    new Set(
+      mockPatients.flatMap((p) =>
+        p.diseases.map((d) => d.name)
+      )
+    )
+  );
+
+  const filteredPatients = mockPatients.filter((patient) => {
+    if (searchTerm.trim() !== "") {
+      const keyword = searchTerm.toLowerCase();
+
+      const fullName =
+        `${patient.firstName} ${patient.lastName}`.toLowerCase();
+
+      const matchesSearch =
+        fullName.includes(keyword) ||
+        patient.idCard.toLowerCase().includes(keyword) ||
+        patient.hnId.toLowerCase().includes(keyword);
+
+      if (!matchesSearch) return false;
+    }
+
+    if (filters.diseases.length > 0) {
+      const hasDisease = patient.diseases.some((d) =>
+        filters.diseases.includes(d.name)
+      );
+
+      if (!hasDisease) return false;
+    }
+
+    if (filters.appointmentStatus) {
+      const hasAppointmentStatus = patient.diseases.some(
+        (d) => d.appointmentStatus === filters.appointmentStatus
+      );
+
+      if (!hasAppointmentStatus) return false;
+    }
+
+    return true;
+  });
   
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -47,9 +96,9 @@ export function SortTablePatient() {
     }
   };
 
-  const totalItems = mockPatients.length;
+  const totalItems = filteredPatients.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const paginatedPatients = mockPatients.slice(
+  const paginatedPatients = filteredPatients.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -169,12 +218,17 @@ export function SortTablePatient() {
             id="search-term"
             name="search-term"
             label=""
-            placeholder="ค้นหารายชื่อ / หมายเลขบัตรประชาชน / หมายเลขประจำตัวผู้ป่วย"
+            placeholder="ค้นหารายชื่อ / หมายเลขที่บัตรประชาชน / หมายเลขประจำตัวผู้ป่วย"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full"
           />
         </div>
+        <PatientFilter
+          diseaseOptions={diseaseOptions}
+          value={filters}
+          onChange={setFilters}
+        />
       </div>
 
       <DataTable<Patient>
