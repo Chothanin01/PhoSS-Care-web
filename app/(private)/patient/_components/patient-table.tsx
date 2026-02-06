@@ -45,7 +45,7 @@ export function SortTablePatient() {
 
   const [filters, setFilters] = useState<PatientFilters>({
     diseases: [],
-    appointmentStatus: [],
+    appointmentStatus: undefined,
   });
 
   const diseaseOptions = Array.from(
@@ -79,9 +79,9 @@ export function SortTablePatient() {
       if (!hasDisease) return false;
     }
 
-    if (filters.appointmentStatus.length > 0) {
-      const hasAppointmentStatus = patient.diseases.some((d) =>
-        filters.appointmentStatus.includes(d.appointmentStatus)
+    if (filters.appointmentStatus) {
+      const hasAppointmentStatus = patient.diseases.some(
+        (d) => d.appointmentStatus === filters.appointmentStatus
       );
 
       if (!hasAppointmentStatus) return false;

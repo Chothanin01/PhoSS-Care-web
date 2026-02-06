@@ -7,10 +7,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/shadcn
 import { Filter, X } from "lucide-react";
 import { Separator } from "@/shadcn/ui/separator";
 import { ClosableBadge } from "./filter-badge";
+import { RadioGroup, RadioGroupItem } from "@/shadcn/ui/radio-group";
+import { cn } from "@/lib/utils";
 
 export type PatientFilters = {
   diseases: string[];
-  appointmentStatus: string[];
+  appointmentStatus?: "scheduled" | "none";
 };
 
 type Props = {
@@ -34,7 +36,14 @@ export function PatientFilter({
     <div className="flex flex-wrap items-center gap-2">
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
-          <Button className="mt-0.5 gap-2 font-medium text-gray-500 border-input h-9 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] hover:bg-gray-200">
+          <Button
+            className={cn(
+              "mt-0.5 gap-2 font-medium h-9 rounded-md border px-3 py-1 shadow-xs transition-[color,box-shadow,border-color]",
+              open
+                ? "border-Bamboo-100 text-Bamboo-100 bg-white border-2"
+                : "border-input text-gray-500 hover:bg-gray-200 bg-white"
+            )}
+          >
             <Filter className="h-4 w-4" />
             กรองข้อมูล
           </Button>
@@ -87,27 +96,30 @@ export function PatientFilter({
             <Separator />
 
             <div className="p-4 space-y-4">
-              <div>
-                <p className="mb-2 text-sm font-medium text-gray-400">ใบนัดแพทย์</p>
+              <p className="mb-2 text-sm font-medium text-gray-400">ใบนัดแพทย์</p>
+
+              <RadioGroup
+                value={value.appointmentStatus}
+                onValueChange={(val) =>
+                  onChange({
+                    ...value,
+                    appointmentStatus: val as "scheduled" | "none",
+                  })
+                }
+                className="space-y-3"
+              >
                 {APPOINTMENT_OPTIONS.map((opt) => (
-                  <div key={opt.value} className="flex items-center gap-2 mb-4">
-                    <Checkbox
-                      checked={value.appointmentStatus.includes(opt.value)}
-                      onCheckedChange={(checked) => {
-                        onChange({
-                          ...value,
-                          appointmentStatus: checked
-                            ? [...value.appointmentStatus, opt.value]
-                            : value.appointmentStatus.filter(
-                                (v) => v !== opt.value
-                              ),
-                        });
-                      }}
-                    />
-                    <span className="text-sm font-medium">{opt.label}</span>
+                  <div key={opt.value} className="flex items-center gap-2">
+                    <RadioGroupItem value={opt.value} id={opt.value} />
+                    <label
+                      htmlFor={opt.value}
+                      className="text-sm font-medium cursor-pointer"
+                    >
+                      {opt.label}
+                    </label>
                   </div>
                 ))}
-              </div>
+              </RadioGroup>
             </div>
           </DropdownMenuContent>
       </DropdownMenu>
@@ -125,20 +137,21 @@ export function PatientFilter({
         />
       ))}
 
-      {value.appointmentStatus.map((s) => (
+      {value.appointmentStatus && (
         <ClosableBadge
-          key={s}
-          label={s === "scheduled" ? "มีใบนัดแพทย์" : "ไม่มีใบนัดแพทย์"}
+          label={
+            value.appointmentStatus === "scheduled"
+              ? "มีใบนัดแพทย์"
+              : "ไม่มีใบนัดแพทย์"
+          }
           onRemove={() =>
             onChange({
               ...value,
-              appointmentStatus: value.appointmentStatus.filter(
-                (x) => x !== s
-              ),
+              appointmentStatus: undefined,
             })
           }
         />
-      ))}
+      )}
     </div>
   );
 }
