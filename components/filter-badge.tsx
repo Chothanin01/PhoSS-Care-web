@@ -9,7 +9,7 @@ export function ClosableBadge({ label, onRemove }: ClosableBadgeProps) {
   return (
     <div className="
       inline-flex items-center gap-2 h-9
-      rounded-md border border-Bamboo-100
+      rounded-md border-2 border-Bamboo-100
       bg-white px-3 py-1
       text-sm font-medium text-Bamboo-100
     ">
