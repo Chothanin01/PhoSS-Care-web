@@ -76,7 +76,7 @@ export function InputField({
 
   return (
     <div className={containerClassName}>
-      <Label htmlFor={id} className={required ? "required" : ""}>
+      <Label htmlFor={id} className={`text-muted-foreground text-sm font-medium ${required ? "required" : ""}`}>
         {label}
         {required && <span className="text-red-500">*</span>}
       </Label>
@@ -101,7 +101,7 @@ export function InputField({
         />
         {endAdornmentLabel && (
           <span
-            className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold ${
+            className={`absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium ${
               hasError ? "text-red-500" : "text-muted-foreground"
             }`}
           >
