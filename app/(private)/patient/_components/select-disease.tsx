@@ -33,7 +33,7 @@ export default function DiseaseSelector({
   return (
     <div className="border rounded-lg p-4 bg-Bamboo-200 border-Bamboo-100/20 mb-6 w-fit">
       <div className="text-sm font-semibold mb-3">
-        เลือกโรคที่ต้องการ
+        เลือกโรคที่ต้องการ<span className="text-red-500">*</span>
       </div>
 
       <div className="flex flex-wrap gap-3">

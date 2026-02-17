@@ -14,17 +14,21 @@ export function ProgressNav({ children, className, withChevron = false }: Progre
   const childrenArray = Array.isArray(children) ? children : [children]
 
   return (
-    <div className={cn("flex w-full flex-col gap-2 sm:flex-row sm:items-center", className)}>
+    <div className={cn("flex w-full items-center justify-between", className)}>
       {childrenArray.map((child: any, index: number) => (
-        <div key={index} className="flex w-full items-center justify-center min-w-0 p-2 sm:w-auto sm:flex-1">
-          {child}
+        <div key={index} className="flex w-full items-center">
+          <div className="flex-1 flex justify-center">
+            {child}
+          </div>
           {withChevron && index < childrenArray.length - 1 && (
-            <ChevronRight
-              className={cn(
-                "h-5 w-5 mx-2",
-                child.props?.isActive ? "text-Bamboo-100" : "text-gray-400"
-              )}
-            />
+            <div className="flex items-center justify-center px-4">
+              <ChevronRight
+                className={cn(
+                  "h-5 w-5",
+                  child.props?.isActive ? "text-Bamboo-100" : "text-gray-400"
+                )}
+              />
+            </div>
           )}
         </div>
       ))}
