@@ -237,7 +237,8 @@ export default function PatientData({
       patient.address.subdistrict &&
       patient.address.district &&
       patient.address.province &&
-      patient.address.zipcode
+      patient.address.zipcode &&
+      patient.diseases.length > 0 
     );
   }, [patient]);
 
@@ -279,7 +280,7 @@ export default function PatientData({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="col-span-2">
               <label className="text-muted-foreground text-sm font-medium">
-                เพศ<span className="text-red-500"> *</span>
+                เพศ<span className="text-red-500">*</span>
               </label>
 
               <RadioGroup
@@ -362,6 +363,7 @@ export default function PatientData({
               value={patient.dob}
               onChange={handleChange}
               errorMessage={errors.dob}
+              max={new Date().toISOString().split("T")[0]}
             />  
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -370,11 +372,17 @@ export default function PatientData({
                 name="weight"
                 label="น้ำหนัก"
                 type="number"
+                min={1}
                 endAdornmentLabel="กก."
                 required
                 value={patient.weight}
                 onChange={handleChange}
                 errorMessage={errors.weight}
+                onKeyDown={(e) => {
+                  if (e.key === "-" || e.key === "e") {
+                    e.preventDefault();
+                  }
+                }}
               />
 
               <InputField
@@ -383,10 +391,16 @@ export default function PatientData({
                 label="ส่วนสูง"
                 endAdornmentLabel="ซม."
                 type="number"
+                min={1}
                 required
                 value={patient.height}
                 onChange={handleChange}
                 errorMessage={errors.height}
+                onKeyDown={(e) => {
+                  if (e.key === "-" || e.key === "e") {
+                    e.preventDefault();
+                  }
+                }}
               />
             </div>
 

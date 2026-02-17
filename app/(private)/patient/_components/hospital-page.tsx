@@ -152,8 +152,6 @@ export default function HospitalData({ onNext, onBack, officer, setOfficer }: Ho
                 { label: "นาย", value: "นาย" },
                 { label: "นาง", value: "นาง" },
                 { label: "นางสาว", value: "นางสาว" },
-                { label: "เด็กชาย", value: "เด็กชาย" },
-                { label: "เด็กหญิง", value: "เด็กหญิง" },
               ]}
               errorMessage={errors.house.title}
             />
@@ -205,8 +203,6 @@ export default function HospitalData({ onNext, onBack, officer, setOfficer }: Ho
                 { label: "นาย", value: "นาย" },
                 { label: "นาง", value: "นาง" },
                 { label: "นางสาว", value: "นางสาว" },
-                { label: "เด็กชาย", value: "เด็กชาย" },
-                { label: "เด็กหญิง", value: "เด็กหญิง" },
               ]}
               errorMessage={errors.nurse.title}
             />
