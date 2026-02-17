@@ -2,7 +2,8 @@ import React from "react";
 import { Input } from "@/shadcn/ui/input";
 import { Label } from "@/shadcn/ui/label";
 
-interface InputFieldProps {
+interface InputFieldProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   name: string;
   label?: string;
@@ -64,9 +65,17 @@ export function InputField({
   errorMessageClassName,
   endAdornmentLabel,
   disabled = false,
+  ...rest
 }: InputFieldProps) {
   let prClass = "";
   if (icon && rightAddon) {
+    prClass = "pr-20";
+  } else if (icon || rightAddon) {
+    prClass = "pr-8";
+  }
+  if (endAdornmentLabel) {
+    prClass = "pr-9";
+  } else if (icon && rightAddon) {
     prClass = "pr-20";
   } else if (icon || rightAddon) {
     prClass = "pr-8";
@@ -76,9 +85,9 @@ export function InputField({
 
   return (
     <div className={containerClassName}>
-      <Label htmlFor={id} className={required ? "required" : ""}>
+      <Label htmlFor={id} className={`text-muted-foreground text-sm font-medium ${required ? "required" : ""}`}>
         {label}
-        {required && <span className="text-red-500">*</span>}
+        {required && <span className="text-red-500 ml-[-8]">*</span>}
       </Label>
       {subLabel && (
         <p className="text-xs text-muted-foreground mt-1">{subLabel}</p>
@@ -98,10 +107,11 @@ export function InputField({
           readOnly={readOnly}
           inputMode={inputMode}
           pattern={pattern}
+          {...rest}
         />
         {endAdornmentLabel && (
           <span
-            className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold ${
+            className={`absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium ${
               hasError ? "text-red-500" : "text-muted-foreground"
             }`}
           >
