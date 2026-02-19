@@ -1,57 +1,94 @@
 "use client";
 
 import * as React from "react";
-import { House, ClipboardCheck, User, LogOut } from "lucide-react";
+import { UserRoundPen, UserRoundSearch } from "lucide-react";
 import { NavMain } from "./nav-main";
-import { Sidebar, SidebarContent, SidebarHeader, SidebarFooter } from "@/shadcn/ui/sidebar";
-import Link from "next/link";
+import { Sidebar, SidebarContent } from "@/shadcn/ui/sidebar";
+import { useParams } from "next/navigation";
 
 export function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>
 ) {
-  const navMain = React.useMemo(
+
+    const params = useParams();
+    const id = params.id as string;
+
+    const mockPatientDiseases: Record<
+      string,
+      { id: string; name: string }[]
+    > = {
+      "1": [
+        { id: "d1", name: "โรคเบาหวาน" },
+        { id: "d2", name: "วัณโรค" },
+      ],
+      "2": [
+        { id: "d3", name: "โรคความดันโลหิตสูง" },
+      ],
+      "3": [
+        { id: "d1", name: "โรคเบาหวาน" },
+        { id: "v1", name: "วัคซีนเด็ก" },
+      ],
+    };
+
+    const diseases = mockPatientDiseases[id] || [];
+
+    const navMain = React.useMemo(
     () => [
       {
+        title: "แก้ไขข้อมูล",
         url: "/patient",
-        icon: House,
+        icon: UserRoundPen,
+        items: [
+          {
+            title: "ข้อมูลผู้ป่วย",
+            url: `/patient/${id}/edit/patient`,
+          },
+          {
+            title: "ข้อมูลญาติผู้ป่วย",
+            url: `/patient/${id}/edit/relative`,
+          },
+          {
+            title: "ข้อมูลโรงพยาบาล",
+            url: `/patient/${id}/edit/hospital`,
+          },
+          {
+            title: "ใบนัดแพทย์",
+            url: `/patient/${id}/edit/appointment`,
+          },
+        ],
       },
       {
-        url: "/approve",
-        icon: ClipboardCheck,
+        title: "ดูข้อมูลทั้งหมด",
+        url: "/patient",
+        icon: UserRoundSearch,
+        items: [
+          {
+            title: "ข้อมูลผู้ป่วย",
+            url: `/patient/${id}/view/patient`,
+          },
+          ...diseases.map((disease) => ({
+            title: `ประวัติการรักษา${disease.name}`,
+            url: `/patient/${id}/view/disease/${disease.id}`,
+          })),
+          {
+            title: "ใบนัดแพทย์",
+            url: `/patient/${id}/view/appointment`,
+          },
+        ],
       },
     ],
-    []
+    [id, diseases]
   );
 
   return (
     <Sidebar
-      variant="floating"
-      collapsible="icon"
-      className="text-black p-2"
+      variant="sidebar"
+      className="w-64 pt-24 left-6"
       {...props}
     >
-      <SidebarHeader className="flex items-center justify-center py-4">
-        <div
-          className="
-            flex h-10 w-10 items-center justify-center
-            rounded-full border-2 border-Bamboo-100
-          "
-        >
-          <User className="h-5 w-5 text-Bamboo-100 opacity-30" />
-        </div>
-      </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMain} />
       </SidebarContent>
-
-      <SidebarFooter className="flex items-center justify-center py-2">
-        <Link
-          href="/login"
-          className="flex h-10 w-10 items-center justify-center rounded-xl transition-colors hover:bg-Bamboo-300"
-        >
-          <LogOut className="h-5 w-5 text-black" />
-        </Link>
-      </SidebarFooter>
     </Sidebar>
   );
 }
