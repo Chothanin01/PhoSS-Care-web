@@ -71,7 +71,7 @@ export default function PatientCard({ patient }: Props) {
           <h2 className="text-lg font-semibold mb-4">ที่อยู่</h2>
 
           <div className="grid grid-cols-2 gap-y-2 text-sm gap-20">
-            <p>เลขที่ : {patient.address.houseNo}</p>
+            <p>เลขที่ : {patient.address.house_number}</p>
             <p>หมู่ที่ : {patient.address.village}</p>
             <p>ถนน : {patient.address.road}</p>
             <p>อำเภอ : {patient.address.district}</p>
