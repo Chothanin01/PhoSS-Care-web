@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans_Thai } from "next/font/google";
 import "../globals.css";
-import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider, SidebarInset } from "@/shadcn/ui/sidebar";
 import { NavBar } from "@/components/nav-bar";
+import { LayoutWrapper } from "@/components/layour-wrapper";
 
 const ibmPlexThai = IBM_Plex_Sans_Thai({
   subsets: ["thai", "latin"],
@@ -18,21 +17,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body
-        className={`${ibmPlexThai.variable} antialiased`}
-      >
-        <SidebarProvider>
-          <SidebarInset className="min-h-screen">
-            <AppSidebar />
-            <NavBar />
-            {children}
-          </SidebarInset>
-        </SidebarProvider>
+      <body className={`${ibmPlexThai.variable} antialiased`}>
+        <NavBar />
+        <LayoutWrapper>
+          {children}
+        </LayoutWrapper>
       </body>
     </html>
   );

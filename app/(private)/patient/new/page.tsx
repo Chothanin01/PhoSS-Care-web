@@ -76,7 +76,7 @@ export default function Page() {
 );
   
   return (
-    <div className="ml-14 px-6 py-28">
+    <div className="py-2">
       <div className="w-full bg-white p-6 rounded-lg shadow">
 
         {step < 3 && (

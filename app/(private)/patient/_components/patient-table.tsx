@@ -181,7 +181,7 @@ export function SortTablePatient() {
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={() => {
-                  router.push(`/agent/${patient.id}/edit`);
+                  router.push(`/patient/${patient.id}/edit/patient`);
                 }}
                 className="cursor-pointer"
               >
@@ -189,7 +189,7 @@ export function SortTablePatient() {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  router.push(`/agent/${patient.id}/appoint`);
+                  router.push(`/patient/${patient.id}/appoint`);
                 }}
                 className="cursor-pointer"
               >
@@ -197,7 +197,7 @@ export function SortTablePatient() {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  router.push(`/agent/${patient.id}/patient`);
+                  router.push(`/patient/${patient.id}/view/patient`);
                 }}
                 className="cursor-pointer"
               >
