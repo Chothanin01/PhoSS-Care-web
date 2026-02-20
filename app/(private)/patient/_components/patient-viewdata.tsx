@@ -17,26 +17,30 @@ export default function PatientCard({ patient }: Props) {
         <div>
           <h2 className="font-semibold mb-2">ข้อมูลส่วนตัว</h2>
 
-          <div className="flex items-center gap-6 mb-4 ">
-            <label className="flex items-center gap-2 =">
-              <input
-                type="radio"
-                className="accent-Bamboo-100"
-                checked={patient.gender === Gender.MALE}
-                readOnly
-              />
-              ผู้ชาย
-            </label>
+          <div className="flex items-center gap-6 mb-4">
+            {patient.gender === Gender.MALE && (
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  className="accent-Bamboo-100"
+                  checked
+                  readOnly
+                />
+                ผู้ชาย
+              </label>
+            )}
 
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                className="accent-Bamboo-100"
-                checked={patient.gender === Gender.FEMALE}
-                readOnly
-              />
-              ผู้หญิง
-            </label>
+            {patient.gender === Gender.FEMALE && (
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  className="accent-Bamboo-100"
+                  checked
+                  readOnly
+                />
+                ผู้หญิง
+              </label>
+            )}
           </div>
 
           <div className="space-y-2 text-sm">

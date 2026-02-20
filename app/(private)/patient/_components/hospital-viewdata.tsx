@@ -16,12 +16,16 @@ export default function OfficerSection({ patient }: Props) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-30">
         <div>
           <h3 className="font-semibold mb-2">เจ้าหน้าที่เยี่ยมบ้าน</h3>
-          <p>ชื่อ - นามสกุล : {patient.officer.house.fullname}</p>
+          <p className="text-sm">
+            ชื่อ - นามสกุล : {patient.officer.house.fullname}
+          </p>
         </div>
 
         <div>
           <h3 className="font-semibold mb-2">เจ้าหน้าที่</h3>
-          <p>ชื่อ - นามสกุล : {patient.officer.nurse.fullname}</p>
+          <p className="text-sm">
+            ชื่อ - นามสกุล : {patient.officer.nurse.fullname}
+          </p>
         </div>
       </div>
 
