@@ -17,7 +17,6 @@ export default function PatientCard({ patient }: Props) {
         <div>
           <h2 className="text-lg font-semibold mb-4">ข้อมูลส่วนตัว</h2>
 
-          {/* Gender */}
           <div className="flex items-center gap-6 mb-4 ">
             <label className="flex items-center gap-2 =">
               <input
@@ -82,7 +81,6 @@ export default function PatientCard({ patient }: Props) {
         </div>
       </div>
 
-      {/* Edit Button */}
       <div className="flex justify-end mt-8">
         <button
           onClick={() => router.push(`/patient/${patient.id}/edit/patient`)}

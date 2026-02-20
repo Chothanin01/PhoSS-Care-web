@@ -13,6 +13,40 @@ export enum Gender {
   FEMALE = "female",
 }
 
+export interface OfficerPerson {
+  fullname: string;
+  role: "house" | "nurse";
+}
+
+export interface OfficerGroup {
+  house: OfficerPerson;
+  nurse: OfficerPerson;
+}
+
+export interface RelativeAddress {
+  house_number: string;
+  village_number: string;
+  alley: string;
+  road: string;
+  subdistrict: string;
+  district: string;
+  province: string;
+  zipcode: string;
+}
+
+export interface RelativePerson {
+  fullname: string;
+  phonenumber: string;
+  role: "kin" | "caretaker" | "medicine";
+  address: RelativeAddress;
+}
+
+export interface RelativeGroup {
+  kin: RelativePerson;
+  caretaker: RelativePerson;
+  medicine: RelativePerson;
+}
+
 export interface Address {
   house_number: string;
   village: string;
@@ -43,6 +77,8 @@ export interface Patient {
   phone: string;
   address: Address;
   diseases: Disease[];
+  relative: RelativeGroup;
+  officer: OfficerGroup;
 }
 
 export const mockPatients: Patient[] = [
@@ -83,6 +119,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 2,
@@ -117,6 +212,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 3,
@@ -155,6 +309,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 4,
@@ -189,6 +402,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 5,
@@ -223,6 +495,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 6,
@@ -257,6 +588,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 7,
@@ -291,6 +681,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 8,
@@ -325,6 +774,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 9,
@@ -359,6 +867,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 10,
@@ -393,6 +960,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 11,
@@ -427,6 +1053,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 12,
@@ -465,6 +1150,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 13,
@@ -499,6 +1243,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 14,
@@ -537,6 +1340,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 15,
@@ -571,6 +1433,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 16,
@@ -605,6 +1526,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 17,
@@ -639,6 +1619,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 18,
@@ -673,6 +1712,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 19,
@@ -707,6 +1805,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 20,
@@ -741,6 +1898,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 21,
@@ -775,6 +1991,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 22,
@@ -813,6 +2088,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 23,
@@ -847,6 +2181,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 24,
@@ -885,6 +2278,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 25,
@@ -919,6 +2371,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 26,
@@ -953,6 +2464,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 27,
@@ -987,6 +2557,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 28,
@@ -1021,6 +2650,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 29,
@@ -1055,6 +2743,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 30,
@@ -1089,6 +2836,65 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
   {
     id: 31,
@@ -1123,5 +2929,64 @@ export const mockPatients: Patient[] = [
         appointmentStatus: AppointmentStatus.SCHEDULED,
       },
     ],
+    relative: {
+      kin: {
+        fullname: "Mr.Prasert Wongprasert",
+        phonenumber: "0811112233",
+        role: "kin",
+        address: {
+          house_number: "45/8",
+          village_number: "6",
+          alley: "Soi Rama 2 Soi 33",
+          road: "Rama 2 Road",
+          subdistrict: "Bang Mot",
+          district: "Chom Thong",
+          province: "Bangkok",
+          zipcode: "10150",
+        },
+      },
+
+      caretaker: {
+        fullname: "Miss Patcharin Siriwan",
+        phonenumber: "0872223344",
+        role: "caretaker",
+        address: {
+          house_number: "120/4",
+          village_number: "9",
+          alley: "Soi Ladprao 101",
+          road: "Ladprao Road",
+          subdistrict: "Wang Thonglang",
+          district: "Wang Thonglang",
+          province: "Bangkok",
+          zipcode: "10310",
+        },
+      },
+
+      medicine: {
+        fullname: "Mr.Nopparat Jaisom",
+        phonenumber: "0851237789",
+        role: "medicine",
+        address: {
+          house_number: "77/5",
+          village_number: "4",
+          alley: "Soi Phahonyothin 34",
+          road: "Phahonyothin Road",
+          subdistrict: "Lat Yao",
+          district: "Chatuchak",
+          province: "Bangkok",
+          zipcode: "10900",
+        },
+      },
+    },
+    officer: {
+      house: {
+        fullname: "Ms.Kanyarat Sae-Tang",
+        role: "house",
+      },
+      nurse: {
+        fullname: "Miss Nanticha Phonchai",
+        role: "nurse",
+      },
+    },
   },
 ];
