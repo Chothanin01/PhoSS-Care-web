@@ -26,8 +26,67 @@ export default function Page() {
   const [step, setStep] = useState(0);
   const [openSuccess, setOpenSuccess] = useState(false);
 
-  const handleCreate = () => {
-    setOpenSuccess(true);
+  const handleCreate = async () => {
+    try {
+      const payload = {
+        user: {
+          username: patient.idcard,
+          password: patient.idcard,
+          role: "patient",
+        },
+        patient: {
+          title: patient.title,
+          firstname: patient.firstname,
+          lastname: patient.lastname,
+          sex: patient.sex,
+          dob: patient.dob,
+          idcard: patient.idcard,
+          rights: patient.healthCoverage,
+          nationality: patient.nationality,
+          ethnicity: patient.ethnicity,
+          phonenumber: patient.phonenumber,
+          weight: Number(patient.weight),
+          height: Number(patient.height),
+          address: patient.address,
+          allergy: patient.allergy,
+          diseases: patient.diseases.map((d) => ({
+            disease_id: d.disease_id,
+            name: d.name,
+          })),
+        },
+        relative: {
+          kin: relative.kin,
+          caretaker: relative.caretaker,
+          medicine: relative.medicine,
+        },
+        officer: {
+          house: officer.house,
+          nurse: officer.nurse,
+        },
+        created_by: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", //mock
+      };
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/patients`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText);
+      }
+
+      setOpenSuccess(true);
+
+    } catch (error) {
+      console.error("Create patient error:", error);
+    }
   };
 
   useEffect(() => {
@@ -106,7 +165,7 @@ export default function Page() {
 
           {step === 2 &&
           <HospitalData
-            onNext={handleCreate}
+            onSubmit={handleCreate}
             onBack={handleBack}
             officer={officer}
             setOfficer={setOfficer}

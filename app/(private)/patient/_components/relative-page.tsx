@@ -195,7 +195,7 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
   };
 
   const isFormValid = useMemo(() => {
-    const sections = ["kin", "caretaker", "medicine"] as const;
+    const sections = ["kin"] as const;
 
     return sections.every(section => {
       const p = relative[section];
@@ -438,7 +438,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
                 id="firstname"
                 name="firstname"
                 label="ชื่อ"
-                required
                 value={relative.caretaker.firstname}
                 onChange={(e) =>
                   handleChange("caretaker", "firstname", e.target.value)
@@ -450,7 +449,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
                 id="lastname"
                 name="lastname"
                 label="นามสกุล"
-                required
                 value={relative.caretaker.lastname}
                 onChange={(e) =>
                   handleChange("caretaker", "lastname", e.target.value)
@@ -462,7 +460,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
                 id="phonenumber"
                 name="phonenumber"
                 label="เบอร์โทรศัพท์"
-                required
                 value={relative.caretaker.phonenumber}
                 onChange={(e) =>
                   handleChange("caretaker", "phonenumber", e.target.value)
@@ -481,7 +478,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
                 id="house_number"
                 name="house_number"
                 label="บ้านเลขที่"
-                required
                 value={relative.caretaker.address.house_number}
                 onChange={(e) =>
                   handleAddressChange("caretaker", "house_number", e.target.value)
@@ -493,7 +489,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
                   id="village_number"
                   name="village_number"
                   label="หมู่"
-                  required
                   value={relative.caretaker.address.village_number}
                   onChange={(e) =>
                     handleAddressChange("caretaker", "village_number", e.target.value)
@@ -529,7 +524,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
                 id="subdistrict"
                 name="subdistrict"
                 label="เขต/อำเภอ"
-                required
                 value={relative.caretaker.address.subdistrict}
                 onChange={(e) =>
                   handleAddressChange("caretaker", "subdistrict", e.target.value)
@@ -541,7 +535,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
                 id="district"
                 name="district"
                 label="แขวง/ตำบล"
-                required
                 value={relative.caretaker.address.district}
                 onChange={(e) =>
                   handleAddressChange("caretaker", "district", e.target.value)
@@ -555,7 +548,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
                 id="province"
                 name="province"
                 label="จังหวัด"
-                required
                 value={relative.caretaker.address.province}
                 onChange={(e) =>
                   handleAddressChange("caretaker", "province", e.target.value)
@@ -567,7 +559,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
                 id="zipcode"
                 name="zipcode"
                 label="รหัสไปรษณีย์"
-                required
                 value={relative.caretaker.address.zipcode}
                 onChange={(e) =>
                   handleAddressChange("caretaker", "zipcode", e.target.value)
@@ -615,7 +606,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
               id="firstname"
               name="firstname"
               label="ชื่อ"
-              required
               value={relative.medicine.firstname}
               onChange={(e) =>
                 handleChange("medicine", "firstname", e.target.value)
@@ -627,7 +617,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
               id="lastname"
               name="lastname"
               label="นามสกุล"
-              required
               value={relative.medicine.lastname}
               onChange={(e) =>
                 handleChange("medicine", "lastname", e.target.value)
@@ -639,7 +628,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
               id="phonenumber"
               name="phonenumber"
               label="เบอร์โทรศัพท์"
-              required
               value={relative.medicine.phonenumber}
               onChange={(e) =>
                 handleChange("medicine", "phonenumber", e.target.value)
@@ -658,7 +646,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
                 id="house_number"
                 name="house_number"
                 label="บ้านเลขที่"
-                required
                 value={relative.medicine.address.house_number}
                 onChange={(e) =>
                   handleAddressChange("medicine", "house_number", e.target.value)
@@ -670,7 +657,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
                 id="village_number"
                 name="village_number"
                 label="หมู่"
-                required
                 value={relative.medicine.address.village_number}
                 onChange={(e) =>
                   handleAddressChange("medicine", "village_number", e.target.value)
@@ -706,7 +692,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
                 id="subdistrict"
                 name="subdistrict"
                 label="เขต/อำเภอ"
-                required
                 value={relative.medicine.address.subdistrict}
                 onChange={(e) =>
                   handleAddressChange("medicine", "subdistrict", e.target.value)
@@ -718,7 +703,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
                 id="district"
                 name="district"
                 label="แขวง/ตำบล"
-                required
                 value={relative.medicine.address.district}
                 onChange={(e) =>
                   handleAddressChange("medicine", "district", e.target.value)
@@ -732,7 +716,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
                 id="province"
                 name="province"
                 label="จังหวัด"
-                required
                 value={relative.medicine.address.province}
                 onChange={(e) =>
                   handleAddressChange("medicine", "province", e.target.value)
@@ -744,7 +727,6 @@ export default function RelativeData({ onNext, onBack, relative, setRelative }: 
                 id="zipcode"
                 name="zipcode"
                 label="รหัสไปรษณีย์"
-                required
                 value={relative.medicine.address.zipcode}
                 onChange={(e) =>
                   handleAddressChange("medicine", "zipcode", e.target.value)

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo  } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { RadioGroup, RadioGroupItem } from "@/shadcn/ui/radio-group";
 import { InputField } from "@/components/inputfield";
 import { SelectField } from "@/components/selectfield";
@@ -17,7 +17,6 @@ interface PatientDataProp {
 export type Patient = {
   sex: string;
   title: string;
-  age: string;
   firstname: string;
   lastname: string;
   dob: string;
@@ -45,7 +44,6 @@ export type Patient = {
 export const PATIENT_INITIAL: Patient = {
   sex: "",
   title: "",
-  age: "",
   firstname: "",
   lastname: "",
   dob: "",
@@ -71,7 +69,7 @@ export const PATIENT_INITIAL: Patient = {
 };
 
 type Disease = {
-  disease_id: number
+  disease_id: string
   name: string
 }
 
@@ -82,17 +80,26 @@ export default function PatientData({
   }: PatientDataProp) {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [diseaseOptions, setDiseaseOptions] = useState<Disease[]>([])
 
-  const diseaseOptions: Disease[] = [
-    { disease_id: 2, name: "โรคเบาหวาน" },
-    { disease_id: 1, name: "โรคความดันโลหิตสูง" },
-    { disease_id: 3, name: "วัณโรค" },
-    { disease_id: 4, name: "วัคซีนเด็ก" },
-  ]
+  useEffect(() => {
+    const fetchDiseases = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/diseases`
+        )
+        const data = await res.json()
+
+        setDiseaseOptions(data.diseases)
+      } catch (err) {
+        console.error("error fetch diseases", err)
+      }
+    }
+    fetchDiseases()
+  }, [])
 
   const fieldLabels: Record<string, string> = {
     sex: "เพศ",
-    age: "อายุ",
     firstname: "ชื่อ",
     lastname: "นามสกุล",
     dob: "วันเกิด",
@@ -163,25 +170,6 @@ export default function PatientData({
       return;
     }
 
-    if (id === "age") {
-      newValue = value.replace(/\D/g, "");
-
-      setPatient((prev) => ({
-        ...prev,
-        age: newValue,
-      }));
-
-      setErrors((prev) => ({
-        ...prev,
-        age:
-        newValue.trim() === ""
-          ? "กรุณากรอกอายุ"
-          : "",
-      }));
-
-      return;
-    }
-
     const errorMessage =
       newValue.trim() === "" ? `กรุณากรอก${label}` : "";
 
@@ -220,7 +208,6 @@ export default function PatientData({
   const isFormValid = useMemo(() => {
     return (
       patient.sex &&
-      patient.age &&
       patient.firstname &&
       patient.lastname &&
       patient.dob &&
@@ -304,34 +291,25 @@ export default function PatientData({
               </RadioGroup>
             </div>
 
-            <SelectField
-              id="title"
-              name="title"
-              label="คำนำหน้า"
-              placeholder="เลือกคำนำหน้า"
-              value={patient.title}
-              onValueChange={handleSelectChange("title")}
-              options={[
-                { label: "นาย", value: "นาย" },
-                { label: "นาง", value: "นาง" },
-                { label: "นางสาว", value: "นางสาว" },
-                { label: "เด็กชาย", value: "เด็กชาย" },
-                { label: "เด็กหญิง", value: "เด็กหญิง" },
-              ]}
-              errorMessage={errors.title}
-            />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <InputField
-                id="age"
-                name="age"
-                label="อายุ"
-                required
-                value={patient.age}
-                onChange={handleChange}
-                errorMessage={errors.age}
-                endAdornmentLabel="ปี"
-              />
+            <div className="col-span-2 flex">
+              <div className="w-78">
+                <SelectField
+                  id="title"
+                  name="title"
+                  label="คำนำหน้า"
+                  placeholder="เลือกคำนำหน้า"
+                  value={patient.title}
+                  onValueChange={handleSelectChange("title")}
+                  options={[
+                    { label: "นาย", value: "นาย" },
+                    { label: "นาง", value: "นาง" },
+                    { label: "นางสาว", value: "นางสาว" },
+                    { label: "เด็กชาย", value: "เด็กชาย" },
+                    { label: "เด็กหญิง", value: "เด็กหญิง" },
+                  ]}
+                  errorMessage={errors.title}
+                />
+              </div>
             </div>
 
             <InputField

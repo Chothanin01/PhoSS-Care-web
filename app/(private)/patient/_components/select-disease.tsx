@@ -4,7 +4,7 @@ import { Checkbox } from "@/shadcn/ui/checkbox"
 import { cn } from "@/lib/utils"
 
 export type Disease = {
-  disease_id: number
+  disease_id: string
   name: string
 }
 
@@ -19,7 +19,7 @@ export default function DiseaseSelector({
   value,
   onChange,
 }: DiseaseSelectorProps) {
-  const isSelected = (id: number) =>
+  const isSelected = (id: string) =>
     value.some((d) => d.disease_id === id)
 
   const toggleDisease = (checked: boolean, disease: Disease) => {
