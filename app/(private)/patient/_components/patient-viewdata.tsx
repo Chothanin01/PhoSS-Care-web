@@ -11,11 +11,11 @@ export default function PatientCard({ patient }: Props) {
   const router = useRouter();
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">ข้อมูลผู้ป่วย</h1>
+      <h1 className="text-xl font-bold mb-6">ข้อมูลผู้ป่วย</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-80">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-55">
         <div>
-          <h2 className="text-lg font-semibold mb-4">ข้อมูลส่วนตัว</h2>
+          <h2 className="font-semibold mb-2">ข้อมูลส่วนตัว</h2>
 
           <div className="flex items-center gap-6 mb-4 ">
             <label className="flex items-center gap-2 =">
@@ -69,7 +69,7 @@ export default function PatientCard({ patient }: Props) {
         <div className="">
           <h2 className="text-lg font-semibold mb-4">ที่อยู่</h2>
 
-          <div className="grid grid-cols-2 gap-y-2 text-sm gap-20">
+          <div className="grid grid-cols-2 gap-x-6 text-sm gap-y-2">
             <p>เลขที่ : {patient.address.house_number}</p>
             <p>หมู่ที่ : {patient.address.village}</p>
             <p>ถนน : {patient.address.road}</p>

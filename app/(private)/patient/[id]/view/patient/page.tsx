@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import PatientCard from "@/app/(private)/patient/_components/patient-viewdata";
+import RelativeSection from "@/app/(private)/patient/_components/relative-viewdata";
 import { mockPatients } from "@/app/utils/patient.mock";
 
 export default function Page() {
@@ -21,9 +22,12 @@ export default function Page() {
   }
 
   return (
-    <div className="ml-70 px-6 py-28">
-      <div className="w-full bg-white p-6 rounded-lg shadow">
+    <div className="ml-70 px-6 py-28 space-y-3">
+      <div className="w-full bg-white p-6 rounded-lg shadow ">
         <PatientCard patient={patient} />
+      </div>
+      <div className="w-full bg-white p-6 rounded-lg shadow">
+        <RelativeSection patient={patient} />
       </div>
     </div>
   );
