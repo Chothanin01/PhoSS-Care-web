@@ -36,15 +36,15 @@ export default function RelativeSection({ patient }: Props) {
     <div className=" pt-3 mt-3">
       <h3 className="text-lg font-semibold mb-4">{title}</h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-55">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-30 ">
         <div>
-          <h4 className="font-semibold mb-2 gap-y-2">ข้อมูลส่วนตัว</h4>
+          <h4 className="font-semibold mb-2 gap-y-2 mb-2">ข้อมูลส่วนตัว</h4>
           <p>ชื่อ - นามสกุล : {person.fullname}</p>
           <p>เบอร์โทรศัพท์ : {formatPhoneNumber(person.phonenumber)}</p>
         </div>
         <div>
           <h4 className="font-semibold mb-2">ที่อยู่</h4>
-          <div className="grid grid-cols-2 gap-x-8 text-sm gap-y-2">
+          <div className="grid grid-cols-2 gap-x-20 text-sm gap-y-2 mb-2">
             <p>เลขที่ : {person.address.house_number}</p>
             <p>หมู่ที่ : {person.address.village_number || "-"}</p>
             <p>ตรอก/ซอย : {person.address.alley || "-"}</p>
@@ -61,7 +61,7 @@ export default function RelativeSection({ patient }: Props) {
 
   return (
     <div className="p-8">
-      <h2 className="text-xl font-bold">ข้อมูลญาติผู้ป่วย</h2>
+      <h2 className="text-xl font-semibold">ข้อมูลญาติผู้ป่วย</h2>
 
       <InfoBlock title="" person={patient.relative.kin} />
       <div className="border-t mt-8 pt-1">

@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import PatientCard from "@/app/(private)/patient/_components/patient-viewdata";
 import RelativeSection from "@/app/(private)/patient/_components/relative-viewdata";
+import OfficerSection from "@/app/(private)/patient/_components/hospital-viewdata";
 import { mockPatients } from "@/app/utils/patient.mock";
 
 export default function Page() {
@@ -28,6 +29,9 @@ export default function Page() {
       </div>
       <div className="w-full bg-white p-6 rounded-lg shadow">
         <RelativeSection patient={patient} />
+      </div>
+      <div className="w-full bg-white p-6 rounded-lg shadow">
+        <OfficerSection patient={patient} />
       </div>
     </div>
   );
