@@ -1,12 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/shadcn/ui/button";
 import { InputField } from "@/components/inputfield";
 import { Edit, EllipsisVertical, FileText, Server } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/shadcn/ui/dropdown-menu";
 import { DataTable } from "@/components/data-table";
-import { mockPatients } from "@/app/utils/patient.mock";
 import { PatientFilter } from "@/components/filter";
 import type { PatientFilters } from "@/components/filter";
 
@@ -29,6 +28,7 @@ interface Disease {
 
 interface Patient {
   id: number;
+  fullName: string;
   firstName: string;
   lastName: string;
   idCard: string;
@@ -42,53 +42,96 @@ export function SortTablePatient() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const [patients, setPatients] = useState<Patient[]>([])
+  const [loading, setLoading] = useState(true)
 
   const [filters, setFilters] = useState<PatientFilters>({
     diseases: [],
     appointmentStatus: undefined,
   });
 
-  const diseaseOptions = Array.from(
-    new Set(
-      mockPatients.flatMap((p) =>
-        p.diseases.map((d) => d.name)
-      )
-    )
-  );
+  const [diseaseOptions, setDiseaseOptions] = useState<string[]>([])
 
-  const filteredPatients = mockPatients.filter((patient) => {
-    if (searchTerm.trim() !== "") {
-      const keyword = searchTerm.toLowerCase();
+  useEffect(() => {
+    const fetchDiseases = async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/diseases`)
+      const data = await res.json()
 
-      const fullName =
-        `${patient.firstName} ${patient.lastName}`.toLowerCase();
-
-      const matchesSearch =
-        fullName.includes(keyword) ||
-        patient.idCard.toLowerCase().includes(keyword) ||
-        patient.hnId.toLowerCase().includes(keyword);
-
-      if (!matchesSearch) return false;
+      setDiseaseOptions(data.diseases.map((d: any) => d.name))
     }
 
-    if (filters.diseases.length > 0) {
-      const hasDisease = patient.diseases.some((d) =>
-        filters.diseases.includes(d.name)
-      );
+    fetchDiseases()
+  }, [])
 
-      if (!hasDisease) return false;
+  const [totalPages, setTotalPages] = useState(1)
+
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        setLoading(true)
+
+        const params = new URLSearchParams()
+
+        params.append("page", currentPage.toString())
+        params.append("limit", itemsPerPage.toString())
+
+        if (searchTerm.trim() !== "") {
+          params.append("search", searchTerm)
+        }
+
+        if (filters.diseases.length > 0) {
+          params.append(
+            "disease",
+            filters.diseases.join(",")
+          )
+        }
+
+        if (filters.appointmentStatus !== undefined) {
+          params.append(
+            "appoint",
+            filters.appointmentStatus === AppointmentStatus.SCHEDULED
+              ? "true"
+              : "false"
+          )
+        }
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/patients?${params.toString()}`
+        )
+
+        const data = await res.json()
+
+        const mapped = data.data.map((p: any) => {
+        const nameParts = (p.fullname || "").split(" ")
+
+        return {
+          id: p.id,
+          fullName: p. fullname,
+          firstName: nameParts[0] || "",
+          lastName: nameParts.slice(1).join(" ") || "",
+          idCard: p.idcard,
+          hnId: p.hnnumber,
+          diseases: (p.diseases || []).map((d: any) => ({
+            name: d.name,
+            appointmentStatus: d.has_appointment
+              ? AppointmentStatus.SCHEDULED
+              : AppointmentStatus.NONE,
+          })),
+        }
+      })
+
+        setPatients(mapped)
+        setTotalPages(data.total_pages)
+
+      } catch (err) {
+        console.error("fetch patient error", err)
+      } finally {
+        setLoading(false)
+      }
     }
 
-    if (filters.appointmentStatus) {
-      const hasAppointmentStatus = patient.diseases.some(
-        (d) => d.appointmentStatus === filters.appointmentStatus
-      );
-
-      if (!hasAppointmentStatus) return false;
-    }
-
-    return true;
-  });
+    fetchPatients()
+  }, [currentPage, searchTerm, filters])
   
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -96,18 +139,15 @@ export function SortTablePatient() {
     }
   };
 
-  const totalItems = filteredPatients.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const paginatedPatients = filteredPatients.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchTerm, filters])
 
   const PatientColumn = [
     {
       id: "name",
       header: "ชื่อ - นามสกุล",
-      cell: (patient: Patient) => <div className="whitespace-nowrap text-xs">{patient.firstName} {patient.lastName}</div>,
+      cell: (patient: Patient) => <div className="whitespace-nowrap text-xs">{patient.firstName} <span className="ml-4">{patient.lastName}</span></div>,
     },
     {
       id: "hnId",
@@ -232,7 +272,7 @@ export function SortTablePatient() {
       </div>
 
       <DataTable<Patient>
-        data={paginatedPatients}
+        data={patients}
         columns={PatientColumn}
         currentPage={currentPage}
         totalPages={totalPages}
