@@ -214,7 +214,7 @@ export const mockPatients: Patient[] = [
     ],
     relative: {
       kin: {
-        fullname: "Mr.Prasert Prapaporn",
+        fullname: "Mr.Prasert P",
         phonenumber: "0811112233",
         role: "kin",
         address: {
