@@ -6,7 +6,7 @@ import { StepBack, UserPlus } from "lucide-react";
 import React, { useEffect, useState, useMemo } from "react";
 
 interface HospitalDataProp {
-  onNext: () => void;
+  onSubmit: () => void;
   onBack: () => void;
   officer: Officer;
   setOfficer: React.Dispatch<React.SetStateAction<Officer>>;
@@ -39,7 +39,7 @@ type ErrorState = {
   nurse: Partial<Record<keyof OfficerData , string>>;
 };
 
-export default function HospitalData({ onNext, onBack, officer, setOfficer }: HospitalDataProp) {
+export default function HospitalData({ onSubmit, onBack, officer, setOfficer }: HospitalDataProp) {
 
   const [errors, setErrors] = useState<ErrorState>({
     house: {},
@@ -119,7 +119,7 @@ export default function HospitalData({ onNext, onBack, officer, setOfficer }: Ho
   }, [officer]);
 
   const handleNext = () => {
-      onNext();
+      onSubmit();
   };
 
   const handleBack = () => {
