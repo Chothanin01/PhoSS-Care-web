@@ -79,6 +79,8 @@ export interface Patient {
   diseases: Disease[];
   relative: RelativeGroup;
   officer: OfficerGroup;
+  location: string;
+  year: number;
 }
 
 export const mockPatients: Patient[] = [
@@ -92,6 +94,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2569,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -100,6 +103,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -189,6 +193,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2569,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -197,6 +202,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 200",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -282,6 +288,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -290,6 +297,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -379,6 +387,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -387,6 +396,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -472,6 +482,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -480,6 +491,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -565,6 +577,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -573,6 +586,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -658,6 +672,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -666,6 +681,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -751,6 +767,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -759,6 +776,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -844,6 +862,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -852,6 +871,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -937,6 +957,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -945,6 +966,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -1030,6 +1052,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -1038,6 +1061,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -1123,6 +1147,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -1131,6 +1156,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -1220,6 +1246,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -1228,6 +1255,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -1313,6 +1341,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -1321,6 +1350,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -1410,6 +1440,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -1418,6 +1449,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -1503,6 +1535,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -1511,6 +1544,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -1596,6 +1630,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -1604,6 +1639,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -1689,6 +1725,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -1697,6 +1734,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -1782,6 +1820,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -1790,6 +1829,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -1875,6 +1915,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -1883,6 +1924,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -1968,6 +2010,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -1976,6 +2019,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -2061,6 +2105,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -2069,6 +2114,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -2158,6 +2204,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -2166,6 +2213,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -2251,6 +2299,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -2259,6 +2308,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -2348,6 +2398,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -2356,6 +2407,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -2441,6 +2493,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -2449,6 +2502,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -2534,6 +2588,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -2542,6 +2597,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -2627,6 +2683,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -2635,6 +2692,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -2720,6 +2778,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -2728,6 +2787,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -2813,6 +2873,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2004,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -2821,6 +2882,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
@@ -2906,6 +2968,7 @@ export const mockPatients: Patient[] = [
     age: 20,
     month: 3,
     day: 2,
+    year: 2024,
     nationalId: "2-1023-01357-90-4",
     right: "บัตรทอง",
     nationality: "ไทย",
@@ -2914,6 +2977,7 @@ export const mockPatients: Patient[] = [
     height: 179,
     allergy: "ไม่มี",
     phone: "123-4567890",
+    location: "อาคาร A ชั้น 2 ห้อง 201",
     address: {
       house_number: "123/45",
       village: "ไม่มี",
