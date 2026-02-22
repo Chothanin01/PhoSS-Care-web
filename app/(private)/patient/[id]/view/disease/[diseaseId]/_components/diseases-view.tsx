@@ -51,7 +51,7 @@ export default function DiseasesView({ data }: DiseasesViewProps) {
               </div>
 
               <div>
-                <h3 className="font-semibold mb-3">ตรวจร่างกายทั่วไป</h3>
+                <h3 className="font-semibold">ตรวจร่างกายทั่วไป</h3>
 
                 <div className="grid grid-cols-2 gap-y-2">
                   <p className="mt-2 text-sm">น้ำหนัก : {item.weight} กก.</p>
