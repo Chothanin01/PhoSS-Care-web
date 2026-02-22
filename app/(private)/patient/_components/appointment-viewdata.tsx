@@ -27,7 +27,7 @@ export default function AppointmentCard({ patient }: Props) {
     <div className="p-8">
       <h1 className="text-xl font-semibold mb-6">ใบนัดแพทย์</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
+      <div className="grid md:grid-cols-[1fr_1fr] md:gap-12 items-start">
         <div>
           <h2 className="font-semibold mb-2">ข้อมูลใบนัดแพทย์ล่าสุด</h2>
 
