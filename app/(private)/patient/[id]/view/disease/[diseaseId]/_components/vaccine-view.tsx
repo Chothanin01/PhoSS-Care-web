@@ -35,7 +35,7 @@ export default function VaccineView({ data }: VaccineViewProps) {
               ประวัติการฉีด{item.vaccineName}
             </h2>
 
-            <div className="grid md:grid-cols-2 gap-20">
+            <div className="grid md:grid-cols-[1fr_1fr] md:gap-12 items-start">
               <div>
                 <h3 className="font-semibold mb-3">ข้อมูลวัคซีน</h3>
 

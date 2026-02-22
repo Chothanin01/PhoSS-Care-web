@@ -35,7 +35,7 @@ export default function DiseasesView({ data }: DiseasesViewProps) {
               ประวัติการรักษา{data.name} ครั้งที่ {item.visitNo}
             </h2>
 
-            <div className="grid md:grid-cols-2 gap-20">
+            <div className="grid md:grid-cols-[1fr_1fr] md:gap-12 items-start">
               <div>
                 <h3 className="font-semibold mb-3">ข้อมูลทั่วไป</h3>
                 <p className="text-sm">
