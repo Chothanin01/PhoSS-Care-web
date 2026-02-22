@@ -1,5 +1,5 @@
 "use client";
-import { Patient, Gender } from "@/app/utils/patient.mock";
+import { Patient } from "@/app/utils/patient.mock";
 import { Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -9,13 +9,27 @@ type Props = {
 
 export default function AppointmentCard({ patient }: Props) {
   const router = useRouter();
+  const diseaseWithHistory = patient.diseases?.find(
+    (d) =>
+      "history" in d &&
+      Array.isArray((d as any).history) &&
+      (d as any).history.length > 0
+  );
+
+  const latestHistory =
+    diseaseWithHistory && "history" in diseaseWithHistory
+      ? (diseaseWithHistory as any).history[
+          (diseaseWithHistory as any).history.length - 1
+        ]
+      : undefined;
+
   return (
     <div className="p-8">
-      <h1 className="text-xl font-semibold mb-6">ใบนัดเเพดทย์</h1>
+      <h1 className="text-xl font-semibold mb-6">ใบนัดแพทย์</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-30">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
         <div>
-          <h2 className="font-semibold mb-2">ข้อมูลใบนัดเเพทย์ล่าสุด</h2>
+          <h2 className="font-semibold mb-2">ข้อมูลใบนัดแพทย์ล่าสุด</h2>
 
           <div className="space-y-2 text-sm">
             <p>
@@ -27,24 +41,29 @@ export default function AppointmentCard({ patient }: Props) {
             </p>
 
             <p>HN : {patient.hnId}</p>
-            <p>สถานที่ : {patient.location} </p>
-            <p>
-              วันที่นัด : วันที่ {patient.day} เดือน {patient.month} ปี{" "}
-              {patient.year}
-            </p>
+            <p>สถานที่ : {patient.location}</p>
+
+            {latestHistory?.nextDaysAppointment ? (
+              <p className="mt-2 text-sm">
+                นัดครั้งถัดไป : วันที่ {latestHistory.nextDaysAppointment} เดือน{" "}
+                {latestHistory.nextMonthAppointment} ปี{" "}
+                {latestHistory.nextYearAppointment}
+              </p>
+            ) : (
+              <p className="mt-2 text-sm text-gray-400">ไม่มีใบนัดครั้งถัดไป</p>
+            )}
+            <p>นัดเพื่อ : {patient.purpostAppointment}</p>
           </div>
         </div>
-        <div className="">
-          <h2 className=" font-semibold mb-4">ผู้นัด</h2>
 
-          <div className="gap-x-20 text-sm gap-y-2">
-            <p className="text-sm">
-              ชื่อ - นามสกุล : {patient.officer.nurse.fullname}
-            </p>
-            <h2 className="font-semibold mb-4 mt-4">เเพทย์</h2>
-            <p className="text-sm">
-              ชื่อ - นามสกุล : {patient.relative.medicine.fullname}
-            </p>
+        <div>
+          <h2 className="font-semibold mb-4">ผู้นัด</h2>
+
+          <div className="text-sm space-y-2">
+            <p>ชื่อ - นามสกุล : {patient.officer.nurse.fullname}</p>
+
+            <h2 className="font-semibold mt-4">แพทย์</h2>
+            <p>ชื่อ - นามสกุล : {patient.relative.medicine.fullname}</p>
           </div>
         </div>
       </div>
