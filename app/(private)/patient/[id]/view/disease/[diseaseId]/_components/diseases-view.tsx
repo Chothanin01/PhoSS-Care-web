@@ -39,11 +39,11 @@ export default function DiseasesView({ data }: DiseasesViewProps) {
               <div>
                 <h3 className="font-semibold mb-3">ข้อมูลทั่วไป</h3>
                 <p className="text-sm">
-                  วันที่ตรวจ : วันที่ {item.days} เดือน{item.months} ปี{" "}
+                  วันที่ตรวจ : วันที่ {item.days} เดือน {item.months} ปี{" "}
                   {item.years}
                 </p>
                 <p className="mt-2 text-sm">
-                  นัดครั้งถัดไป : วันที่ {item.nextDaysAppointment} เดือน
+                  นัดครั้งถัดไป : วันที่ {item.nextDaysAppointment} เดือน{" "}
                   {item.nextMonthAppointment} ปี {item.nextyearAppointment}
                 </p>
                 <p className="mt-2 text-sm">ผู้ตรวจ : {item.examiner}</p>

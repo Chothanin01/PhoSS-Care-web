@@ -54,7 +54,7 @@ export default function VaccineView({ data }: VaccineViewProps) {
                   อายุที่ควรได้รับ : {item.recommendedAge}
                 </p>
                 <p className="mt-2 text-sm">
-                  วันที่ฉีดวัคซีน : วันที่ {item.days} เดือน{item.months} ปี{" "}
+                  วันที่ฉีดวัคซีน : วันที่ {item.days} เดือน {item.months} ปี{" "}
                   {item.years}
                 </p>
               </div>
