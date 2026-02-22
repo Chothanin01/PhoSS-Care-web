@@ -31,7 +31,7 @@ export default function AppointmentCard({ patient }: Props) {
         <div>
           <h2 className="font-semibold mb-2">ข้อมูลใบนัดแพทย์ล่าสุด</h2>
 
-          <div className="space-y-2 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 md:gap-x-20 text-sm">
             <p>
               ชื่อ - นามสกุล : {patient.firstName} {patient.lastName}
             </p>
@@ -39,19 +39,23 @@ export default function AppointmentCard({ patient }: Props) {
             <p>
               อายุ : {patient.age} ปี {patient.month} เดือน {patient.day} วัน
             </p>
-
             <p>HN : {patient.hnId}</p>
+
             <p>สถานที่ : {patient.location}</p>
 
             {latestHistory?.nextDaysAppointment ? (
-              <p className="mt-2 text-sm">
+              <p className="md:col-span-2">
                 นัดครั้งถัดไป : วันที่ {latestHistory.nextDaysAppointment} เดือน{" "}
                 {latestHistory.nextMonthAppointment} ปี{" "}
-                {latestHistory.nextYearAppointment}
+                {latestHistory.nextyearAppointment}
               </p>
             ) : (
-              <p className="mt-2 text-sm text-gray-400">ไม่มีใบนัดครั้งถัดไป</p>
+              <p className="text-gray-400 md:col-span-2">
+                ไม่มีใบนัดครั้งถัดไป
+              </p>
             )}
+          </div>
+          <div className="mt-3 text-sm">
             <p>นัดเพื่อ : {patient.purpostAppointment}</p>
           </div>
         </div>
