@@ -38,12 +38,14 @@ export default function RelativeSection({ patient }: Props) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-30 ">
         <div>
-          <h4 className="text-sm mb-2 gap-y-2 mb-2">ข้อมูลส่วนตัว</h4>
+          <h4 className="text-sm mb-2 gap-y-2 font-semibold mb-2">
+            ข้อมูลส่วนตัว
+          </h4>
           <p>ชื่อ - นามสกุล : {person.fullname}</p>
           <p>เบอร์โทรศัพท์ : {formatPhoneNumber(person.phonenumber)}</p>
         </div>
         <div>
-          <h4 className="text-sm mb-2">ที่อยู่</h4>
+          <h4 className="text-sm font-semibold mb-2">ที่อยู่</h4>
           <div className="grid grid-cols-2 gap-x-20 text-sm gap-y-2 mb-2">
             <p>เลขที่ : {person.address.house_number}</p>
             <p>หมู่ที่ : {person.address.village_number || "-"}</p>

@@ -1,6 +1,6 @@
 import DiseasesView from "./_components/diseases-view";
 import VaccineView from "./_components/vaccine-view";
-
+import { mockPatients } from "@/app/utils/patient.mock";
 type PageProps = {
   params: {
     id: string;
@@ -21,12 +21,19 @@ export default async function Page({ params }: PageProps) {
 }
 
 async function mockFetchDisease(id: string, diseaseId: string) {
-  const mockDB: any = {
-    d1: { id: "d1", name: "เบาหวาน"},
-    d2: { id: "d2", name: "วัณโรค"},
-    d3: { id: "d3", name: "ความดันโลหิตสูง"},
-    v1: { id: "v1", name: "วัคซีนเด็ก"},
-  };
+  const patientId = Number(id);
 
-  return mockDB[diseaseId];
+  const patient = mockPatients.find((p) => p.id === patientId);
+
+  if (!patient) {
+    throw new Error("Patient not found");
+  }
+
+  const disease = patient.diseases.find((d) => d.id === diseaseId);
+
+  if (!disease) {
+    throw new Error("Disease not found");
+  }
+
+  return disease;
 }
