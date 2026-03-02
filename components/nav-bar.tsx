@@ -60,10 +60,7 @@ export function NavBar() {
       </nav>
 
       <div className="ml-auto">
-        <Link
-          href="/"
-          className="text-lg font-medium text-gray-600"
-        >
+        <Link href="/login" className="text-lg font-medium text-gray-600">
           ออกจากระบบ
         </Link>
       </div>
