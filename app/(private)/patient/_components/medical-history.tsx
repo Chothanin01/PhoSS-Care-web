@@ -213,6 +213,16 @@ export default function HistoryPatient({
                 onChange={handleChange}
               />
             </div>
+            <div className="mt-1">
+              <InputField
+                id="symptom"
+                name="symptom"
+                label="อาการ"
+                required
+                value={formData.bmi}
+                onChange={handleChange}
+              />
+            </div>
           </div>
         </div>
       </div>
