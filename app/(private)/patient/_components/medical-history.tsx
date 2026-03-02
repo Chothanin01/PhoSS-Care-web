@@ -15,6 +15,7 @@ type HistoryFormData = {
   pulse: string;
   pressure: string;
   bmi: string;
+  symptom: string;
   status: string;
   treatment: string;
   doctorTitle: string;
@@ -219,7 +220,7 @@ export default function HistoryPatient({
                 name="symptom"
                 label="อาการ"
                 required
-                value={formData.bmi}
+                value={formData.symptom}
                 onChange={handleChange}
               />
             </div>

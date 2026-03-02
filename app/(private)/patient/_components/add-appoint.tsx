@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Patient } from "@/app/utils/patient.mock";
 import { InputField } from "@/components/inputfield";
 import { SelectField } from "@/components/selectfield";
 import { Button } from "@/shadcn/ui/button";
-import { StepBack, UserPlus } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/shadcn/ui/dialog";
+import { StepBack, UserPlus, Check } from "lucide-react";
 
 type AppointmentFormData = {
   purpose: string;
@@ -33,6 +35,9 @@ export default function AddAppoint({
   onNext,
   onBack,
 }: Props) {
+  const router = useRouter();
+  const [openSuccess, setOpenSuccess] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -61,6 +66,20 @@ export default function AddAppoint({
       formData.doctorLastName
     );
   }, [formData]);
+
+  const handleSubmit = () => {
+    if (!isFormValid) return;
+
+    // ถ้ามี API ให้เรียกตรงนี้ก่อน
+
+    setOpenSuccess(true);
+
+    // แสดง popup 2 วิ → ปิด → เด้งไปหน้า patient
+    setTimeout(() => {
+      setOpenSuccess(false);
+      router.push("/patient");
+    }, 2000);
+  };
 
   return (
     <div className="px-6 py-6">
@@ -123,6 +142,7 @@ export default function AddAppoint({
           />
         </div>
 
+        {/* RIGHT */}
         <div>
           <h4 className="font-medium mb-2 -mt-8">แพทย์</h4>
 
@@ -162,6 +182,7 @@ export default function AddAppoint({
           </div>
         </div>
       </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 mt-8">
         <div className="flex justify-start">
           <Button
@@ -175,7 +196,7 @@ export default function AddAppoint({
 
         <div className="flex justify-end">
           <Button
-            onClick={onNext}
+            onClick={handleSubmit}
             disabled={!isFormValid}
             className="text-Bamboo-100 bg-white border-2 border-Bamboo-100 font-semibold hover:bg-gray-200"
           >
@@ -184,6 +205,27 @@ export default function AddAppoint({
           </Button>
         </div>
       </div>
+
+      <Dialog open={openSuccess}>
+        <DialogContent
+          showCloseButton={false}
+          className="sm:max-w-md text-center"
+        >
+          <DialogTitle></DialogTitle>
+
+          <div className="flex justify-center mb-6 mt-4">
+            <div className="flex items-center justify-center w-20 h-20 rounded-full bg-[#b2e0a6]">
+              <div className="flex items-center justify-center w-14 h-14 rounded-full bg-Bamboo-400">
+                <Check className="w-8 h-8 text-white" strokeWidth={3} />
+              </div>
+            </div>
+          </div>
+
+          <p className="text-lg font-semibold">
+            ระบบได้สร้างใบนัดเรียบร้อยแล้ว
+          </p>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
