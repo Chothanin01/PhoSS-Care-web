@@ -228,14 +228,16 @@ export default function HistoryPatient({
         </div>
       </div>
 
-      <div className="mt-8">
-        <InputField
-          id="treatment"
+      <div className="mt-8 w-[1390px]">
+        <label className="block mb-2 text-sm font-medium">การรักษา</label>
+
+        <textarea
           name="treatment"
-          label="การรักษา"
-          required
           value={formData.treatment}
           onChange={handleChange}
+          required
+          rows={4}
+          className="w-full border rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-300 resize-none"
         />
       </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Patient } from "@/app/utils/patient.mock";
 import { InputField } from "@/components/inputfield";
@@ -37,6 +37,7 @@ export default function AddAppoint({
 }: Props) {
   const router = useRouter();
   const [openSuccess, setOpenSuccess] = useState(false);
+  const [timeError, setTimeError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -53,6 +54,17 @@ export default function AddAppoint({
         [field]: value,
       }));
     };
+  useEffect(() => {
+    if (formData.timeStart && formData.timeEnd) {
+      if (formData.timeEnd <= formData.timeStart) {
+        setTimeError("ไม่สามารถเลือกเวลาสิ้นสุดก่อนเวลาเริ่มต้นได้");
+      } else {
+        setTimeError("");
+      }
+    } else {
+      setTimeError("");
+    }
+  }, [formData.timeStart, formData.timeEnd]);
 
   const isFormValid = useMemo(() => {
     return (
@@ -60,21 +72,19 @@ export default function AddAppoint({
       formData.appointmentDate &&
       formData.timeStart &&
       formData.timeEnd &&
+      !timeError &&
       formData.location &&
       formData.doctorTitle &&
       formData.doctorFirstName &&
       formData.doctorLastName
     );
-  }, [formData]);
+  }, [formData, timeError]);
 
   const handleSubmit = () => {
     if (!isFormValid) return;
 
-    // ถ้ามี API ให้เรียกตรงนี้ก่อน
-
     setOpenSuccess(true);
 
-    // แสดง popup 2 วิ → ปิด → เด้งไปหน้า patient
     setTimeout(() => {
       setOpenSuccess(false);
       router.push("/patient");
@@ -87,7 +97,6 @@ export default function AddAppoint({
       <h3 className="text-md font-semibold mt-2">เพิ่มใบนัดครั้งถัดไป</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-20 mt-5">
-        {/* LEFT */}
         <div className="space-y-6">
           <InputField
             id="purpose"
@@ -109,26 +118,35 @@ export default function AddAppoint({
               onChange={handleChange}
             />
 
-            <div className="grid grid-cols-2 gap-3">
-              <InputField
-                id="timeStart"
-                name="timeStart"
-                label="เวลา"
-                type="time"
-                required
-                value={formData.timeStart}
-                onChange={handleChange}
-              />
+            <div>
+              <div className="grid grid-cols-2 gap-3">
+                <InputField
+                  id="timeStart"
+                  name="timeStart"
+                  label="เวลา"
+                  type="time"
+                  required
+                  value={formData.timeStart}
+                  onChange={handleChange}
+                  className={timeError ? "border-red-500" : ""}
+                />
 
-              <InputField
-                id="timeEnd"
-                name="timeEnd"
-                label=" "
-                type="time"
-                required
-                value={formData.timeEnd}
-                onChange={handleChange}
-              />
+                <div className="mt-5">
+                  <InputField
+                    id="timeEnd"
+                    name="timeEnd"
+                    label=""
+                    type="time"
+                    value={formData.timeEnd}
+                    onChange={handleChange}
+                    className={timeError ? "border-red-500" : ""}
+                  />
+                </div>
+              </div>
+
+              {timeError && (
+                <p className="text-red-500 text-sm mt-2">{timeError}</p>
+              )}
             </div>
           </div>
 
@@ -141,8 +159,6 @@ export default function AddAppoint({
             onChange={handleChange}
           />
         </div>
-
-        {/* RIGHT */}
         <div>
           <h4 className="font-medium mb-2 -mt-8">แพทย์</h4>
 
@@ -198,7 +214,7 @@ export default function AddAppoint({
           <Button
             onClick={handleSubmit}
             disabled={!isFormValid}
-            className="text-Bamboo-100 bg-white border-2 border-Bamboo-100 font-semibold hover:bg-gray-200"
+            className="text-Bamboo-100 bg-white border-2 border-Bamboo-100 font-semibold hover:bg-gray-200 disabled:opacity-50"
           >
             สร้าง
             <UserPlus className="ml-2" />

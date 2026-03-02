@@ -12,7 +12,6 @@ export default function Page() {
   const [step, setStep] = useState(0);
   const patient = mockPatients[0];
 
-  // ✅ เพิ่ม historyData
   const [historyData, setHistoryData] = useState({
     examDate: "",
     visitNo: "",
@@ -28,8 +27,7 @@ export default function Page() {
     doctorLastName: "",
     disease: "",
   });
-
-  // ใบนัด
+  1;
   const [appointData, setAppointData] = useState({
     purpose: "",
     appointmentDate: "",
