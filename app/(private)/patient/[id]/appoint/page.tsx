@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ProgressNav } from "@/components/progress-nav";
 import { ProgressNavItem } from "@/components/progress-nav-item";
 import HistoryPatient from "@/app/(private)/patient/_components/medical-history";
-import AddAppoint from "@/app/(private)/patient/_components/add-appoint";
+import AddAppoint from "@/app/(private)/patient/_components/appoint";
 import { FileText, FileCheckCorner } from "lucide-react";
 import { mockPatients } from "@/app/utils/patient.mock";
 
@@ -20,6 +20,7 @@ export default function Page() {
     pulse: "",
     pressure: "",
     bmi: "",
+    symptom: "",
     status: "",
     treatment: "",
     doctorTitle: "",

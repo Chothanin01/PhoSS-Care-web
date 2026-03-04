@@ -67,6 +67,7 @@ export default function HistoryPatient({
       formData.pulse &&
       formData.pressure &&
       formData.bmi &&
+      formData.symptom &&
       formData.treatment
     );
   }, [formData]);
