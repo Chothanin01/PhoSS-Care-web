@@ -6,8 +6,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-ibm-plex-thai);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -44,18 +43,18 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
-  --color-shadow-100: #05548D;
-  --color-Bamboo-100: #05548D;
-  --color-Bamboo-200: #F1F6F9;
-  --color-Bamboo-300: #C6E2F5;
-  --color-Bamboo-400: #58AD46;
-  --color-Bamboo-500: #EBF7FF;
+  --color-shadow-100: #05548d;
+  --color-Bamboo-100: #05548d;
+  --color-Bamboo-200: #f1f6f9;
+  --color-Bamboo-300: #c6e2f5;
+  --color-Bamboo-400: #58ad46;
+  --color-Bamboo-500: #ebf7ff;
   --color-Bamboo-600: rgba(5, 84, 141, 0.3);
 }
 
 :root {
   --radius: 0.625rem;
-  --background: #F1F6F9;
+  --background: #f1f6f9;
   --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
