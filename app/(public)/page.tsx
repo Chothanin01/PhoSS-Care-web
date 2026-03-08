@@ -12,20 +12,54 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!username || !password) {
       setError("กรุณากรอกชื่อผู้ใช้และรหัสผ่าน");
       return;
     }
-    if (username !== "admin" || password !== "1234") {
-      setError("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
-      return;
+
+    try {
+      setLoading(true);
+      setError("");
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/admin/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username,
+            password,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
+        return;
+      }
+
+      console.log("Login success:", data);
+
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      }
+
+      router.push("/patient");
+    } catch (err) {
+      console.error(err);
+      setError("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
+    } finally {
+      setLoading(false);
     }
-    setError("");
-    router.push("/patient");
   };
 
   return (
@@ -55,6 +89,7 @@ export default function LoginPage() {
             <label className="block mb-2 text-[#000000]/40 font-medium">
               ชื่อผู้ใช้งาน
             </label>
+
             <input
               type="text"
               placeholder="กรุณากรอกชื่อผู้ใช้งาน"
@@ -63,13 +98,13 @@ export default function LoginPage() {
                 setUsername(e.target.value);
                 setError("");
               }}
-              className={`w-[400px] border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 ${
-                error
+              className={`w-[400px] border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 ${error
                   ? "border-red-500 focus:ring-red-400"
                   : "focus:ring-Bamboo-100"
-              }`}
+                }`}
             />
           </div>
+
           <div>
             <label className="block mb-2 text-[#000000]/40 font-medium">
               รหัสผ่าน
@@ -84,11 +119,10 @@ export default function LoginPage() {
                   setPassword(e.target.value);
                   setError("");
                 }}
-                className={`w-full border rounded-md px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 ${
-                  error
+                className={`w-full border rounded-md px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 ${error
                     ? "border-red-500 focus:ring-red-400"
                     : "focus:ring-Bamboo-100"
-                }`}
+                  }`}
               />
 
               <button
@@ -105,9 +139,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-[400px] bg-Bamboo-100 text-white font-semibold py-3 rounded-lg shadow-[0_15px_15px_-5px_rgba(5,84,141,0.5)] transition-all duration-300 cursor-pointer mt-2"
+            disabled={loading}
+            className="w-[400px] bg-Bamboo-100 text-white font-semibold py-3 rounded-lg shadow-[0_15px_15px_-5px_rgba(5,84,141,0.5)] transition-all duration-300 cursor-pointer mt-2 disabled:opacity-50"
           >
-            เข้าสู่ระบบ
+            {loading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
           </button>
         </form>
       </div>
