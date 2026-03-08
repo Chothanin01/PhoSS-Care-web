@@ -111,13 +111,9 @@ export default function Page() {
 
   return (
     <div className="py-2">
-
       <div className="w-full bg-white p-6 rounded-lg shadow">
-
         <div className="mb-6">
-
           <ProgressNav withChevron>
-
             <ProgressNavItem
               icon={FileText}
               completedIcon={FileCheckCorner}
@@ -125,7 +121,6 @@ export default function Page() {
               isActive={step === 0}
               isCompleted={step > 0}
             />
-
             <ProgressNavItem
               icon={FileText}
               completedIcon={FileCheckCorner}
@@ -133,13 +128,9 @@ export default function Page() {
               isActive={step === 1}
               isCompleted={step > 1}
             />
-
           </ProgressNav>
-
         </div>
-
         <div className="border-t border-gray-300 mb-6"></div>
-
         {step === 0 && (
           <HistoryPatient
             formData={historyData}
