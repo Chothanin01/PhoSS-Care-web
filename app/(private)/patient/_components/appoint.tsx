@@ -2,7 +2,6 @@
 
 import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Patient } from "@/app/utils/patient.mock";
 import { InputField } from "@/components/inputfield";
 import { SelectField } from "@/components/selectfield";
 import { Button } from "@/shadcn/ui/button";
@@ -11,17 +10,16 @@ import { StepBack, UserPlus, Check } from "lucide-react";
 
 type AppointmentFormData = {
   purpose: string;
-  appointmentDate: string;
-  timeStart: string;
-  timeEnd: string;
-  location: string;
-  doctorTitle: string;
-  doctorFirstName: string;
-  doctorLastName: string;
+  date: string;
+  time_start: string;
+  time_end: string;
+  place: string;
+  doctor_title: string;
+  doctor_firstname: string;
+  doctor_lastname: string;
 };
 
 type Props = {
-  patient: Patient;
   formData: AppointmentFormData;
   setFormData: React.Dispatch<React.SetStateAction<AppointmentFormData>>;
   onNext: () => void;
@@ -29,18 +27,19 @@ type Props = {
 };
 
 export default function AddAppoint({
-  patient,
   formData,
   setFormData,
   onNext,
   onBack,
 }: Props) {
+
   const router = useRouter();
   const [openSuccess, setOpenSuccess] = useState(false);
   const [timeError, setTimeError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -54,9 +53,10 @@ export default function AddAppoint({
         [field]: value,
       }));
     };
+
   useEffect(() => {
-    if (formData.timeStart && formData.timeEnd) {
-      if (formData.timeEnd <= formData.timeStart) {
+    if (formData.time_start && formData.time_end) {
+      if (formData.time_end <= formData.time_start) {
         setTimeError("ไม่สามารถเลือกเวลาสิ้นสุดก่อนเวลาเริ่มต้นได้");
       } else {
         setTimeError("");
@@ -64,38 +64,35 @@ export default function AddAppoint({
     } else {
       setTimeError("");
     }
-  }, [formData.timeStart, formData.timeEnd]);
+  }, [formData.time_start, formData.time_end]);
 
   const isFormValid = useMemo(() => {
     return (
       formData.purpose &&
-      formData.appointmentDate &&
-      formData.timeStart &&
-      formData.timeEnd &&
+      formData.date &&
+      formData.time_start &&
+      formData.time_end &&
       !timeError &&
-      formData.location &&
-      formData.doctorTitle &&
-      formData.doctorFirstName &&
-      formData.doctorLastName
+      formData.place &&
+      formData.doctor_title &&
+      formData.doctor_firstname &&
+      formData.doctor_lastname
     );
   }, [formData, timeError]);
 
   const handleSubmit = () => {
     if (!isFormValid) return;
 
+    onNext();
     setOpenSuccess(true);
-
-    setTimeout(() => {
-      setOpenSuccess(false);
-      router.push("/patient");
-    }, 2000);
   };
 
   return (
     <div className="px-6 py-6">
       <h2 className="text-xl font-semibold">เพิ่มใบนัด</h2>
-      <h3 className="text-md font-semibold mt-2">เพิ่มใบนัดครั้งถัดไป</h3>
-
+      <h3 className="text-md font-semibold mt-2">
+        เพิ่มใบนัดครั้งถัดไป
+      </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-20 mt-5">
         <div className="space-y-6">
           <InputField
@@ -106,99 +103,93 @@ export default function AddAppoint({
             value={formData.purpose}
             onChange={handleChange}
           />
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <InputField
-              id="appointmentDate"
-              name="appointmentDate"
+              id="date"
+              name="date"
               label="นัดหมายวันที่"
               type="date"
               required
-              value={formData.appointmentDate}
+              value={formData.date}
               onChange={handleChange}
             />
-
             <div>
               <div className="grid grid-cols-2 gap-3">
                 <InputField
-                  id="timeStart"
-                  name="timeStart"
+                  id="time_start"
+                  name="time_start"
                   label="เวลา"
                   type="time"
                   required
-                  value={formData.timeStart}
+                  value={formData.time_start}
                   onChange={handleChange}
                   className={timeError ? "border-red-500" : ""}
                 />
-
                 <div className="mt-5">
                   <InputField
-                    id="timeEnd"
-                    name="timeEnd"
+                    id="time_end"
+                    name="time_end"
                     label=""
                     type="time"
-                    value={formData.timeEnd}
+                    value={formData.time_end}
                     onChange={handleChange}
                     className={timeError ? "border-red-500" : ""}
                   />
                 </div>
               </div>
-
               {timeError && (
-                <p className="text-red-500 text-sm mt-2">{timeError}</p>
+                <p className="text-red-500 text-sm mt-2">
+                  {timeError}
+                </p>
               )}
             </div>
-          </div>
-
-          <InputField
-            id="location"
-            name="location"
-            label="สถานที่"
-            required
-            value={formData.location}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <h4 className="font-medium mb-2 -mt-8">แพทย์</h4>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <SelectField
-              id="doctorTitle"
-              name="doctorTitle"
-              label="คำนำหน้า"
-              placeholder="เลือกคำนำหน้า"
-              value={formData.doctorTitle}
-              onValueChange={handleSelectChange("doctorTitle")}
-              options={[
-                { label: "นายแพทย์", value: "นายแพทย์" },
-                { label: "แพทย์หญิง", value: "แพทย์หญิง" },
-              ]}
-            />
-
-            <div></div>
-
             <InputField
-              id="doctorFirstName"
-              name="doctorFirstName"
-              label="ชื่อ"
+              id="place"
+              name="place"
+              label="สถานที่"
               required
-              value={formData.doctorFirstName}
+              value={formData.place}
               onChange={handleChange}
             />
-
+          </div>
+        </div>
+        <div>
+          <h4 className="font-medium mb-2 -mt-8">
+            แพทย์
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <SelectField
+              id="doctor_title"
+              name="doctor_title"
+              label="คำนำหน้า"
+              placeholder="เลือกคำนำหน้า"
+              value={formData.doctor_title}
+              onValueChange={handleSelectChange("doctor_title")}
+              options={[
+                { label: "นายแพทย์", value: "Dr." },
+                { label: "แพทย์หญิง", value: "Dr." },
+              ]}
+            />
+            <div></div>
             <InputField
-              id="doctorLastName"
-              name="doctorLastName"
+              id="doctor_firstname"
+              name="doctor_firstname"
+              label="ชื่อ"
+              required
+              value={formData.doctor_firstname}
+              onChange={handleChange}
+            />
+            <InputField
+              id="doctor_lastname"
+              name="doctor_lastname"
               label="นามสกุล"
               required
-              value={formData.doctorLastName}
+              value={formData.doctor_lastname}
               onChange={handleChange}
             />
           </div>
         </div>
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 mt-8">
         <div className="flex justify-start">
           <Button
@@ -209,7 +200,6 @@ export default function AddAppoint({
             ย้อนกลับ
           </Button>
         </div>
-
         <div className="flex justify-end">
           <Button
             onClick={handleSubmit}
@@ -221,22 +211,23 @@ export default function AddAppoint({
           </Button>
         </div>
       </div>
-
       <Dialog open={openSuccess}>
         <DialogContent
           showCloseButton={false}
-          className="sm:max-w-md text-center"
+          className="sm:max-w-md text-center cursor-pointer"
+          onClick={() => router.push("/patient")}
         >
           <DialogTitle></DialogTitle>
-
           <div className="flex justify-center mb-6 mt-4">
             <div className="flex items-center justify-center w-20 h-20 rounded-full bg-[#b2e0a6]">
               <div className="flex items-center justify-center w-14 h-14 rounded-full bg-Bamboo-400">
-                <Check className="w-8 h-8 text-white" strokeWidth={3} />
+                <Check
+                  className="w-8 h-8 text-white"
+                  strokeWidth={3}
+                />
               </div>
             </div>
           </div>
-
           <p className="text-lg font-semibold">
             ระบบได้สร้างใบนัดเรียบร้อยแล้ว
           </p>
