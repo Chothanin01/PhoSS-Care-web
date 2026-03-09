@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
+import Cookies from "js-cookie";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -12,20 +13,54 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!username || !password) {
       setError("กรุณากรอกชื่อผู้ใช้และรหัสผ่าน");
       return;
     }
-    if (username !== "admin" || password !== "1234") {
-      setError("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
-      return;
+
+    try {
+      setLoading(true);
+      setError("");
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/admin/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username,
+            password,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
+        return;
+      }
+
+      console.log("Login success:", data);
+
+      if (data.token) {
+        Cookies.set("token", data.token, { expires: 3 });
+      }
+
+      router.push("/patient");
+    } catch (err) {
+      console.error(err);
+      setError("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
+    } finally {
+      setLoading(false);
     }
-    setError("");
-    router.push("/patient");
   };
 
   return (
@@ -55,6 +90,7 @@ export default function LoginPage() {
             <label className="block mb-2 text-[#000000]/40 font-medium">
               ชื่อผู้ใช้งาน
             </label>
+
             <input
               type="text"
               placeholder="กรุณากรอกชื่อผู้ใช้งาน"
@@ -70,6 +106,7 @@ export default function LoginPage() {
               }`}
             />
           </div>
+
           <div>
             <label className="block mb-2 text-[#000000]/40 font-medium">
               รหัสผ่าน
@@ -105,9 +142,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-[400px] bg-Bamboo-100 text-white font-semibold py-3 rounded-lg shadow-[0_15px_15px_-5px_rgba(5,84,141,0.5)] transition-all duration-300 cursor-pointer mt-2"
+            disabled={loading}
+            className="w-[400px] bg-Bamboo-100 text-white font-semibold py-3 rounded-lg shadow-[0_15px_15px_-5px_rgba(5,84,141,0.5)] transition-all duration-300 cursor-pointer mt-2 disabled:opacity-50"
           >
-            เข้าสู่ระบบ
+            {loading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
           </button>
         </form>
       </div>
