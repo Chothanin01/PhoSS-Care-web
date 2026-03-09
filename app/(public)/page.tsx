@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
+import Cookies from "js-cookie";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -50,7 +51,7 @@ export default function LoginPage() {
       console.log("Login success:", data);
 
       if (data.token) {
-        localStorage.setItem("token", data.token);
+        Cookies.set("token", data.token, { expires: 3 });
       }
 
       router.push("/patient");
@@ -98,10 +99,11 @@ export default function LoginPage() {
                 setUsername(e.target.value);
                 setError("");
               }}
-              className={`w-[400px] border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 ${error
+              className={`w-[400px] border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 ${
+                error
                   ? "border-red-500 focus:ring-red-400"
                   : "focus:ring-Bamboo-100"
-                }`}
+              }`}
             />
           </div>
 
@@ -119,10 +121,11 @@ export default function LoginPage() {
                   setPassword(e.target.value);
                   setError("");
                 }}
-                className={`w-full border rounded-md px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 ${error
+                className={`w-full border rounded-md px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 ${
+                  error
                     ? "border-red-500 focus:ring-red-400"
                     : "focus:ring-Bamboo-100"
-                  }`}
+                }`}
               />
 
               <button
