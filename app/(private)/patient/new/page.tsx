@@ -67,7 +67,7 @@ export default function Page() {
       };
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/v1/patients`,
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients`,
         {
           method: "POST",
           headers: {

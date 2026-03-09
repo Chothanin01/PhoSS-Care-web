@@ -54,7 +54,7 @@ export function SortTablePatient() {
 
   useEffect(() => {
     const fetchDiseases = async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/diseases`)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/admins/diseases`)
       const data = await res.json()
 
       setDiseaseOptions(data.diseases.map((d: any) => d.name))
@@ -96,7 +96,7 @@ export function SortTablePatient() {
         }
 
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/v1/patients?${params.toString()}`
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients?${params.toString()}`
         )
 
         const data = await res.json()
