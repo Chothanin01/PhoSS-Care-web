@@ -7,11 +7,11 @@ import { ProgressNavItem } from "@/components/progress-nav-item";
 import HistoryPatient from "@/app/(private)/patient/_components/medical-history";
 import AddAppoint from "@/app/(private)/patient/_components/appoint";
 import { FileText, FileCheckCorner } from "lucide-react";
+import Cookies from "js-cookie";
 
 export default function Page() {
-
   const params = useParams();
-  const patientId = params?.id;
+  const patientId = params?.id as string;
 
   const [step, setStep] = useState(0);
 
@@ -51,10 +51,19 @@ export default function Page() {
     setStep((prev) => Math.max(prev - 1, 0));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<boolean> => {
     try {
+      const token = Cookies.get("token");
 
-      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("กรุณา login ใหม่");
+        return false;
+      }
+
+      if (!patientId) {
+        alert("ไม่พบ patient id");
+        return false;
+      }
 
       const body = {
         patient_id: patientId,
@@ -65,9 +74,9 @@ export default function Page() {
         symptom: historyData.symptom,
         note: historyData.treatment,
         place: appointData.place,
-        time: `${appointData.time_start} - ${appointData.time_end}`,
         date: appointData.date,
         purpose: appointData.purpose,
+        time: `${appointData.time_start.replace(":", ".")} - ${appointData.time_end.replace(":", ".")}`,
         health: {
           weight: Number(historyData.weight),
           height: Number(historyData.height),
@@ -77,7 +86,7 @@ export default function Page() {
         },
       };
 
-      console.log("Sending API:", body);
+      console.log("Sending API Body:", body);
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments`,
@@ -92,26 +101,25 @@ export default function Page() {
       );
 
       const data = await res.json();
-
       console.log("API Response:", data);
 
       if (!res.ok) {
         throw new Error(data.message || "Create appointment failed");
       }
 
-      alert("สร้างใบนัดสำเร็จ");
-
-      setStep(0);
+      return true;
 
     } catch (error) {
       console.error("API Error:", error);
       alert("เกิดข้อผิดพลาดในการสร้างใบนัด");
+      return false;
     }
   };
 
   return (
     <div className="py-2">
       <div className="w-full bg-white p-6 rounded-lg shadow">
+
         <div className="mb-6">
           <ProgressNav withChevron>
             <ProgressNavItem
@@ -130,7 +138,9 @@ export default function Page() {
             />
           </ProgressNav>
         </div>
+
         <div className="border-t border-gray-300 mb-6"></div>
+
         {step === 0 && (
           <HistoryPatient
             formData={historyData}
@@ -138,6 +148,7 @@ export default function Page() {
             onNext={handleNext}
           />
         )}
+
         {step === 1 && (
           <AddAppoint
             formData={appointData}
@@ -146,6 +157,7 @@ export default function Page() {
             onBack={handleBack}
           />
         )}
+
       </div>
     </div>
   );

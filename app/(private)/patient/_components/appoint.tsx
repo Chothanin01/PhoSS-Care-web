@@ -22,7 +22,7 @@ type AppointmentFormData = {
 type Props = {
   formData: AppointmentFormData;
   setFormData: React.Dispatch<React.SetStateAction<AppointmentFormData>>;
-  onNext: () => void;
+  onNext: () => Promise<boolean>;   
   onBack: () => void;
 };
 
@@ -32,7 +32,6 @@ export default function AddAppoint({
   onNext,
   onBack,
 }: Props) {
-
   const router = useRouter();
   const [openSuccess, setOpenSuccess] = useState(false);
   const [timeError, setTimeError] = useState("");
@@ -68,27 +67,30 @@ export default function AddAppoint({
 
   const isFormValid = useMemo(() => {
     return (
-      formData.purpose &&
-      formData.date &&
-      formData.time_start &&
-      formData.time_end &&
-      !timeError &&
-      formData.place &&
-      formData.doctor_title &&
-      formData.doctor_firstname &&
-      formData.doctor_lastname
+      formData.purpose !== "" &&
+      formData.date !== "" &&
+      formData.time_start !== "" &&
+      formData.time_end !== "" &&
+      formData.place !== "" &&
+      formData.doctor_title !== "" &&
+      formData.doctor_firstname !== "" &&
+      formData.doctor_lastname !== "" &&
+      !timeError
     );
   }, [formData, timeError]);
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!isFormValid) return;
 
-    onNext();
-    setOpenSuccess(true);
+    const success = await onNext();
+
+    if (success) {
+      setOpenSuccess(true);
+    }
   };
 
   return (
     <div className="px-6 py-6">
+
       <h2 className="text-xl font-semibold">เพิ่มใบนัด</h2>
       <h3 className="text-md font-semibold mt-2">
         เพิ่มใบนัดครั้งถัดไป
@@ -129,7 +131,6 @@ export default function AddAppoint({
                   <InputField
                     id="time_end"
                     name="time_end"
-                    label=""
                     type="time"
                     value={formData.time_end}
                     onChange={handleChange}
@@ -166,8 +167,8 @@ export default function AddAppoint({
               value={formData.doctor_title}
               onValueChange={handleSelectChange("doctor_title")}
               options={[
-                { label: "นายแพทย์", value: "Dr." },
-                { label: "แพทย์หญิง", value: "Dr." },
+                { label: "นายแพทย์", value: "male_doctor" },
+                { label: "แพทย์หญิง", value: "female_doctor" },
               ]}
             />
             <div></div>
@@ -211,7 +212,7 @@ export default function AddAppoint({
           </Button>
         </div>
       </div>
-      <Dialog open={openSuccess}>
+      <Dialog open={openSuccess} onOpenChange={setOpenSuccess}>
         <DialogContent
           showCloseButton={false}
           className="sm:max-w-md text-center cursor-pointer"
@@ -221,10 +222,7 @@ export default function AddAppoint({
           <div className="flex justify-center mb-6 mt-4">
             <div className="flex items-center justify-center w-20 h-20 rounded-full bg-[#b2e0a6]">
               <div className="flex items-center justify-center w-14 h-14 rounded-full bg-Bamboo-400">
-                <Check
-                  className="w-8 h-8 text-white"
-                  strokeWidth={3}
-                />
+                <Check className="w-8 h-8 text-white" strokeWidth={3} />
               </div>
             </div>
           </div>

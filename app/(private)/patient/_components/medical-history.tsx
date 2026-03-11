@@ -6,6 +6,13 @@ import { SelectField } from "@/components/selectfield";
 import { Button } from "@/shadcn/ui/button";
 import { StepForward } from "lucide-react";
 
+const DOCTOR_TITLES = [
+  { label: "นายแพทย์", value: "male_doctor" },
+  { label: "แพทย์หญิง", value: "female_doctor" },
+];
+
+type DoctorTitle = "male_doctor" | "female_doctor";
+
 type HistoryFormData = {
   exam_date: string;
   visit_no: string;
@@ -50,7 +57,7 @@ export default function HistoryPatient({
     (field: keyof HistoryFormData) => (value: string) => {
       setFormData((prev) => ({
         ...prev,
-        [field]: value,
+        [field]: value as DoctorTitle,
       }));
     };
 
@@ -91,10 +98,22 @@ export default function HistoryPatient({
               value={formData.disease}
               onValueChange={handleSelectChange("disease")}
               options={[
-                { label: "โรคเบาหวาน", value: "diabetes" },
-                { label: "ความดันโลหิตสูง", value: "hypertension" },
-                { label: "วัณโรค", value: "tuberculosis" },
-                { label: "วัคซีนเด็ก", value: "child_vaccine" },
+                {
+                  label: "โรคเบาหวาน",
+                  value: "77fe42d0-1d68-4e02-9ac0-6914a446ab2a",
+                },
+                {
+                  label: "ความดันโลหิตสูง",
+                  value: "58da0327-d979-46cf-ac6c-71ad655d541b",
+                },
+                {
+                  label: "วัณโรค",
+                  value: "56d1cd69-156f-4959-9d1e-7e66a695cfa8",
+                },
+                {
+                  label: "วัคซีนเด็ก",
+                  value: "ac6ba29e-75cf-414c-a599-0e3650b3f94e",
+                },
               ]}
             />
             <InputField
@@ -116,10 +135,7 @@ export default function HistoryPatient({
                 placeholder="เลือกคำนำหน้า"
                 value={formData.doctor_title}
                 onValueChange={handleSelectChange("doctor_title")}
-                options={[
-                  { label: "นายแพทย์", value: "Dr." },
-                  { label: "แพทย์หญิง", value: "Dr." },
-                ]}
+                options={DOCTOR_TITLES}
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 col-span-2">
@@ -168,22 +184,26 @@ export default function HistoryPatient({
               onChange={handleChange}
             />
             <div className="mt-3">
-              <InputField id="pulse"
+              <InputField
+                id="pulse"
                 name="pulse"
                 label="ชีพจร"
                 endAdornmentLabel="ครั้ง/นาที"
                 required
                 value={formData.pulse}
-                onChange={handleChange} />
+                onChange={handleChange}
+              />
             </div>
             <div className="mt-3">
-              <InputField id="pressure"
+              <InputField
+                id="pressure"
                 name="pressure"
                 label="ความดัน"
                 endAdornmentLabel="มม.ปรอท"
                 required
                 value={formData.pressure}
-                onChange={handleChange} />
+                onChange={handleChange}
+              />
             </div>
             <div className="mt-1">
               <InputField
@@ -209,6 +229,7 @@ export default function HistoryPatient({
           </div>
         </div>
       </div>
+
       <div className="mt-8 w-full">
         <label className="block mb-2 text-sm font-medium">
           การรักษา
