@@ -38,9 +38,9 @@ export default function Page() {
     time_start: "",
     time_end: "",
     place: "",
-    doctor_title: "",
-    doctor_firstname: "",
-    doctor_lastname: "",
+    next_doctor_title: "",
+    next_doctor_firstname: "",
+    next_doctor_lastname: "",
   });
 
   const handleNext = () => {
