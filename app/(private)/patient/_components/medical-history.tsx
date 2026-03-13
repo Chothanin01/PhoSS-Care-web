@@ -95,20 +95,21 @@ export default function HistoryPatient({
         const token = Cookies.get("token");
 
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${patientId}/diseases/active`,
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${patientId}/diseases`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
             },
           }
         );
 
         const data = await res.json();
 
+        console.log("disease api:", data);
+
         const options = (data.data || []).map((item: any) => ({
           label: item.name,
-          value: item.disease_id,
+          value: String(item.disease_id),
         }));
 
         setDiseaseOptions(options);
@@ -117,9 +118,7 @@ export default function HistoryPatient({
       }
     };
 
-    if (patientId) {
-      fetchDiseases();
-    }
+    if (patientId) fetchDiseases();
   }, [patientId]);
 
   const handleChange = (
@@ -137,7 +136,7 @@ export default function HistoryPatient({
     (field: keyof HistoryFormData) => (value: string) => {
       setFormData((prev) => ({
         ...prev,
-        [field]: value as DoctorTitle,
+        [field]: value,
       }));
     };
 
