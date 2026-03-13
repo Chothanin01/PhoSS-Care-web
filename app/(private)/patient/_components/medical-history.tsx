@@ -37,6 +37,14 @@ type DiseaseOption = {
   value: string;
 };
 
+type PatientInfo = {
+  fullname: string;
+  hn_number: string;
+  age_years: number;
+  age_months: number;
+  age_days: number;
+};
+
 type Props = {
   formData: HistoryFormData;
   setFormData: React.Dispatch<React.SetStateAction<HistoryFormData>>;
@@ -52,6 +60,35 @@ export default function HistoryPatient({
   const patientId = params.id as string;
 
   const [diseaseOptions, setDiseaseOptions] = useState<DiseaseOption[]>([]);
+  const [patientInfo, setPatientInfo] = useState<PatientInfo | null>(null);
+
+  useEffect(() => {
+    const fetchPatientInfo = async () => {
+      try {
+        const token = Cookies.get("token");
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${patientId}/info`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const data = await res.json();
+
+        setPatientInfo(data.data);
+
+      } catch (err) {
+        console.error("fetch patient info error", err);
+      }
+    };
+
+    if (patientId) fetchPatientInfo();
+  }, [patientId]);
   useEffect(() => {
     const fetchDiseases = async () => {
       try {
@@ -60,7 +97,6 @@ export default function HistoryPatient({
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${patientId}/diseases/active`,
           {
-            method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
@@ -127,12 +163,27 @@ export default function HistoryPatient({
       <div>
         <h2 className="text-xl font-semibold">เพิ่มใบนัด</h2>
         <h3 className="text-lg font-semibold mt-3">ประวัติการรักษา</h3>
+        {patientInfo && (
+          <div className="mt-3 text-sm font-semibold">
+            <div className="flex gap-10">
+              <p>ชื่อ - นามสกุล : {patientInfo.fullname}</p>
+              <p>หมายเลขประจำตัวผู้ป่วย : HN{patientInfo.hn_number}</p>
+            </div>
+
+            <p className="mt-2">
+              อายุ : {patientInfo.age_years} ปี {patientInfo.age_months} เดือน{" "}
+              {patientInfo.age_days} วัน
+            </p>
+          </div>
+        )}
       </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
         <div>
           <div className="mb-4 font-semibold text-md mt-5">
             ข้อมูลการตรวจ
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <SelectField
               id="disease"
@@ -143,6 +194,7 @@ export default function HistoryPatient({
               onValueChange={handleSelectChange("disease")}
               options={diseaseOptions}
             />
+
             <InputField
               id="exam_date"
               name="exam_date"
@@ -153,7 +205,9 @@ export default function HistoryPatient({
               onChange={handleChange}
               max={new Date().toISOString().split("T")[0]}
             />
+
             <h2 className="col-span-2 font-medium -mt-3">ผู้ตรวจ</h2>
+
             <div className="-mt-5">
               <SelectField
                 id="doctor_title"
@@ -165,6 +219,7 @@ export default function HistoryPatient({
                 options={DOCTOR_TITLES}
               />
             </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 col-span-2">
               <InputField
                 id="doctor_firstname"
@@ -174,6 +229,7 @@ export default function HistoryPatient({
                 value={formData.doctor_firstname}
                 onChange={handleChange}
               />
+
               <InputField
                 id="doctor_lastname"
                 name="doctor_lastname"
@@ -185,10 +241,12 @@ export default function HistoryPatient({
             </div>
           </div>
         </div>
+
         <div>
           <div className="mb-4 font-semibold text-md mt-5">
             ตรวจร่างกายทั่วไป
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <InputField
               id="weight"
@@ -200,6 +258,7 @@ export default function HistoryPatient({
               value={formData.weight}
               onChange={handleChange}
             />
+
             <InputField
               id="height"
               name="height"
@@ -210,62 +269,57 @@ export default function HistoryPatient({
               value={formData.height}
               onChange={handleChange}
             />
-            <div className="mt-3">
-              <InputField
-                id="pulse"
-                name="pulse"
-                label="ชีพจร"
-                type="number"
-                endAdornmentLabel="ครั้ง/นาที"
-                required
-                value={formData.pulse}
-                onChange={handleChange}
-                className="pr-16"
-              />
-            </div>
-            <div className="mt-3">
-              <InputField
-                id="pressure"
-                name="pressure"
-                label="ความดัน"
-                type="number"
-                endAdornmentLabel="มม.ปรอท"
-                required
-                value={formData.pressure}
-                onChange={handleChange}
-                className="pr-16"
-              />
-            </div>
-            <div className="mt-1">
-              <InputField
-                id="bmi"
-                name="bmi"
-                label="ดัชนีมวลกาย"
-                type="number"
-                endAdornmentLabel="kg/m²"
-                required
-                value={formData.bmi}
-                onChange={handleChange}
-                className="pr-12"
-              />
-            </div>
-            <div className="mt-1">
-              <InputField
-                id="symptom"
-                name="symptom"
-                label="อาการ"
-                required
-                value={formData.symptom}
-                onChange={handleChange}
-              />
-            </div>
+
+            <InputField
+              id="pulse"
+              name="pulse"
+              label="ชีพจร"
+              type="number"
+              endAdornmentLabel="ครั้ง/นาที"
+              required
+              value={formData.pulse}
+              onChange={handleChange}
+            />
+
+            <InputField
+              id="pressure"
+              name="pressure"
+              label="ความดัน"
+              type="number"
+              endAdornmentLabel="มม.ปรอท"
+              required
+              value={formData.pressure}
+              onChange={handleChange}
+            />
+
+            <InputField
+              id="bmi"
+              name="bmi"
+              label="ดัชนีมวลกาย"
+              type="number"
+              endAdornmentLabel="kg/m²"
+              required
+              value={formData.bmi}
+              onChange={handleChange}
+            />
+
+            <InputField
+              id="symptom"
+              name="symptom"
+              label="อาการ"
+              required
+              value={formData.symptom}
+              onChange={handleChange}
+            />
           </div>
         </div>
       </div>
+
       <div className="mt-8 w-full">
         <label className="block mb-2 text-sm font-medium">
           การรักษา <span className="text-red-500">*</span>
         </label>
+
         <textarea
           name="treatment"
           value={formData.treatment}
@@ -275,6 +329,7 @@ export default function HistoryPatient({
           className="w-full border rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-300 resize-none"
         />
       </div>
+
       <div className="flex justify-end mt-8">
         <Button
           onClick={onNext}
