@@ -51,6 +51,12 @@ export default function Page() {
     setStep((prev) => Math.max(prev - 1, 0));
   };
 
+  const mapDoctorTitle = (title: string) => {
+    if (title === "นายแพทย์") return "Dr.";
+    if (title === "แพทย์หญิง") return "Dr.";
+    return title;
+  };
+
   const handleSubmit = async (): Promise<boolean> => {
     try {
       const token = Cookies.get("token");
@@ -65,28 +71,42 @@ export default function Page() {
         return false;
       }
 
+      if (!historyData.disease) {
+        alert("กรุณาเลือกโรค");
+        return false;
+      }
+
+      const weight = parseFloat(historyData.weight);
+      const height = parseFloat(historyData.height);
+      const pulse = parseInt(historyData.pulse);
+      const bmi =
+        height > 0 ? Number((weight / ((height / 100) ** 2)).toFixed(2)) : 0;
       const body = {
         patient_id: patientId,
         disease_id: historyData.disease,
-        doctor_title: historyData.doctor_title,
-        doctor_firstname: historyData.doctor_firstname,
-        doctor_lastname: historyData.doctor_lastname,
-        symptom: historyData.symptom,
-        note: historyData.treatment,
-        place: appointData.place,
+        doctor_title: mapDoctorTitle(historyData.doctor_title),
+        doctor_firstname: historyData.doctor_firstname || "-",
+        doctor_lastname: historyData.doctor_lastname || "-",
+        next_doctor_title: mapDoctorTitle(appointData.next_doctor_title),
+        next_doctor_firstname: appointData.next_doctor_firstname || "-",
+        next_doctor_lastname: appointData.next_doctor_lastname || "-",
+        purpose: appointData.purpose || "-",
+        place: appointData.place || "-",
         date: appointData.date,
-        purpose: appointData.purpose,
-        time: `${appointData.time_start.replace(":", ".")} - ${appointData.time_end.replace(":", ".")}`,
+        start_time: appointData.time_start,
+        end_time: appointData.time_end,
+        symptom: historyData.symptom || "-",
+        note: historyData.treatment || "-",
         health: {
-          weight: Number(historyData.weight),
-          height: Number(historyData.height),
-          pulse: Number(historyData.pulse),
+          weight: weight || 0,
+          height: height || 0,
+          bmi,
+          pulse: pulse || 0,
           sugar: 0,
-          bmi: Number(historyData.bmi),
         },
       };
 
-      console.log("Sending API Body:", body);
+      console.log("Sending API Body:", JSON.stringify(body, null, 2));
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments`,
@@ -101,14 +121,13 @@ export default function Page() {
       );
 
       const data = await res.json();
+
       console.log("API Response:", data);
 
       if (!res.ok) {
         throw new Error(data.message || "Create appointment failed");
       }
-
       return true;
-
     } catch (error) {
       console.error("API Error:", error);
       alert("เกิดข้อผิดพลาดในการสร้างใบนัด");

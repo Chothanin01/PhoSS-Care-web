@@ -72,7 +72,7 @@ export default function HistoryPatient({
 
         const options = (data.data || []).map((item: any) => ({
           label: item.name,
-          value: item.id,
+          value: item.disease_id,
         }));
 
         setDiseaseOptions(options);
@@ -128,13 +128,11 @@ export default function HistoryPatient({
         <h2 className="text-xl font-semibold">เพิ่มใบนัด</h2>
         <h3 className="text-lg font-semibold mt-3">ประวัติการรักษา</h3>
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
         <div>
           <div className="mb-4 font-semibold text-md mt-5">
             ข้อมูลการตรวจ
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <SelectField
               id="disease"
@@ -145,7 +143,6 @@ export default function HistoryPatient({
               onValueChange={handleSelectChange("disease")}
               options={diseaseOptions}
             />
-
             <InputField
               id="exam_date"
               name="exam_date"
@@ -156,9 +153,7 @@ export default function HistoryPatient({
               onChange={handleChange}
               max={new Date().toISOString().split("T")[0]}
             />
-
             <h2 className="col-span-2 font-medium -mt-3">ผู้ตรวจ</h2>
-
             <div className="-mt-5">
               <SelectField
                 id="doctor_title"
@@ -170,7 +165,6 @@ export default function HistoryPatient({
                 options={DOCTOR_TITLES}
               />
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 col-span-2">
               <InputField
                 id="doctor_firstname"
@@ -180,7 +174,6 @@ export default function HistoryPatient({
                 value={formData.doctor_firstname}
                 onChange={handleChange}
               />
-
               <InputField
                 id="doctor_lastname"
                 name="doctor_lastname"
@@ -192,12 +185,10 @@ export default function HistoryPatient({
             </div>
           </div>
         </div>
-
         <div>
           <div className="mb-4 font-semibold text-md mt-5">
             ตรวจร่างกายทั่วไป
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <InputField
               id="weight"
@@ -209,7 +200,6 @@ export default function HistoryPatient({
               value={formData.weight}
               onChange={handleChange}
             />
-
             <InputField
               id="height"
               name="height"
@@ -220,7 +210,6 @@ export default function HistoryPatient({
               value={formData.height}
               onChange={handleChange}
             />
-
             <div className="mt-3">
               <InputField
                 id="pulse"
@@ -234,7 +223,6 @@ export default function HistoryPatient({
                 className="pr-16"
               />
             </div>
-
             <div className="mt-3">
               <InputField
                 id="pressure"
@@ -248,7 +236,6 @@ export default function HistoryPatient({
                 className="pr-16"
               />
             </div>
-
             <div className="mt-1">
               <InputField
                 id="bmi"
@@ -262,7 +249,6 @@ export default function HistoryPatient({
                 className="pr-12"
               />
             </div>
-
             <div className="mt-1">
               <InputField
                 id="symptom"
@@ -276,12 +262,10 @@ export default function HistoryPatient({
           </div>
         </div>
       </div>
-
       <div className="mt-8 w-full">
         <label className="block mb-2 text-sm font-medium">
           การรักษา <span className="text-red-500">*</span>
         </label>
-
         <textarea
           name="treatment"
           value={formData.treatment}
@@ -291,7 +275,6 @@ export default function HistoryPatient({
           className="w-full border rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-300 resize-none"
         />
       </div>
-
       <div className="flex justify-end mt-8">
         <Button
           onClick={onNext}
