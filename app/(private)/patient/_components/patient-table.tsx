@@ -8,6 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { DataTable } from "@/components/data-table";
 import { PatientFilter } from "@/components/filter";
 import type { PatientFilters } from "@/components/filter";
+import Cookies from "js-cookie";
 
 const diseaseColorMap: Record<string, string> = {
   "โรคเบาหวาน": "bg-red-100 text-red-600",
@@ -54,7 +55,16 @@ export function SortTablePatient() {
 
   useEffect(() => {
     const fetchDiseases = async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/diseases`)
+      const token = Cookies.get("token")
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/diseases`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       const data = await res.json()
 
       setDiseaseOptions(data.diseases.map((d: any) => d.name))
@@ -95,30 +105,37 @@ export function SortTablePatient() {
           )
         }
 
+        const token = Cookies.get("token")
+
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/v1/patients?${params.toString()}`
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients?${params.toString()}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         )
 
         const data = await res.json()
 
         const mapped = data.data.map((p: any) => {
-        const nameParts = (p.fullname || "").split(" ")
+          const nameParts = (p.fullname || "").split(" ")
 
-        return {
-          id: p.id,
-          fullName: p. fullname,
-          firstName: nameParts[0] || "",
-          lastName: nameParts.slice(1).join(" ") || "",
-          idCard: p.idcard,
-          hnId: p.hnnumber,
-          diseases: (p.diseases || []).map((d: any) => ({
-            name: d.name,
-            appointmentStatus: d.has_appointment
-              ? AppointmentStatus.SCHEDULED
-              : AppointmentStatus.NONE,
-          })),
-        }
-      })
+          return {
+            id: p.id,
+            fullName: p.fullname,
+            firstName: nameParts[0] || "",
+            lastName: nameParts.slice(1).join(" ") || "",
+            idCard: p.idcard,
+            hnId: p.hnnumber,
+            diseases: (p.diseases || []).map((d: any) => ({
+              name: d.name,
+              appointmentStatus: d.has_appointment
+                ? AppointmentStatus.SCHEDULED
+                : AppointmentStatus.NONE,
+            })),
+          }
+        })
 
         setPatients(mapped)
         setTotalPages(data.total_pages)
@@ -132,7 +149,7 @@ export function SortTablePatient() {
 
     fetchPatients()
   }, [currentPage, searchTerm, filters])
-  
+
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
@@ -193,11 +210,10 @@ export function SortTablePatient() {
             return (
               <span
                 key={index}
-                className={`text-xs inline-flex items-center justify-center ${
-                  isScheduled
-                    ? "font-medium rounded-full bg-green-100 px-2 py-1 text-green-600"
-                    : "text-black"
-                }`}
+                className={`text-xs inline-flex items-center justify-center ${isScheduled
+                  ? "font-medium rounded-full bg-green-100 px-2 py-1 text-green-600"
+                  : "text-black"
+                  }`}
               >
                 {isScheduled ? "มีใบนัดแพทย์" : "-"}
               </span>
