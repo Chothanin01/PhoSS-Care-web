@@ -363,41 +363,72 @@ export function SortTableRequest() {
           </DialogHeader>
           <DialogDescription/>
 
-          <div className="font-medium">เลื่อนนัดเป็นวันที่ {formatThaiDate(requestDetail?.date)} เวลา {requestDetail?.time} น.</div>
+          {requestDetail?.request_type === "appoint" && (
+            <div className="font-medium">
+              เลื่อนนัดเป็นวันที่ {formatThaiDate(requestDetail?.date)} เวลา {requestDetail?.start_time} - {requestDetail?.end_time} น.
+            </div>
+          )}
 
           <div className="grid grid-cols-12 gap-3 text-sm">
             <div className="col-span-5">{requestDetail?.fullname}</div>
             <div className="col-span-4">{formatIdCard(requestDetail?.id_card)}</div>
             <div className="col-span-3">HN {requestDetail?.hn_number}</div>
             <div className="col-span-12">{requestDetail?.disease_name}</div>
-            <div className="col-span-12">
-              นัดก่อนเลื่อน : {formatThaiDate(requestDetail?.appoint_date)} เวลา {requestDetail?.appoint_time} น.
+            {requestDetail?.request_type === "appoint" && (
+              <div className="col-span-12">
+                นัดก่อนเลื่อน : {formatThaiDate(requestDetail?.appoint_date)} เวลา {requestDetail?.appoint_start_time} - {requestDetail?.appoint_end_time} น.
+              </div>
+            )}
+            {requestDetail?.status === RequestStatus.DECLINED && requestDetail?.description && (
+              <div className="col-span-12">
+                เหตุผลที่ยกเลิกคำขอ : {requestDetail.description}
+              </div>
+            )}
+            {requestDetail?.request_type === "medical" && (
+              <div className="col-span-12">
+                แพทย์ : {requestDetail?.doctor || "-"}
+              </div>
+            )}
+            {(requestDetail?.request_type === "medical" || requestDetail?.request_type === "document") && (
+              <>
+                <div className="col-span-12">
+                  รายละเอียด : {requestDetail?.description || "-"}
+                </div>
+              </>
+            )}
+              {requestDetail?.request_type === "medical" && (
+              <div className="col-span-12">
+                วันที่ {formatThaiDate(requestDetail?.created_date || "-")}
+              </div>
+            )}
+          </div>
+
+          {requestDetail?.status === RequestStatus.PENDING && (
+            <div className="flex justify-between mt-6">
+              <Button
+                onClick={() => {
+                  setSelectedRequest(requestDetail)
+                  setIsModalOpen(false)
+
+                  setTimeout(() => {
+                    setIsDeclineModalOpen(true)
+                  }, 100)
+                }}
+                className="bg-Bamboo-200 text-red-500 border-2 border-red-500 font-medium hover:bg-gray-200 w-40"
+              >
+                <CircleX className="w-4 h-4 mr-2"/> 
+                ปฏิเสธคำขอ
+              </Button>
+
+              <Button
+                onClick={() => confirmApprove(requestDetail.request_id)}
+                className="bg-Bamboo-200 text-Bamboo-100 border-2 border-Bamboo-100 font-medium hover:bg-gray-200 w-40"
+              >
+                <BadgeCheck className="w-4 h-4 mr-2"/>
+                อนุมัติคำขอ
+              </Button>
             </div>
-          </div>
-          <div className="flex justify-between mt-6">
-            <Button
-              onClick={() => {
-                setSelectedRequest(requestDetail)
-                setIsModalOpen(false)
-
-                setTimeout(() => {
-                  setIsDeclineModalOpen(true)
-                }, 100)
-              }}
-              className="bg-Bamboo-200 text-red-500 border-2 border-red-500 font-medium hover:bg-gray-200 w-40"
-            >
-              <CircleX className="w-4 h-4 mr-2"/> 
-              ปฏิเสธคำขอ
-            </Button>
-
-            <Button
-              onClick={() => confirmApprove(requestDetail.request_id)}
-              className="bg-Bamboo-200 text-Bamboo-100 border-2 border-Bamboo-100 font-medium hover:bg-gray-200 w-40"
-            >
-              <BadgeCheck className="w-4 h-4 mr-2"/>
-              อนุมัติคำขอ
-            </Button>
-          </div>
+          )}
         </DialogContent>
       </Dialog>
 
@@ -419,16 +450,35 @@ export function SortTableRequest() {
           </DialogHeader>
           <DialogDescription/>
 
-          <div className="font-medium">เลื่อนนัดเป็นวันที่ {formatThaiDate(requestDetail?.date)} เวลา {requestDetail?.time} น.</div>
+          <div className="font-medium">เลื่อนนัดเป็นวันที่ {formatThaiDate(requestDetail?.date)} เวลา {requestDetail?.start_time} - {requestDetail?.end_time} น.</div>
 
           <div className="grid grid-cols-12 gap-3 text-sm">
             <div className="col-span-5">{requestDetail?.fullname}</div>
             <div className="col-span-4">{formatIdCard(requestDetail?.id_card)}</div>
             <div className="col-span-3">HN {requestDetail?.hn_number}</div>
             <div className="col-span-12">{requestDetail?.disease_name}</div>
-            <div className="col-span-12">
-              นัดก่อนเลื่อน : {formatThaiDate(requestDetail?.appoint_date)} เวลา {requestDetail?.appoint_time} น.
-            </div>
+            {requestDetail?.request_type === "appoint" && (
+              <div className="col-span-12">
+                นัดก่อนเลื่อน : {formatThaiDate(requestDetail?.appoint_date)} เวลา {requestDetail?.appoint_start_time} - {requestDetail?.appoint_end_time} น.
+              </div>
+            )}
+            {requestDetail?.request_type === "medical" && (
+              <div className="col-span-12">
+                แพทย์ : {requestDetail?.doctor || "-"}
+              </div>
+            )}
+            {(requestDetail?.request_type === "medical" || requestDetail?.request_type === "document") && (
+              <>
+                <div className="col-span-12">
+                  รายละเอียด : {requestDetail?.description || "-"}
+                </div>
+              </>
+            )}
+            {requestDetail?.request_type === "medical" && (
+              <div className="col-span-12">
+                วันที่ {formatThaiDate(requestDetail?.created_date || "-")}
+              </div>
+            )}
           </div>
 
           <div className="mt-4">ระบุเหตุผลในการปฏิเสธ <span className="text-red-500">*</span></div>
