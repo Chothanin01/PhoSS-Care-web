@@ -7,7 +7,8 @@ import { LayoutWrapper } from "@/components/layour-wrapper";
 const ibmPlexThai = IBM_Plex_Sans_Thai({
   subsets: ["thai", "latin"],
   weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-sans",
+  variable: "--font-ibm-plex-thai",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -21,8 +22,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${ibmPlexThai.variable} antialiased`}>
+    <html lang="th">
+      <body className={`${ibmPlexThai.variable} font-sans antialiased`}>
         <NavBar />
         <LayoutWrapper>
           {children}
