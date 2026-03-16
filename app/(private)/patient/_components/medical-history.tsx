@@ -95,7 +95,7 @@ export default function HistoryPatient({
         const token = Cookies.get("token");
 
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${patientId}/diseases`,
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${patientId}/diseases?type=noappoint`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
