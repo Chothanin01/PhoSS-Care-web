@@ -1,70 +1,147 @@
 "use client";
 
-import { DiseaseHistory, RecordStatus } from "@/app/utils/patient.mock";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import Cookies from "js-cookie";
 
-type DiseasesViewProps = {
-  data: {
-    id: string;
-    name: string;
-    history?: DiseaseHistory[];
-  };
+type Health = {
+  height: number;
+  weight: number;
+  bmi: number;
+  pulse: number;
+  sugar: number;
 };
 
-export default function DiseasesView({ data }: DiseasesViewProps) {
-  if (!data.history || data.history.length === 0) {
+type Appointment = {
+  no: number;
+  date: string;
+  symptom: string;
+  note: string;
+  doctor: string;
+  status: string;
+  place: string;
+  health: Health;
+};
+
+type DiseaseData = {
+  disease_name: string;
+  appointment_info: Appointment[];
+};
+
+function formatThaiDate(dateString?: string) {
+  if (!dateString || dateString.startsWith("0001")) return "-";
+
+  return new Date(dateString).toLocaleDateString("th-TH", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+export default function DiseasesView() {
+  const params = useParams();
+  const id = params.id as string;
+  const diseaseId = params.diseaseId as string;
+
+  const [data, setData] = useState<DiseaseData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDisease = async () => {
+      try {
+        const token = Cookies.get("token");
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}/${diseaseId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const result = await res.json();
+
+        if (result.success) {
+          setData(result.data.data[0]);
+        }
+      } catch (err) {
+        console.error("fetch disease error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id && diseaseId) fetchDisease();
+  }, [id, diseaseId]);
+
+  if (loading) {
+    return <div className="ml-70 px-6 py-28">กำลังโหลดข้อมูล...</div>;
+  }
+
+  if (!data || data.appointment_info.length === 0) {
     return <div className="ml-70 px-6 py-28">ไม่มีประวัติการรักษา</div>;
   }
-  const sortedHistory = [...data.history].sort((a, b) => b.visitNo - a.visitNo);
+
+  const sortedHistory = [...data.appointment_info].sort(
+    (a, b) => b.no - a.no
+  );
 
   return (
-    <div className="ml-70 px-6 py-28 space-y-3">
+    <div className="ml-70 px-6 py-28 space-y-6">
       {sortedHistory.map((item) => {
         const statusColor =
-          item.status === RecordStatus.NORMAL
+          item.status === "completed"
             ? "bg-green-500"
-            : item.status === RecordStatus.MONITOR
-            ? "bg-red-500"
-            : "bg-yellow-500";
+            : item.status === "pending"
+              ? "bg-yellow-500"
+              : "bg-red-500";
 
         return (
           <div
-            key={item.visitNo}
-            className="w-[1190px] bg-white p-6 rounded-lg shadow px-14 py-14"
+            key={item.no}
+            className="w-[1190px] bg-white rounded-lg shadow px-14 py-14"
           >
-            <h2 className="text-xl font-semibold mb-6">
-              ประวัติการรักษา{data.name} ครั้งที่ {item.visitNo}
+            <h2 className="text-xl font-semibold mb-8">
+              ประวัติการรักษา{data.disease_name} ครั้งที่ {item.no}
             </h2>
 
-            <div className="grid md:grid-cols-[1fr_1fr] md:gap-12 items-start">
+            <div className="grid grid-cols-2 gap-16">
               <div>
-                <h3 className="font-semibold mb-3">ข้อมูลทั่วไป</h3>
+                <h3 className="font-semibold mb-4">ข้อมูลทั่วไป</h3>
+
                 <p className="text-sm">
-                  วันที่ตรวจ : วันที่ {item.days} เดือน {item.months} ปี{" "}
-                  {item.years}
+                  วันที่ตรวจ : {formatThaiDate(item.date)}
                 </p>
-                <p className="mt-2 text-sm">
-                  นัดครั้งถัดไป : วันที่ {item.nextDaysAppointment} เดือน{" "}
-                  {item.nextMonthAppointment} ปี {item.nextyearAppointment}
+                <p className="text-sm mt-2">
+                  นัดครั้งถัดไป : {formatThaiDate(item.date)}
                 </p>
-                <p className="mt-2 text-sm">ผู้ตรวจ : {item.examiner}</p>
-                <p className="mt-2 text-sm">แพทย์ : {item.doctor}</p>
+                <p className="text-sm mt-2">
+                  ผู้ตรวจ : {formatThaiDate(item.date)}
+                </p>
+                <p className="text-sm mt-2">
+                  แพทย์ : {item.doctor || "-"}
+                </p>
               </div>
 
               <div>
-                <h3 className="font-semibold">ตรวจร่างกายทั่วไป</h3>
+                <h3 className="font-semibold mb-4">ตรวจร่างกายทั่วไป</h3>
 
-                <div className="grid grid-cols-2 gap-y-2">
-                  <p className="mt-2 text-sm">น้ำหนัก : {item.weight} กก.</p>
-                  <p className="mt-2 text-sm">ส่วนสูง : {item.height} ซม.</p>
+                <div className="grid grid-cols-2 gap-y-2 text-sm">
+                  <p>น้ำหนัก : {item.health?.weight ?? "-"} กก.</p>
+                  <p>ส่วนสูง : {item.health?.height ?? "-"} ซม.</p>
 
-                  <p className="text-sm">ชีพจร : {item.pulse} ครั้ง/นาที</p>
-                  <p className="text-sm">
-                    ความดัน : {item.bloodPressure} มม.ปรอท
+                  <p>ชีพจร : {item.health?.pulse ?? "-"} ครั้ง/นาที</p>
+
+                  <p>
+                    ความดัน : {item.health?.bmi ?? "-"} กก./ม²
                   </p>
 
-                  <p className="text-sm">ดัชนีมวลกาย : {item.bmi} กก./ม²</p>
+                  <p>
+                    ดัชนีมวลกาย : {item.health?.bmi ?? "-"} กก./ม²
+                  </p>
 
-                  <p className="text-sm">
+                  <p>
                     สถานะ :
                     <span
                       className={`text-white px-3 py-1 rounded-md text-sm ml-2 ${statusColor}`}
@@ -72,17 +149,19 @@ export default function DiseasesView({ data }: DiseasesViewProps) {
                       {item.status}
                     </span>
                   </p>
-
-                  <p className="text-sm">อาการ : {item.symptom}</p>
-                  <p className="text-sm">
-                    ระดับน้ำตาล : {item.bloodSugar} มก./ดล.
+                  <p>
+                    อาการ : {item.symptom || "-"}
+                  </p>
+                  <p>
+                    ความดัน : {item.symptom || "-"}
                   </p>
                 </div>
               </div>
             </div>
-
             <div className="mt-6 text-sm">
-              <p>การรักษา : {item.treatment}</p>
+              <p>
+                การรักษา : {item.note || "-"}
+              </p>
             </div>
           </div>
         );

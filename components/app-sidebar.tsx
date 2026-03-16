@@ -5,34 +5,53 @@ import { UserRoundPen, UserRoundSearch } from "lucide-react";
 import { NavMain } from "./nav-main";
 import { Sidebar, SidebarContent } from "@/shadcn/ui/sidebar";
 import { useParams } from "next/navigation";
+import Cookies from "js-cookie";
 
 export function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>
 ) {
+  const params = useParams();
+  const id = params.id as string;
 
-    const params = useParams();
-    const id = params.id as string;
+  const [diseases, setDiseases] = React.useState<
+    { id: string; name: string }[]
+  >([]);
 
-    const mockPatientDiseases: Record<
-      string,
-      { id: string; name: string }[]
-    > = {
-      "1": [
-        { id: "d1", name: "โรคเบาหวาน" },
-        { id: "d2", name: "วัณโรค" },
-      ],
-      "2": [
-        { id: "d3", name: "โรคความดันโลหิตสูง" },
-      ],
-      "3": [
-        { id: "d1", name: "โรคเบาหวาน" },
-        { id: "v1", name: "วัคซีนเด็ก" },
-      ],
+  React.useEffect(() => {
+    const fetchDiseases = async () => {
+      try {
+        const token = Cookies.get("token");
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}/diseases`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const result = await res.json();
+
+        if (result.success) {
+          const mapped = result.data.map((d: any) => ({
+            id: d.disease_id,
+            name: d.name,
+          }));
+
+          setDiseases(mapped);
+        }
+      } catch (error) {
+        console.error("fetch diseases error:", error);
+      }
     };
 
-    const diseases = mockPatientDiseases[id] || [];
+    if (id) {
+      fetchDiseases();
+    }
+  }, [id]);
 
-    const navMain = React.useMemo(
+  const navMain = React.useMemo(
     () => [
       {
         title: "แก้ไขข้อมูล",
@@ -81,11 +100,7 @@ export function AppSidebar(
   );
 
   return (
-    <Sidebar
-      variant="sidebar"
-      className="w-64 pt-24 left-6"
-      {...props}
-    >
+    <Sidebar variant="sidebar" className="w-64 pt-24 left-6" {...props}>
       <SidebarContent>
         <NavMain items={navMain} />
       </SidebarContent>
