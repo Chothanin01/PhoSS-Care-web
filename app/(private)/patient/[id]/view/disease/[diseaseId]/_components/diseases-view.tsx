@@ -100,7 +100,7 @@ export default function DiseasesView() {
         return (
           <div
             key={item.no}
-            className="w-[1190px] bg-white rounded-lg shadow px-14 py-14"
+            className="w-[1360px] bg-white rounded-lg shadow px-14 py-14"
           >
             <h2 className="text-xl font-semibold mb-8">
               ประวัติการรักษา{data.disease_name} ครั้งที่ {item.no}
