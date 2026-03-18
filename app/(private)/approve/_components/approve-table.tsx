@@ -48,14 +48,15 @@ export function SortTableRequest() {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [requestDetail, setRequestDetail] = useState<any>(null)
-  const [filterType, setFilterType] = useState("")
-  const [filterStatus, setFilterStatus] = useState("")
+  const [filterType, setFilterType] = useState("all")
+  const [filterStatus, setFilterStatus] = useState("all")
 
   const [totalPages, setTotalPages] = useState(1)
 
   const itemsPerPage = 10
   
   const requestStatusOptions = [
+    { value: "all", label: "สถานะทั้งหมด" },
     { value: "pending", label: "กำลังรอพิจารณา" },
     { value: "accepted", label: "อนุมัติคำขอ" },
     { value: "declined", label: "ยกเลิกคำขอ" },
@@ -68,6 +69,7 @@ export function SortTableRequest() {
   }
 
   const requestTypeOptions = [
+    { label: "คำขอทั้งหมด", value: "all" },
     { label: "เลื่อนนัด", value: "appoint" },
     { label: "ใบรับรองแพทย์", value: "medical" },
     { label: "ใบรับรองเอกสาร", value: "document" },
@@ -113,11 +115,11 @@ export function SortTableRequest() {
       params.append("page", currentPage.toString())
       params.append("limit", itemsPerPage.toString())
 
-      if (filterType) {
+      if (filterType !== "all") {
         params.append("req_type", filterType)
       }
 
-      if (filterStatus) {
+      if (filterStatus !== "all") {
         params.append("status", filterStatus)
       }
 
@@ -404,29 +406,45 @@ export function SortTableRequest() {
           </div>
 
           {requestDetail?.status === RequestStatus.PENDING && (
-            <div className="flex justify-between mt-6">
-              <Button
-                onClick={() => {
-                  setSelectedRequest(requestDetail)
-                  setIsModalOpen(false)
+            <div
+              className={cn(
+                "mt-6",
+                requestDetail?.request_type === "appoint"
+                  ? "flex justify-between"
+                  : "flex justify-center"
+              )}
+            >
 
-                  setTimeout(() => {
-                    setIsDeclineModalOpen(true)
-                  }, 100)
-                }}
-                className="bg-Bamboo-200 text-red-500 border-2 border-red-500 font-medium hover:bg-gray-200 w-40"
-              >
-                <CircleX className="w-4 h-4 mr-2"/> 
-                ปฏิเสธคำขอ
-              </Button>
+              {requestDetail?.request_type === "appoint" && (
+                <Button
+                  onClick={() => {
+                    setSelectedRequest(requestDetail)
+                    setIsModalOpen(false)
+
+                    setTimeout(() => {
+                      setIsDeclineModalOpen(true)
+                    }, 100)
+                  }}
+                  className="bg-Bamboo-200 text-red-500 border-2 border-red-500 font-medium hover:bg-gray-200 w-40"
+                >
+                  <CircleX className="w-4 h-4 mr-2"/>
+                  ปฏิเสธคำขอ
+                </Button>
+              )}
 
               <Button
                 onClick={() => confirmApprove(requestDetail.request_id)}
-                className="bg-Bamboo-200 text-Bamboo-100 border-2 border-Bamboo-100 font-medium hover:bg-gray-200 w-40"
+                className={cn(
+                  "bg-Bamboo-200 text-Bamboo-100 border-2 border-Bamboo-100 font-medium hover:bg-gray-200",
+                  requestDetail?.request_type === "appoint"
+                    ? "w-40"
+                    : "w-full"
+                )}
               >
                 <BadgeCheck className="w-4 h-4 mr-2"/>
                 อนุมัติคำขอ
               </Button>
+
             </div>
           )}
         </DialogContent>
