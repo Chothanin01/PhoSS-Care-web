@@ -13,6 +13,8 @@ type Appointment = {
   place: string;
   purpose: string;
   doctor: string;
+  status?: string;
+  delay?: boolean;
 };
 
 export default function AppointmentCard() {
@@ -73,8 +75,10 @@ export default function AppointmentCard() {
           });
 
           if (futureAppointments.length === 0) return;
+
           const nextAppointment = futureAppointments.sort(
-            (a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime()
+            (a: any, b: any) =>
+              new Date(a.date).getTime() - new Date(b.date).getTime()
           )[0];
 
           validAppointments.push({
@@ -85,6 +89,8 @@ export default function AppointmentCard() {
             place: nextAppointment.place,
             purpose: nextAppointment.purpose,
             doctor: nextAppointment.doctor,
+            status: nextAppointment.status,
+            delay: nextAppointment.delay,
           });
         });
 
@@ -93,8 +99,10 @@ export default function AppointmentCard() {
         console.error("fetch appointment error:", error);
       }
     };
+
     if (patientId) fetchAppointment();
   }, [patientId]);
+
   if (!patient) return <div className="p-8">Loading...</div>;
 
   return (
@@ -102,18 +110,28 @@ export default function AppointmentCard() {
       {appointments.map((appointment, index) => (
         <div key={index} className="p-5">
           {index !== 0 && <hr className="border-gray-300 mb-8" />}
+
           <h1 className="text-xl font-semibold mb-6">
             ใบนัดแพทย์{appointment.disease_name}
           </h1>
+          {appointment.status === "delay" && (
+            <div className="mb-4 text-yellow-700 bg-yellow-100 border border-yellow-300 px-4 py-2 rounded-md text-sm">
+              ใบนัดกำลังมีการขอเลื่อน
+            </div>
+          )}
+          {appointment.delay === true && (
+            <div className="mb-4 text-blue-700 bg-blue-100 border border-blue-300 px-4 py-2 rounded-md text-sm">
+              เป็นนัดที่เลื่อนมาแล้ว
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-30">
             <div>
               <h2 className="font-semibold mb-2">ข้อมูลใบนัด</h2>
               <div className="space-y-3 text-sm">
                 <p>ชื่อ - นามสกุล : {patient.fullname}</p>
                 <p>หมายเลขประจำตัวผู้ป่วย : {patient.hnnumber}</p>
-                <p>
-                  นัดมาวันที่ : {formatThaiDate(appointment.date)}
-                </p>
+                <p>นัดมาวันที่ : {formatThaiDate(appointment.date)}</p>
                 <p>
                   เวลา : {appointment.start_time} - {appointment.end_time} น.
                 </p>
@@ -121,6 +139,7 @@ export default function AppointmentCard() {
                 <p>สถานที่ : {appointment.place}</p>
               </div>
             </div>
+
             <div>
               <h2 className="font-semibold mb-4">แพทย์</h2>
               <div className="text-sm space-y-2">
@@ -128,6 +147,7 @@ export default function AppointmentCard() {
               </div>
             </div>
           </div>
+
           <div className="flex justify-end mt-8">
             <button
               onClick={() =>
