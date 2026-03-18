@@ -9,6 +9,7 @@ import RelativeData, { INITIAL_RELATIVE, Relative } from "../_components/relativ
 import HospitalData, { INITIAL_OFFICE, Officer } from "../_components/hospital-page";
 import { Separator } from "@/shadcn/ui/separator";
 import { Dialog, DialogContent, DialogTitle } from "@/shadcn/ui/dialog";
+import Cookies from "js-cookie";
 
 
 export default function Page() {
@@ -27,67 +28,71 @@ export default function Page() {
   const [openSuccess, setOpenSuccess] = useState(false);
 
   const handleCreate = async () => {
-    try {
-      const payload = {
-        user: {
-          username: patient.idcard,
-          password: patient.idcard,
-          role: "patient",
-        },
-        patient: {
-          title: patient.title,
-          firstname: patient.firstname,
-          lastname: patient.lastname,
-          sex: patient.sex,
-          dob: patient.dob,
-          idcard: patient.idcard,
-          rights: patient.healthCoverage,
-          nationality: patient.nationality,
-          ethnicity: patient.ethnicity,
-          phonenumber: patient.phonenumber,
-          weight: Number(patient.weight),
-          height: Number(patient.height),
-          address: patient.address,
-          allergy: patient.allergy,
-          diseases: patient.diseases.map((d) => ({
-            disease_id: d.disease_id,
-            name: d.name,
-          })),
-        },
-        relative: {
-          kin: relative.kin,
-          caretaker: relative.caretaker,
-          medicine: relative.medicine,
-        },
-        officer: {
-          house: officer.house,
-          nurse: officer.nurse,
-        },
-        created_by: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", //mock
-      };
+  try {
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/v1/patients`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+    const token = Cookies.get("token"); 
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(errorText);
+    const payload = {
+      user: {
+        username: patient.idcard,
+        password: patient.idcard,
+        role: "patient",
+      },
+      patient: {
+        title: patient.title,
+        firstname: patient.firstname,
+        lastname: patient.lastname,
+        sex: patient.sex,
+        dob: patient.dob,
+        idcard: patient.idcard,
+        rights: patient.healthCoverage,
+        nationality: patient.nationality,
+        ethnicity: patient.ethnicity,
+        phonenumber: patient.phonenumber,
+        weight: Number(patient.weight),
+        height: Number(patient.height),
+        address: patient.address,
+        allergy: patient.allergy,
+        diseases: patient.diseases.map((d) => ({
+          disease_id: d.disease_id,
+          name: d.name,
+        })),
+      },
+      relative: {
+        kin: relative.kin,
+        caretaker: relative.caretaker,
+        medicine: relative.medicine,
+      },
+      officer: {
+        house: officer.house,
+        nurse: officer.nurse,
+      },
+      created_by: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    };
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, 
+        },
+        body: JSON.stringify(payload),
       }
+    );
 
-      setOpenSuccess(true);
-
-    } catch (error) {
-      console.error("Create patient error:", error);
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(errorText);
     }
-  };
+
+    setOpenSuccess(true);
+
+  } catch (error) {
+    console.error("Create patient error:", error);
+  }
+};
 
   useEffect(() => {
     if (openSuccess) {

@@ -7,6 +7,7 @@ import { SelectField } from "@/components/selectfield";
 import { Button } from "@/shadcn/ui/button";
 import { StepForward } from "lucide-react";
 import DiseaseSelector from './select-disease';
+import Cookies from "js-cookie";
 
 interface PatientDataProp {
   onNext: () => void;
@@ -77,7 +78,7 @@ export default function PatientData({
   onNext,
   patient,
   setPatient,
-  }: PatientDataProp) {
+}: PatientDataProp) {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [diseaseOptions, setDiseaseOptions] = useState<Disease[]>([])
@@ -85,18 +86,26 @@ export default function PatientData({
   useEffect(() => {
     const fetchDiseases = async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/v1/diseases`
-        )
-        const data = await res.json()
+        const token = Cookies.get("token");
 
-        setDiseaseOptions(data.diseases)
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/diseases`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = await res.json();
+        setDiseaseOptions(data.diseases);
       } catch (err) {
-        console.error("error fetch diseases", err)
+        console.error("error fetch diseases", err);
       }
-    }
-    fetchDiseases()
-  }, [])
+    };
+    fetchDiseases();
+  }, []);
 
   const fieldLabels: Record<string, string> = {
     sex: "เพศ",
@@ -225,7 +234,7 @@ export default function PatientData({
       patient.address.district &&
       patient.address.province &&
       patient.address.zipcode &&
-      patient.diseases.length > 0 
+      patient.diseases.length > 0
     );
   }, [patient]);
 
@@ -342,7 +351,7 @@ export default function PatientData({
               onChange={handleChange}
               errorMessage={errors.dob}
               max={new Date().toISOString().split("T")[0]}
-            />  
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <InputField
@@ -448,100 +457,100 @@ export default function PatientData({
           <div className="mb-4 font-semibold text-md mt-10">
             ที่อยู่
           </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6.5"> 
-              <InputField
-                id="house_number"
-                name="house_number"
-                label="บ้านเลขที่"
-                required
-                value={patient.address.house_number}
-                onChange={handleAddressChange}
-                errorMessage={errors.house_number}
-              />
-              
-              <InputField
-                id="village_number"
-                name="village_number"
-                label="หมู่"
-                required
-                value={patient.address.village_number}
-                onChange={handleAddressChange}
-                errorMessage={errors.village_number}
-              />
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6.5">
+            <InputField
+              id="house_number"
+              name="house_number"
+              label="บ้านเลขที่"
+              required
+              value={patient.address.house_number}
+              onChange={handleAddressChange}
+              errorMessage={errors.house_number}
+            />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6.5"> 
-              <InputField
-                id="alley"
-                name="alley"
-                label="ตรอก/ซอย"
-                value={patient.address.alley}
-                onChange={handleAddressChange}
-              />
-              
-              <InputField
-                  id="road"
-                  name="road"
-                  label="ถนน"
-                  value={patient.address.road}
-                  onChange={handleAddressChange}
-                />
-            </div>
+            <InputField
+              id="village_number"
+              name="village_number"
+              label="หมู่"
+              required
+              value={patient.address.village_number}
+              onChange={handleAddressChange}
+              errorMessage={errors.village_number}
+            />
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6.5"> 
-              <InputField
-                id="subdistrict"
-                name="subdistrict"
-                label="เขต/อำเภอ"
-                required
-                value={patient.address.subdistrict}
-                onChange={handleAddressChange}
-                errorMessage={errors.subdistrict}
-              />
-              
-              <InputField
-                id="district"
-                name="district"
-                label="แขวง/ตำบล"
-                required
-                value={patient.address.district}
-                onChange={handleAddressChange}
-                errorMessage={errors.district}
-              />
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6.5">
+            <InputField
+              id="alley"
+              name="alley"
+              label="ตรอก/ซอย"
+              value={patient.address.alley}
+              onChange={handleAddressChange}
+            />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> 
-              <InputField
-                id="province"
-                name="province"
-                label="จังหวัด"
-                required
-                value={patient.address.province}
-                onChange={handleAddressChange}
-                errorMessage={errors.province}
-              />
-              
-              <InputField
-                id="zipcode"
-                name="zipcode"
-                label="รหัสไปรษณีย์"
-                required
-                value={patient.address.zipcode}
-                onChange={handleAddressChange}
-                errorMessage={errors.zipcode}
-              />
-            </div>
+            <InputField
+              id="road"
+              name="road"
+              label="ถนน"
+              value={patient.address.road}
+              onChange={handleAddressChange}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6.5">
+            <InputField
+              id="subdistrict"
+              name="subdistrict"
+              label="เขต/อำเภอ"
+              required
+              value={patient.address.subdistrict}
+              onChange={handleAddressChange}
+              errorMessage={errors.subdistrict}
+            />
+
+            <InputField
+              id="district"
+              name="district"
+              label="แขวง/ตำบล"
+              required
+              value={patient.address.district}
+              onChange={handleAddressChange}
+              errorMessage={errors.district}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <InputField
+              id="province"
+              name="province"
+              label="จังหวัด"
+              required
+              value={patient.address.province}
+              onChange={handleAddressChange}
+              errorMessage={errors.province}
+            />
+
+            <InputField
+              id="zipcode"
+              name="zipcode"
+              label="รหัสไปรษณีย์"
+              required
+              value={patient.address.zipcode}
+              onChange={handleAddressChange}
+              errorMessage={errors.zipcode}
+            />
+          </div>
         </div>
       </div>
 
       <div className="flex justify-end mt-8">
-        <Button 
+        <Button
           onClick={handleNext}
           className="text-Bamboo-100 bg-white border-2 border-Bamboo-100 font-semibold hover:bg-gray-200"
           disabled={!isFormValid}
         >
-            ถัดไป
-            <StepForward className="ml-2"/>
+          ถัดไป
+          <StepForward className="ml-2" />
         </Button>
       </div>
     </div>
