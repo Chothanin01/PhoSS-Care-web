@@ -22,6 +22,8 @@ export default function Page() {
   const [oldVaccineId, setOldVaccineId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!patientId) return;
+
     const checkPatientDisease = async () => {
       try {
         const token = Cookies.get("token");
@@ -36,7 +38,6 @@ export default function Page() {
         );
 
         const data = await res.json();
-
         const diseases = Array.isArray(data?.data) ? data.data : [];
 
         const hasVaccine = diseases.some(
@@ -49,47 +50,48 @@ export default function Page() {
       }
     };
 
-    if (patientId) checkPatientDisease();
+    checkPatientDisease();
   }, [patientId]);
 
   useEffect(() => {
-  const fetchVaccinationRecord = async () => {
-    try {
-      const token = Cookies.get("token");
+    if (!patientId) return;
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/${patientId}/vaccination`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+    const fetchVaccinationRecord = async () => {
+      try {
+        const token = Cookies.get("token");
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/${patientId}/vaccination`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await res.json();
+        const records = Array.isArray(data?.data) ? data.data : [];
+
+        if (records.length > 0) {
+          const last = records[records.length - 1];
+
+          setOldVaccineId(last.id);
+
+          setVaccineHistoryData((prev) => ({
+            ...prev,
+            vaccine_id: last.vaccine_id,
+            old_vaccine_id: last.id,
+            dose_number: last.dose_number + 1,
+            next_dose_number: last.dose_number + 2,
+          }));
         }
-      );
-
-      const data = await res.json();
-
-      const records = Array.isArray(data?.data) ? data.data : [];
-
-      if (records.length > 0) {
-        const last = records[records.length - 1];
-
-        setOldVaccineId(last.id);
-
-        setVaccineHistoryData((prev) => ({
-          ...prev,
-          vaccine_id: last.vaccine_id, 
-          old_vaccine_id: last.id,     
-          dose_number: last.dose_number + 1,
-          next_dose_number: last.dose_number + 2,
-        }));
+      } catch (error) {
+        console.error("fetch vaccination record error:", error);
       }
-    } catch (error) {
-      console.error("fetch vaccination record error:", error);
-    }
-  };
+    };
 
-  if (patientId) fetchVaccinationRecord();
-}, [patientId]);
+    fetchVaccinationRecord();
+  }, [patientId]);
 
   const [historyData, setHistoryData] = useState({
     exam_date: "",
@@ -106,6 +108,17 @@ export default function Page() {
     doctor_firstname: "",
     doctor_lastname: "",
     disease: "",
+  });
+
+  const [appointData, setAppointData] = useState({
+    purpose: "",
+    date: "",
+    time_start: "",
+    time_end: "",
+    place: "",
+    next_doctor_title: "",
+    next_doctor_firstname: "",
+    next_doctor_lastname: "",
   });
 
   const [vaccineHistoryData, setVaccineHistoryData] = useState({
@@ -125,17 +138,6 @@ export default function Page() {
     time_end: "",
   });
 
-  const [appointData, setAppointData] = useState({
-    purpose: "",
-    date: "",
-    time_start: "",
-    time_end: "",
-    place: "",
-    next_doctor_title: "",
-    next_doctor_firstname: "",
-    next_doctor_lastname: "",
-  });
-
   const [vaccineAppointData, setVaccineAppointData] = useState({
     vaccine_id: "",
     old_vaccine_id: "",
@@ -153,12 +155,10 @@ export default function Page() {
     time_end: "",
   });
 
-  const handleNext = () => {
-    setStep(1);
-  };
-
+  const handleNext = () => setStep(1);
   const handleBack = () => setStep(0);
-  const handleSubmit = async (): Promise<boolean> => {
+
+  const handleSubmit = async () => {
     try {
       const token = Cookies.get("token");
 
@@ -176,7 +176,7 @@ export default function Page() {
         body = {
           patient_id: patientId,
           vaccine_id: vaccineHistoryData.vaccine_id,
-          old_vaccine_id: vaccineHistoryData.vaccine_id,
+          old_vaccine_id: oldVaccineId,
           dose_number: vaccineHistoryData.dose_number,
           next_dose_number: vaccineHistoryData.next_dose_number,
           vaccine_doctor_title: vaccineHistoryData.vaccine_doctor_title,
@@ -190,10 +190,6 @@ export default function Page() {
           start_time: vaccineAppointData.time_start,
           end_time: vaccineAppointData.time_end,
         };
-
-        if (oldVaccineId && vaccineHistoryData.dose_number > 1) {
-          body.old_vaccine_id = oldVaccineId;
-        }
       } else {
         const weight = parseFloat(historyData.weight);
         const height = parseFloat(historyData.height);
@@ -237,15 +233,13 @@ export default function Page() {
         body: JSON.stringify(body),
       });
 
-      const data = await res.json();
+      if (!res.ok) throw new Error("Create appointment failed");
 
-      if (!res.ok) {
-        throw new Error(data.message || "Create appointment failed");
-      }
+      alert("สร้างใบนัดเรียบร้อยแล้ว");
       return true;
     } catch (error) {
-      console.error("API Error:", error);
-      alert("เกิดข้อผิดพลาดในการสร้างใบนัด");
+      console.error(error);
+      alert("เกิดข้อผิดพลาด");
       return false;
     }
   };
@@ -268,7 +262,6 @@ export default function Page() {
               completedIcon={FileCheckCorner}
               label="เพิ่มใบนัด"
               isActive={step === 1}
-              isCompleted={step > 1}
             />
           </ProgressNav>
         </div>

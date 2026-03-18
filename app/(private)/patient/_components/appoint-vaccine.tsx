@@ -320,9 +320,6 @@ export default function AddVaccineAppoint({
           <p className="text-lg font-semibold">
             ระบบได้สร้างใบนัดเรียบร้อยแล้ว
           </p>
-          <p className="text-sm text-gray-500 mt-2">
-            กำลังกลับไปหน้าผู้ป่วยใน 3 วินาที...
-          </p>
         </DialogContent>
       </Dialog>
     </div>
