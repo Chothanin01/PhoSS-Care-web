@@ -24,6 +24,27 @@ export default function AppointmentCard() {
 
   const [patient, setPatient] = useState<any>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const Status = ({
+    color,
+    children,
+  }: {
+    color: "green" | "yellow" | "blue";
+    children: React.ReactNode;
+  }) => {
+    const styles = {
+      green: "text-green-700 bg-green-100 border-green-300",
+      yellow: "text-yellow-700 bg-yellow-100 border-yellow-300",
+      blue: "text-blue-700 bg-blue-100 border-blue-300",
+    };
+
+    return (
+      <div
+        className={`mb-4 border px-4 py-2 rounded-md text-sm ${styles[color]}`}
+      >
+        {children}
+      </div>
+    );
+  };
 
   const formatThaiDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -114,15 +135,16 @@ export default function AppointmentCard() {
           <h1 className="text-xl font-semibold mb-6">
             ใบนัดแพทย์{appointment.disease_name}
           </h1>
-          {appointment.status === "delay" && (
-            <div className="mb-4 text-yellow-700 bg-yellow-100 border border-yellow-300 px-4 py-2 rounded-md text-sm">
-              ใบนัดกำลังมีการขอเลื่อน
-            </div>
+          {appointment.status === "ongoing" && (
+            <Status color="green">ใบนัดกำลังดำเนินการ</Status>
           )}
-          {appointment.delay === true && (
-            <div className="mb-4 text-blue-700 bg-blue-100 border border-blue-300 px-4 py-2 rounded-md text-sm">
-              เป็นนัดที่เลื่อนมาแล้ว
-            </div>
+
+          {appointment.status === "delay" && (
+            <Status color="yellow">ใบนัดกำลังมีการขอเลื่อน</Status>
+          )}
+
+          {appointment.delay && (
+            <Status color="blue">เป็นนัดที่เลื่อนมาแล้ว</Status>
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-30">
