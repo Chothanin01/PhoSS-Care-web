@@ -6,6 +6,8 @@ import { useRouter, useParams } from "next/navigation";
 import Cookies from "js-cookie";
 
 type Appointment = {
+  appointment_id: string;
+  disease_id: string;
   disease_name: string;
   date: string;
   start_time: string;
@@ -17,6 +19,12 @@ type Appointment = {
   delay?: boolean;
 };
 
+type Vaccination = {
+  vaccine_id: string;
+  name: string;
+  type: string;
+};
+
 export default function AppointmentCard() {
   const router = useRouter();
   const params = useParams();
@@ -24,6 +32,10 @@ export default function AppointmentCard() {
 
   const [patient, setPatient] = useState<any>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [vaccinations, setVaccinations] = useState<
+    Record<string, Vaccination | null>
+  >({});
+
   const Status = ({
     color,
     children,
@@ -57,7 +69,7 @@ export default function AppointmentCard() {
   };
 
   useEffect(() => {
-    const fetchAppointment = async () => {
+    const fetchAppointments = async () => {
       try {
         const token = Cookies.get("token");
 
@@ -92,7 +104,8 @@ export default function AppointmentCard() {
           const futureAppointments = diseaseAppointments.filter((a: any) => {
             const appointmentDate = new Date(a.date);
             appointmentDate.setHours(0, 0, 0, 0);
-            return appointmentDate >= today;
+
+            return appointmentDate >= today && a.status === "ongoing";
           });
 
           if (futureAppointments.length === 0) return;
@@ -103,6 +116,8 @@ export default function AppointmentCard() {
           )[0];
 
           validAppointments.push({
+            appointment_id: nextAppointment.id,
+            disease_id: disease.disease_id,
             disease_name: disease.disease_name,
             date: nextAppointment.date,
             start_time: nextAppointment.start_time,
@@ -116,73 +131,117 @@ export default function AppointmentCard() {
         });
 
         setAppointments(validAppointments);
+
+        const vaccinationMap: Record<string, Vaccination | null> = {};
+        await Promise.all(
+          validAppointments.map(async (appointment) => {
+            if (appointment.disease_name !== "วัคซีน") {
+              vaccinationMap[appointment.appointment_id] = null;
+              return;
+            }
+
+            try {
+              const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/${patientId}/vaccination`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+
+              const data = await res.json();
+
+              if (data.success && data.data) {
+                vaccinationMap[appointment.appointment_id] = data.data;
+              } else {
+                vaccinationMap[appointment.appointment_id] = null;
+              }
+            } catch {
+              vaccinationMap[appointment.appointment_id] = null;
+            }
+          })
+        );
+
+        setVaccinations(vaccinationMap);
       } catch (error) {
         console.error("fetch appointment error:", error);
       }
     };
 
-    if (patientId) fetchAppointment();
+    if (patientId) fetchAppointments();
   }, [patientId]);
 
   if (!patient) return <div className="p-8">Loading...</div>;
 
   return (
     <>
-      {appointments.map((appointment, index) => (
-        <div key={index} className="p-5">
-          {index !== 0 && <hr className="border-gray-300 mb-8" />}
+      {appointments.map((appointment, index) => {
+        const vaccination = vaccinations[appointment.appointment_id];
 
-          <h1 className="text-xl font-semibold mb-6">
-            ใบนัดแพทย์{appointment.disease_name}
-          </h1>
-          {appointment.status === "ongoing" && (
-            <Status color="green">ใบนัดกำลังดำเนินการ</Status>
-          )}
+        return (
+          <div key={appointment.appointment_id ?? index} className="p-5">
+            {index !== 0 && <hr className="border-gray-300 mb-8" />}
 
-          {appointment.status === "delay" && (
-            <Status color="yellow">ใบนัดกำลังมีการขอเลื่อน</Status>
-          )}
+            <h1 className="text-xl font-semibold mb-6">
+              ใบนัดแพทย์ {appointment.disease_name}
+            </h1>
 
-          {appointment.delay && (
-            <Status color="blue">เป็นนัดที่เลื่อนมาแล้ว</Status>
-          )}
+            {appointment.status === "delay" && (
+              <Status color="yellow">ใบนัดกำลังมีการขอเลื่อนนัด</Status>
+            )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-30">
-            <div>
-              <h2 className="font-semibold mb-2">ข้อมูลใบนัด</h2>
-              <div className="space-y-3 text-sm">
-                <p>ชื่อ - นามสกุล : {patient.fullname}</p>
-                <p>หมายเลขประจำตัวผู้ป่วย : {patient.hnnumber}</p>
-                <p>นัดมาวันที่ : {formatThaiDate(appointment.date)}</p>
-                <p>
-                  เวลา : {appointment.start_time} - {appointment.end_time} น.
-                </p>
-                <p>นัดเพื่อ : {appointment.purpose}</p>
-                <p>สถานที่ : {appointment.place}</p>
+            {appointment.status === "ongoing" && !appointment.delay && (
+              <Status color="green">ใบนัดกำลังดำเนินการ</Status>
+            )}
+
+            {appointment.status === "ongoing" && appointment.delay && (
+              <Status color="blue">ใบนัดเคยขอเลื่อนนัดแล้ว</Status>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
+              <div>
+                <h2 className="font-semibold mb-3">ข้อมูลใบนัด</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 text-sm gap-x-10 py-2">
+                  <p>ชื่อ - นามสกุล : {patient.fullname}</p>
+                  <p>หมายเลขประจำตัวผู้ป่วย : HN{patient.hnnumber}</p>
+                  {vaccination && (
+                    <>
+                      <p>ชื่อวัคซีน : {vaccination.name}</p>
+                      <p>ชนิดวัคซีน : {vaccination.type}</p>
+                    </>
+                  )}
+                  <p>นัดมาวันที่ : {formatThaiDate(appointment.date)}</p>
+                  <p>
+                    เวลา : {appointment.start_time} - {appointment.end_time} น.
+                  </p>
+                  <p>นัดเพื่อ : {appointment.purpose}</p>
+                  <p>สถานที่ : {appointment.place}</p>
+                </div>
+              </div>
+              <div>
+                <h2 className="font-semibold mb-4">แพทย์</h2>
+                <div className="text-sm space-y-2">
+                  <p>ชื่อ - นามสกุล : {appointment.doctor}</p>
+                </div>
               </div>
             </div>
-
-            <div>
-              <h2 className="font-semibold mb-4">แพทย์</h2>
-              <div className="text-sm space-y-2">
-                <p>ชื่อ - นามสกุล : {appointment.doctor}</p>
-              </div>
+            <div className="flex justify-end mt-8">
+              <button
+                onClick={() =>
+                  router.push(
+                    `/patient/${patientId}/edit/patient?appointmentId=${appointment.appointment_id}&diseaseId=${appointment.disease_id}`
+                  )
+                }
+                className="flex items-center gap-2 px-4 py-2 text-Bamboo-100 bg-white border-2 border-Bamboo-100 font-semibold rounded-lg hover:bg-Bamboo-100 hover:text-white"
+              >
+                แก้ไขข้อมูล
+                <Pencil size={16} />
+              </button>
             </div>
           </div>
-
-          <div className="flex justify-end mt-8">
-            <button
-              onClick={() =>
-                router.push(`/patient/${patientId}/edit/patient`)
-              }
-              className="flex items-center gap-2 px-4 py-2 text-Bamboo-100 bg-white border-2 border-Bamboo-100 font-semibold rounded-lg hover:bg-Bamboo-100 hover:text-white"
-            >
-              แก้ไขข้อมูล
-              <Pencil size={16} />
-            </button>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </>
   );
 }
