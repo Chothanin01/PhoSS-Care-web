@@ -142,6 +142,9 @@ export function DataTable<T>({
               <TableRow
                 key={rowIndex}
                 onClick={() => onRowClick?.(item)}
+                className={cn(
+                  onRowClick && "cursor-pointer hover:bg-gray-50 transition-colors"
+                )}
               >
                 {columns.map((column) => (
                   <TableCell
