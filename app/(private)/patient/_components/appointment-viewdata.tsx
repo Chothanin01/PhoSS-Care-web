@@ -101,19 +101,21 @@ export default function AppointmentCard() {
 
           if (!diseaseAppointments?.length) return;
 
-          const futureAppointments = diseaseAppointments.filter((a: any) => {
-            const appointmentDate = new Date(a.date);
-            appointmentDate.setHours(0, 0, 0, 0);
+          const futureAppointments = diseaseAppointments
+            .filter((a: any) => {
+              const appointmentDate = new Date(a.date);
+              appointmentDate.setHours(0, 0, 0, 0);
 
-            return appointmentDate >= today && a.status === "ongoing";
-          });
+              return appointmentDate >= today && a.status === "ongoing";
+            })
+            .sort(
+              (a: any, b: any) =>
+                new Date(a.date).getTime() - new Date(b.date).getTime()
+            );
 
           if (futureAppointments.length === 0) return;
 
-          const nextAppointment = futureAppointments.sort(
-            (a: any, b: any) =>
-              new Date(a.date).getTime() - new Date(b.date).getTime()
-          )[0];
+          const nextAppointment = futureAppointments[0];
 
           validAppointments.push({
             appointment_id: nextAppointment.id,
@@ -133,6 +135,7 @@ export default function AppointmentCard() {
         setAppointments(validAppointments);
 
         const vaccinationMap: Record<string, Vaccination | null> = {};
+
         await Promise.all(
           validAppointments.map(async (appointment) => {
             if (appointment.disease_name !== "วัคซีน") {
@@ -172,8 +175,6 @@ export default function AppointmentCard() {
     if (patientId) fetchAppointments();
   }, [patientId]);
 
-  if (!patient) return <div className="p-8">Loading...</div>;
-
   return (
     <>
       {appointments.map((appointment, index) => {
@@ -186,10 +187,6 @@ export default function AppointmentCard() {
             <h1 className="text-xl font-semibold mb-6">
               ใบนัดแพทย์ {appointment.disease_name}
             </h1>
-
-            {appointment.status === "delay" && (
-              <Status color="yellow">ใบนัดกำลังมีการขอเลื่อนนัด</Status>
-            )}
 
             {appointment.status === "ongoing" && !appointment.delay && (
               <Status color="green">ใบนัดกำลังดำเนินการ</Status>
@@ -205,6 +202,7 @@ export default function AppointmentCard() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 text-sm gap-x-10 py-2">
                   <p>ชื่อ - นามสกุล : {patient.fullname}</p>
                   <p>หมายเลขประจำตัวผู้ป่วย : HN{patient.hnnumber}</p>
+
                   {vaccination && (
                     <>
                       <p>ชื่อวัคซีน : {vaccination.name}</p>
@@ -219,6 +217,7 @@ export default function AppointmentCard() {
                   <p>สถานที่ : {appointment.place}</p>
                 </div>
               </div>
+
               <div>
                 <h2 className="font-semibold mb-4">แพทย์</h2>
                 <div className="text-sm space-y-2">
@@ -226,6 +225,7 @@ export default function AppointmentCard() {
                 </div>
               </div>
             </div>
+
             <div className="flex justify-end mt-8">
               <button
                 onClick={() =>
