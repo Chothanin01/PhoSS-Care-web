@@ -1,39 +1,40 @@
 import DiseasesView from "./_components/diseases-view";
 import VaccineView from "./_components/vaccine-view";
-import { mockPatients } from "@/app/utils/patient.mock";
+import { cookies } from "next/headers";
+
 type PageProps = {
-  params: {
+  params: Promise<{
     id: string;
     diseaseId: string;
-  };
+  }>;
 };
 
 export default async function Page({ params }: PageProps) {
   const { id, diseaseId } = await params;
 
-  const data = await mockFetchDisease(id, diseaseId);
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
 
-  if (data.type === "vaccine") {
-    return <VaccineView data={data} />;
-  }
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}/${diseaseId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    }
+  );
 
-  return <DiseasesView data={data} />;
-}
-
-async function mockFetchDisease(id: string, diseaseId: string) {
-  const patientId = Number(id);
-
-  const patient = mockPatients.find((p) => p.id === patientId);
-
-  if (!patient) {
-    throw new Error("Patient not found");
-  }
-
-  const disease = patient.diseases.find((d) => d.id === diseaseId);
+  const result = await res.json();
+  const disease = result?.data?.data?.[0];
 
   if (!disease) {
-    throw new Error("Disease not found");
+    return <div className="ml-70 px-6 py-28">ไม่พบข้อมูล</div>;
   }
 
-  return disease;
+  if (disease.disease_name?.includes("วัคซีน")) {
+    return <VaccineView />;
+  }
+
+  return <DiseasesView />;
 }
