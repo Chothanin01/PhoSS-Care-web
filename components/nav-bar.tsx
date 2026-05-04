@@ -2,16 +2,31 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
+import Cookies from "js-cookie";
 
 export function NavBar() {
   const pathname = usePathname();
+  const router = useRouter();
 
   const navItems = [
     { name: "รายชื่อผู้ป่วย", href: "/patient" },
     { name: "คำขออนุมัติ", href: "/approve" },
   ];
+
+  const handleLogout = async () => {
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/auth/logout`, {
+        method: "GET",
+      });
+
+      Cookies.remove("token");
+      router.replace("/");
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
+  };
 
   return (
     <header
@@ -60,9 +75,12 @@ export function NavBar() {
       </nav>
 
       <div className="ml-auto">
-        <Link href="/" className="text-lg font-medium text-gray-600">
+        <button
+          onClick={handleLogout}
+          className="text-lg font-medium text-gray-600 hover:text-Bamboo-100"
+        >
           ออกจากระบบ
-        </Link>
+        </button>
       </div>
     </header>
   );
