@@ -188,7 +188,7 @@ export default function DiseasesView() {
                     <p>
                       สถานะ :
                       <span
-                        className="text-white px-3 py-1 rounded-md text-sm ml-2"
+                        className="text-blackc px-3 py-1 rounded-md text-sm ml-2"
                         style={{ backgroundColor: bgColor }}
                       >
                         {label}

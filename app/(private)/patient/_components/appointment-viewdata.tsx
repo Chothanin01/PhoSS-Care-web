@@ -50,12 +50,12 @@ export default function AppointmentCard() {
     };
 
     return (
-      <div
-        className={`mb-4 border px-4 py-2 rounded-md text-sm ${styles[color]}`}
-      >
-        {children}
-      </div>
-    );
+  <div
+    className={`inline-flex w-fit mb-4 border px-4 py-2 rounded-md text-sm ${styles[color]}`}
+  >
+    {children}
+  </div>
+);
   };
 
   const formatThaiDate = (dateString: string) => {
