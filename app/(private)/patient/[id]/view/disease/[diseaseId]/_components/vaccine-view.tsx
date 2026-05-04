@@ -111,13 +111,6 @@ export default function VaccineView() {
   return (
     <div className="ml-70 px-6 py-28 space-y-3">
       {sortedHistory.map((item) => {
-        const statusColor =
-          item.status === "completed"
-            ? "bg-green-500"
-            : item.status === "pending"
-            ? "bg-red-500"
-            : "bg-yellow-500";
-
         return (
           <div
             key={item.id}
@@ -129,14 +122,6 @@ export default function VaccineView() {
             <div className="grid md:grid-cols-[1fr_1fr] md:gap-12 items-start">
               <div>
                 <h3 className="font-semibold mb-3">ข้อมูลวัคซีน</h3>
-                <p className="text-sm">
-                  สถานะ :
-                  <span
-                    className={`text-white px-3 py-1 rounded-md ml-2 text-sm ${statusColor}`}
-                  >
-                    {item.status}
-                  </span>
-                </p>
                 <p className="mt-2 text-sm">
                   ชนิดวัคซีน : {item.vaccine_type}
                 </p>

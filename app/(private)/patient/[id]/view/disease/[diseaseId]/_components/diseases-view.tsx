@@ -43,8 +43,6 @@ function formatThaiDate(dateString?: string) {
 
 const getColorStatus = (maxLevel?: number) => {
   switch (maxLevel) {
-    case 1:
-      return "white";
     case 3:
       return "dark_green";
     case 4:
