@@ -20,6 +20,8 @@ type Appointment = {
   doctor: string;
   status: string;
   place: string;
+  maxLevel?: number;
+  color_status?: string;
   health: Health;
 };
 
@@ -37,6 +39,52 @@ function formatThaiDate(dateString?: string) {
     year: "numeric",
   });
 }
+
+
+const getColorStatus = (maxLevel?: number) => {
+  switch (maxLevel) {
+    case 3:
+      return "dark_green";
+    case 4:
+      return "yellow";
+    case 5:
+      return "orange";
+    case 6:
+      return "red";
+    default:
+      return "none";
+  }
+};
+
+const getStatusLabel = (color: string) => {
+  switch (color) {
+    case "dark_green":
+      return "สีเขียวเข้ม";
+    case "yellow":
+      return "สีเหลือง";
+    case "orange":
+      return "สีส้ม";
+    case "red":
+      return "สีแดง";
+    default:
+      return "ไม่ระบุ";
+  }
+};
+
+const getStatusColorHex = (color: string) => {
+  switch (color) {
+    case "dark_green":
+      return "#2E7D32";
+    case "yellow":
+      return "#FFD57B";
+    case "orange":
+      return "#FF9800";
+    case "red":
+      return "#FF0505";
+    default:
+      return "#E5E7EB";
+  }
+};
 
 export default function DiseasesView() {
   const params = useParams();
@@ -87,23 +135,24 @@ export default function DiseasesView() {
     (a, b) => b.no - a.no
   );
 
+  const isTuberculosis =
+    data.disease_name === "วัณโรค" ||
+    data.disease_name?.toLowerCase().includes("tuberculosis");
+
   return (
     <div className="ml-70 px-6 py-28 space-y-6">
       {sortedHistory.map((item) => {
-        const statusColor =
-          item.status === "completed"
-            ? "bg-green-500"
-            : item.status === "pending"
-              ? "bg-yellow-500"
-              : "bg-red-500";
+        const color = getColorStatus(item.maxLevel);
+        const label = getStatusLabel(color);
+        const bgColor = getStatusColorHex(color);
 
         return (
           <div
             key={item.no}
             className="w-[1360px] bg-white rounded-lg shadow px-14 py-14"
           >
-            <h2 className="text-xl font-semibold mb-8">
-              ประวัติการรักษา{data.disease_name} ครั้งที่ {item.no}
+            <h2 className="text-xl font-semibold mb-6">
+              ประวัติการรักษา {data.disease_name} ครั้งที่ {item.no}
             </h2>
 
             <div className="grid grid-cols-2 gap-16">
@@ -117,51 +166,43 @@ export default function DiseasesView() {
                   นัดครั้งถัดไป : {formatThaiDate(item.date)}
                 </p>
                 <p className="text-sm mt-2">
-                  ผู้ตรวจ : {formatThaiDate(item.date)}
-                </p>
-                <p className="text-sm mt-2">
-                  แพทย์ : {item.doctor || "-"}
+                  ผู้ตรวจ : {item.doctor || "-"}
                 </p>
               </div>
 
               <div>
-                <h3 className="font-semibold mb-4">ตรวจร่างกายทั่วไป</h3>
+                <h3 className="font-semibold mb-4">
+                  ตรวจร่างกายทั่วไป
+                </h3>
 
                 <div className="grid grid-cols-2 gap-y-2 text-sm">
                   <p>น้ำหนัก : {item.health?.weight ?? "-"} กก.</p>
                   <p>ส่วนสูง : {item.health?.height ?? "-"} ซม.</p>
-
                   <p>ชีพจร : {item.health?.pulse ?? "-"} ครั้ง/นาที</p>
-
-                  <p>
-                    ความดัน : {item.health?.bmi ?? "-"} กก./ม²
-                  </p>
-
-                  <p>
-                    ดัชนีมวลกาย : {item.health?.bmi ?? "-"} กก./ม²
-                  </p>
-
-                  <p>
-                    สถานะ :
-                    <span
-                      className={`text-white px-3 py-1 rounded-md text-sm ml-2 ${statusColor}`}
-                    >
-                      {item.status}
-                    </span>
-                  </p>
-                  <p>
-                    อาการ : {item.symptom || "-"}
-                  </p>
-                  <p>
+                   <p>
                     ความดัน : {item.symptom || "-"}
                   </p>
+                  <p>ดัชนีมวลกาย : {item.health?.bmi ?? "-"} kg/m²</p>
+
+                  {!isTuberculosis && (
+                    <p>
+                      สถานะ :
+                      <span
+                        className="text-blackc px-3 py-1 rounded-md text-sm ml-2"
+                        style={{ backgroundColor: bgColor }}
+                      >
+                        {label}
+                      </span>
+                    </p>
+                  )}
+
+                  <p>อาการ : {item.symptom || "-"}</p>
                 </div>
               </div>
             </div>
+
             <div className="mt-6 text-sm">
-              <p>
-                การรักษา : {item.note || "-"}
-              </p>
+              <p>การรักษา : {item.note || "-"}</p>
             </div>
           </div>
         );
