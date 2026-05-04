@@ -102,12 +102,6 @@ export default function AppointmentCard() {
           if (!diseaseAppointments?.length) return;
 
           const futureAppointments = diseaseAppointments
-            .filter((a: any) => {
-              const appointmentDate = new Date(a.date);
-              appointmentDate.setHours(0, 0, 0, 0);
-
-              return appointmentDate >= today && a.status === "ongoing";
-            })
             .sort(
               (a: any, b: any) =>
                 new Date(a.date).getTime() - new Date(b.date).getTime()
