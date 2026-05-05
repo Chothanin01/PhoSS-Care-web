@@ -20,6 +20,7 @@ const diseaseColorMap: Record<string, string> = {
 enum AppointmentStatus {
   NONE = "none",
   SCHEDULED = "scheduled",
+  OVERDUE = "overdue",
 }
 
 interface Disease {
@@ -96,13 +97,12 @@ export function SortTablePatient() {
           )
         }
 
-        if (filters.appointmentStatus !== undefined) {
-          params.append(
-            "appoint",
-            filters.appointmentStatus === AppointmentStatus.SCHEDULED
-              ? "true"
-              : "false"
-          )
+        if (filters.appointmentStatus === "scheduled") {
+          params.append("appoint", "true")
+        } else if (filters.appointmentStatus === "none") {
+          params.append("appoint", "false")
+        } else if (filters.appointmentStatus === "overdue") {
+          params.append("overdue", "true")
         }
 
         const token = Cookies.get("token")
@@ -130,7 +130,9 @@ export function SortTablePatient() {
             hnId: p.hnnumber,
             diseases: (p.diseases || []).map((d: any) => ({
               name: d.name,
-              appointmentStatus: d.has_appointment
+              appointmentStatus: d.has_overdue
+                ? AppointmentStatus.OVERDUE
+                : d.has_appointment
                 ? AppointmentStatus.SCHEDULED
                 : AppointmentStatus.NONE,
             })),
@@ -204,18 +206,22 @@ export function SortTablePatient() {
       cell: (patient: Patient) => (
         <div className="flex flex-col items-center gap-4 text-center">
           {patient.diseases.map((disease, index) => {
-            const isScheduled =
-              disease.appointmentStatus === AppointmentStatus.SCHEDULED;
+            let label = "-"
+            let className = "text-black"
+
+            if (disease.appointmentStatus === AppointmentStatus.SCHEDULED) {
+              label = "มีใบนัดแพทย์"
+              className = "font-medium rounded-full bg-green-100 px-2 py-1 text-green-600"
+            }
+
+            if (disease.appointmentStatus === AppointmentStatus.OVERDUE) {
+              label = "เลยกำหนดนัด"
+              className = "font-medium rounded-full bg-orange-200 px-2 py-1 text-orange-400"
+            }
 
             return (
-              <span
-                key={index}
-                className={`text-xs inline-flex items-center justify-center ${isScheduled
-                  ? "font-medium rounded-full bg-green-100 px-2 py-1 text-green-600"
-                  : "text-black"
-                  }`}
-              >
-                {isScheduled ? "มีใบนัดแพทย์" : "-"}
+              <span key={index} className={`text-xs inline-flex ${className}`}>
+                {label}
               </span>
             );
           })}

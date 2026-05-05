@@ -5,10 +5,14 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
 import Cookies from "js-cookie";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription  } from "@/shadcn/ui/dialog"
+import { Button } from "@/shadcn/ui/button";
 
 export function NavBar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false)
 
   const navItems = [
     { name: "รายชื่อผู้ป่วย", href: "/patient" },
@@ -19,6 +23,7 @@ export function NavBar() {
     try {
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/auth/logout`, {
         method: "GET",
+        credentials: "include",
       });
 
       Cookies.remove("token");
@@ -76,12 +81,44 @@ export function NavBar() {
 
       <div className="ml-auto">
         <button
-          onClick={handleLogout}
+          onClick={() => setIsLogoutOpen(true)}
           className="text-lg font-medium text-gray-600 hover:text-Bamboo-100"
         >
           ออกจากระบบ
         </button>
       </div>
+
+      <Dialog open={isLogoutOpen} onOpenChange={setIsLogoutOpen}>
+        <DialogContent className="max-w-sm" showCloseButton={false}>
+          <DialogHeader>
+            <DialogTitle>ยืนยันการออกจากระบบ</DialogTitle>
+          </DialogHeader>
+
+          <DialogDescription>
+            คุณต้องการออกจากระบบใช่หรือไม่?
+          </DialogDescription>
+
+          <div className="flex gap-3 mt-4 w-full">
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={() => setIsLogoutOpen(false)}
+            >
+              ยกเลิก
+            </Button>
+
+            <Button
+              className="flex-1 bg-Bamboo-100 text-white hover:bg-gray-200"
+              onClick={async () => {
+                await handleLogout()
+                setIsLogoutOpen(false)
+              }}
+            >
+              ออกจากระบบ
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 }
