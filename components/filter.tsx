@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 export type PatientFilters = {
   diseases: string[];
-  appointmentStatus?: "scheduled" | "none";
+  appointmentStatus?: "scheduled" | "none" | "overdue";
 };
 
 type Props = {
@@ -24,6 +24,7 @@ type Props = {
 const APPOINTMENT_OPTIONS = [
   { label: "มีใบนัดแพทย์", value: "scheduled" },
   { label: "ไม่มีใบนัดแพทย์", value: "none" },
+  { label: "เลยกำหนดนัด", value: "overdue" },
 ];
 
 export function PatientFilter({
@@ -103,7 +104,7 @@ export function PatientFilter({
                 onValueChange={(val) =>
                   onChange({
                     ...value,
-                    appointmentStatus: val as "scheduled" | "none",
+                    appointmentStatus: val as "scheduled" | "none" | "overdue",
                   })
                 }
                 className="space-y-3"
@@ -142,6 +143,8 @@ export function PatientFilter({
           label={
             value.appointmentStatus === "scheduled"
               ? "มีใบนัดแพทย์"
+              : value.appointmentStatus === "overdue"
+              ? "เลยกำหนดนัด"
               : "ไม่มีใบนัดแพทย์"
           }
           onRemove={() =>
