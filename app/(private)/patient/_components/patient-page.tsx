@@ -7,7 +7,7 @@ import { SelectField } from "@/components/selectfield";
 import { Button } from "@/shadcn/ui/button";
 import { StepForward } from "lucide-react";
 import DiseaseSelector from './select-disease';
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 interface PatientDataProp {
   onNext: () => void;
@@ -86,15 +86,13 @@ export default function PatientData({
   useEffect(() => {
     const fetchDiseases = async () => {
       try {
-        const token = Cookies.get("token");
 
-        const res = await fetch(
+        const res = await fetchWithRefresh(
           `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/diseases`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
             },
           }
         );

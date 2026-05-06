@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 type VaccineHistory = {
   id: string;
@@ -37,21 +37,14 @@ export default function VaccineView() {
   useEffect(() => {
     const fetchVaccines = async () => {
       try {
-        const token = Cookies.get("token");
 
-        const res = await fetch(
+        const res = await fetchWithRefresh(
           `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${patientId}/vaccines`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
         );
 
         const result = await res.json();
-        const appointmentRes = await fetch(
+        const appointmentRes = await fetchWithRefresh(
           `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/${patientId}/vaccination`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
         );
 
         const appointmentResult = await appointmentRes.json();

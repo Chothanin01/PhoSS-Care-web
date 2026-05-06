@@ -7,7 +7,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { Separator } from "@/shadcn/ui/separator";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/shadcn/ui/dialog";
 import { useParams } from "next/navigation"
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 interface RelativeDataProp {
   relative: Relative;
@@ -91,15 +91,9 @@ export default function EditRelativeData({ relative, setRelative }: RelativeData
 
   useEffect(() => {
     const fetchRelative = async () => {
-      const token = Cookies.get("token");
 
-      const res = await fetch(
+      const res = await fetchWithRefresh(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       )
 
       if (!res.ok) {
@@ -288,15 +282,12 @@ export default function EditRelativeData({ relative, setRelative }: RelativeData
   }, [relative]);
 
   const handleSubmit = async () => {
-    const token = Cookies.get("token");
-
-    const res = await fetch(
+    const res = await fetchWithRefresh(
       `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}/relatives`,
       {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           kin: relative.kin,

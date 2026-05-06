@@ -2,11 +2,11 @@
 
 import { useMemo, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Cookies from "js-cookie";
 import { InputField } from "@/components/inputfield";
 import { SelectField } from "@/components/selectfield";
 import { Button } from "@/shadcn/ui/button";
 import { StepForward } from "lucide-react";
+import { fetchWithRefresh } from "@/lib/api";
 
 const DOCTOR_TITLES = [
     { label: "นายเเพทย์", value: "นายแพทย์" },
@@ -69,20 +69,20 @@ export default function VaccineForm({
     const [patientInfo, setPatientInfo] = useState<PatientInfo | null>(null);
     const [vaccineOptions, setVaccineOptions] = useState<VaccineOption[]>([]);
     const [vaccineList, setVaccineList] = useState<VaccineData[]>([]);
-    const [selectedVaccine, setSelectedVaccine] = useState<VaccineData | null>(null);
+    // const [selectedVaccine, setSelectedVaccine] = useState<VaccineData | null>(null);
+    const selectedVaccine = useMemo(() => {
+        if (!formData.vaccine_id) return null;
+
+        return (
+            vaccineList.find((v) => v.vaccine_id === formData.vaccine_id) || null
+        );
+        }, [formData.vaccine_id, vaccineList]);
 
     useEffect(() => {
         const fetchPatientInfo = async () => {
             try {
-                const token = Cookies.get("token");
-
-                const res = await fetch(
+                const res = await fetchWithRefresh(
                     `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${appointmentId}/info`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
                 );
                 const data = await res.json();
                 setPatientInfo(data.data);
@@ -97,15 +97,8 @@ export default function VaccineForm({
     useEffect(() => {
         const fetchVaccines = async () => {
             try {
-                const token = Cookies.get("token");
-
-                const res = await fetch(
+                const res = await fetchWithRefresh(
                     `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/diseases/vaccines`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
                 );
                 const data = await res.json();
                 const list = data?.data || [];
@@ -128,15 +121,8 @@ export default function VaccineForm({
     useEffect(() => {
         const fetchVaccinationHistory = async () => {
             try {
-                const token = Cookies.get("token");
-
-                const res = await fetch(
+                const res = await fetchWithRefresh(
                     `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/${appointmentId}/vaccination`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
                 );
 
                 const data = await res.json();
@@ -155,7 +141,7 @@ export default function VaccineForm({
                         name: vaccine.name || vaccine.type,
                     };
 
-                    setSelectedVaccine(autoData);
+                    // setSelectedVaccine(autoData);
 
                     setFormData((prev) => ({
                         ...prev,
@@ -174,17 +160,17 @@ export default function VaccineForm({
             fetchVaccinationHistory();
         }
     }, [appointmentId, setFormData]);
-    useEffect(() => {
-        if (formData.vaccine_id && vaccineList.length > 0) {
-            const vaccine = vaccineList.find(
-                (v) => v.vaccine_id === formData.vaccine_id
-            );
+    // useEffect(() => {
+    //     if (formData.vaccine_id && vaccineList.length > 0) {
+    //         const vaccine = vaccineList.find(
+    //             (v) => v.vaccine_id === formData.vaccine_id
+    //         );
 
-            if (vaccine) {
-                setSelectedVaccine(vaccine);
-            }
-        }
-    }, [formData.vaccine_id, vaccineList]);
+    //         if (vaccine) {
+    //             setSelectedVaccine(vaccine);
+    //         }
+    //     }
+    // }, [formData.vaccine_id, vaccineList]);
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -203,11 +189,11 @@ export default function VaccineForm({
                 [field]: value,
             }));
 
-            const vaccine = vaccineList.find((v) => v.vaccine_id === value);
+            // const vaccine = vaccineList.find((v) => v.vaccine_id === value);
 
-            if (vaccine) {
-                setSelectedVaccine(vaccine);
-            }
+            // if (vaccine) {
+            //     setSelectedVaccine(vaccine);
+            // }
         };
 
     const isFormValid = useMemo(() => {

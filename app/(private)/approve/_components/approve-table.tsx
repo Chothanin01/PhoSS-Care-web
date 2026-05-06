@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 import { Separator } from "@/shadcn/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription  } from "@/shadcn/ui/dialog"
 import { Textarea } from "@/shadcn/ui/textarea";
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 interface Request {
   id: string;
@@ -123,15 +123,8 @@ export function SortTableRequest() {
         params.append("status", filterStatus)
       }
 
-      const token = Cookies.get("token");
-
-      const res = await fetch(
+      const res = await fetchWithRefresh(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/requests?${params.toString()}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       )
 
       const data = await res.json()
@@ -171,15 +164,12 @@ export function SortTableRequest() {
 
   const confirmApprove = async (requestId: string) => {
 
-    const token = Cookies.get("token");
-
-    await fetch(
+    await fetchWithRefresh(
       `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/requests/${requestId}`,
       {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           status: "accepted"
@@ -193,15 +183,12 @@ export function SortTableRequest() {
 
   const confirmDecline = async () => {
 
-    const token = Cookies.get("token");
-
-    await fetch(
+    await fetchWithRefresh(
       `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/requests/${requestDetail.request_id}`,
       {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           status: "declined",
@@ -215,15 +202,8 @@ export function SortTableRequest() {
     fetchRequests()
   }
 
-  const fetchRequestDetail = async (id: string) => {
-    const token = Cookies.get("token");
-    const res = await fetch(
+  const fetchRequestDetail = async (id: string) => {    const res = await fetchWithRefresh(
       `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/requests/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
     )
 
     const data = await res.json()

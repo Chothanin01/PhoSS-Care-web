@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 type Health = {
   height: number;
@@ -97,15 +97,8 @@ export default function DiseasesView() {
   useEffect(() => {
     const fetchDisease = async () => {
       try {
-        const token = Cookies.get("token");
-
-        const res = await fetch(
+        const res = await fetchWithRefresh(
           `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}/${diseaseId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
         );
 
         const result = await res.json();

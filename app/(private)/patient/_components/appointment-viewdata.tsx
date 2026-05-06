@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Pencil } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 type Appointment = {
   appointment_id: string;
@@ -71,15 +71,8 @@ export default function AppointmentCard() {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const token = Cookies.get("token");
-
-        const res = await fetch(
+        const res = await fetchWithRefresh(
           `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${patientId}/appointments`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
         );
 
         const data = await res.json();
@@ -138,13 +131,8 @@ export default function AppointmentCard() {
             }
 
             try {
-              const res = await fetch(
+              const res = await fetchWithRefresh(
                 `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/${patientId}/vaccination`,
-                {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
-                }
               );
 
               const data = await res.json();

@@ -21,7 +21,7 @@ export function NavBar() {
 
   const handleLogout = async () => {
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/auth/logout`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/auth/admin/logout`, {
         method: "GET",
         credentials: "include",
       });

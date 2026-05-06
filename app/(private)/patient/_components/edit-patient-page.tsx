@@ -9,7 +9,7 @@ import { Check, Save, CircleX, CircleCheck } from "lucide-react";
 import DiseaseSelector from './select-disease';
 import { useParams } from "next/navigation"
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/shadcn/ui/dialog";
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 interface PatientDataProp {
   patient: Patient;
@@ -90,15 +90,9 @@ export default function EditPatientData({
 
   useEffect(() => {
     const fetchPatient = async () => {
-      const token = Cookies.get("token");
 
-      const res = await fetch(
+      const res = await fetchWithRefresh(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       )
 
       if (!res.ok) {
@@ -156,15 +150,9 @@ export default function EditPatientData({
 
   useEffect(() => {
     const fetchDiseases = async () => {
-      const token = Cookies.get("token");
 
-      const res = await fetch(
+      const res = await fetchWithRefresh(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/diseases`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       )
 
       const data = await res.json()
@@ -177,15 +165,8 @@ export default function EditPatientData({
 
   useEffect(() => {
     const fetchPatientDiseases = async () => {
-      const token = Cookies.get("token")
-
-      const res = await fetch(
+      const res = await fetchWithRefresh(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}/diseases?type=active`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       )
 
       const data = await res.json()
@@ -363,15 +344,13 @@ export default function EditPatientData({
 
   const submitUpdate = async () => {
 
-    const token = Cookies.get("token");
 
-    const res = await fetch(
+    const res = await fetchWithRefresh(
       `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}`,
       {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           title: patient.title,

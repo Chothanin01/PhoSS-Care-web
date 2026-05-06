@@ -3,58 +3,37 @@
 import { useEffect, useState } from "react";
 import { Pencil } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
-export default function RelativeSection() {
-  const router = useRouter();
-  const params = useParams();
-  const id = params.id as string;
-
-  const [relative, setRelative] = useState<any>(null);
-
-  useEffect(() => {
-    if (!id) return;
-
-    const fetchRelative = async () => {
-      try {
-        const token = Cookies.get("token");
-
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const data = await res.json();
-
-        const r = data?.data?.[0]?.relative;
-
-        setRelative(r);
-      } catch (err) {
-        console.error("fetch relative error", err);
-      }
-    };
-
-    fetchRelative();
-  }, [id]);
-
-  const formatPhoneNumber = (phone: string) => {
-    if (!phone) return "-";
-    return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+type Person = {
+  fullname?: string;
+  phonenumber?: string;
+  address?: {
+    house_number?: string;
+    village_number?: string;
+    alley?: string;
+    road?: string;
+    district?: string;
+    subdistrict?: string;
+    province?: string;
+    zipcode?: string;
   };
+};
 
-  const InfoBlock = ({
-    title,
-    person,
-  }: {
-    title: string;
-    person: any;
-  }) => (
+type InfoBlockProps = {
+  title: string;
+  person: Person;
+};
+
+const formatPhoneNumber = (phone?: string) => {
+  if (!phone) return "-";
+  return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+};
+
+function InfoBlock({ title, person }: InfoBlockProps) {
+  return (
     <div className="pt-3 mt-3">
-      <h3 className="text-lg font-semibold mb-4">{title}</h3>
+      {title && <h3 className="text-lg font-semibold mb-4">{title}</h3>}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-30">
         <div>
@@ -82,6 +61,35 @@ export default function RelativeSection() {
       </div>
     </div>
   );
+}
+
+export default function RelativeSection() {
+  const router = useRouter();
+  const params = useParams();
+  const id = params.id as string;
+
+  const [relative, setRelative] = useState<any>(null);
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchRelative = async () => {
+      try {
+        const res = await fetchWithRefresh(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}`
+        );
+
+        const data = await res.json();
+        const r = data?.data?.[0]?.relative;
+
+        setRelative(r);
+      } catch (err) {
+        console.error("fetch relative error", err);
+      }
+    };
+
+    fetchRelative();
+  }, [id]);
 
   if (!relative) return <div className="p-8">Loading...</div>;
 

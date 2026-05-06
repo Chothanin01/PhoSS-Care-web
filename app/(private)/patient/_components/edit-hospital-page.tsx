@@ -6,7 +6,7 @@ import { Check, Save } from "lucide-react";
 import React, { useEffect, useState, useMemo } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/shadcn/ui/dialog";
 import { useParams } from "next/navigation"
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 interface HospitalDataProp {
   officer: Officer;
@@ -48,15 +48,9 @@ export default function EditHospitalData({ officer, setOfficer }: HospitalDataPr
 
   useEffect(() => {
     const fetchOfficer = async () => {
-      const token = Cookies.get("token");
 
-      const res = await fetch(
+      const res = await fetchWithRefresh(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       )
 
       if (!res.ok) {
@@ -103,15 +97,13 @@ export default function EditHospitalData({ officer, setOfficer }: HospitalDataPr
   }, [id])
 
   const handleSubmit = async () => {
-    const token = Cookies.get("token");
 
-    const res = await fetch(
+    const res = await fetchWithRefresh(
       `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}/officer`,
       {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           house: officer.house,

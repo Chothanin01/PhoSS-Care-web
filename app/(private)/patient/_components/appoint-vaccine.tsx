@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 import { InputField } from "@/components/inputfield";
 import { SelectField } from "@/components/selectfield";
 import { Button } from "@/shadcn/ui/button";
+import { fetchWithRefresh } from "@/lib/api";
 
 import {
   Dialog,
@@ -73,14 +73,8 @@ export default function AddVaccineAppoint({
 
   useEffect(() => {
     const fetchVaccines = async () => {
-      const token = Cookies.get("token");
-      const res = await fetch(
+      const res = await fetchWithRefresh(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/diseases/vaccines`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       );
       const data = await res.json();
       const list = data?.data || [];

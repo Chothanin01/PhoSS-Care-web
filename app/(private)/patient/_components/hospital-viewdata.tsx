@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Pencil } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 export default function OfficerSection() {
   const router = useRouter();
@@ -17,15 +17,8 @@ export default function OfficerSection() {
 
     const fetchOfficer = async () => {
       try {
-        const token = Cookies.get("token");
-
-        const res = await fetch(
+        const res = await fetchWithRefresh(
           `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
         );
 
         const data = await res.json();
@@ -65,7 +58,7 @@ export default function OfficerSection() {
 
       <div className="flex justify-end mt-10">
         <button
-          onClick={() => router.push(`/patient/${id}/edit/officer`)}
+          onClick={() => router.push(`/patient/${id}/edit/hospital`)}
           className="flex items-center gap-2 px-4 py-2 
           border-2 border-Bamboo-100 text-Bamboo-100
           rounded-lg font-semibold
