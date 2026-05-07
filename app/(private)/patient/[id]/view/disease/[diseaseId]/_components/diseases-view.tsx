@@ -121,7 +121,7 @@ export default function DiseasesView() {
   }
 
   if (!data || data.appointment_info.length === 0) {
-    return <div className="ml-70 px-6 py-28">ไม่มีประวัติการรักษา</div>;
+    return <div className="ml-70 py-4">ไม่มีประวัติการรักษา</div>;
   }
 
   const sortedHistory = [...data.appointment_info].sort(
@@ -133,7 +133,7 @@ export default function DiseasesView() {
     data.disease_name?.toLowerCase().includes("tuberculosis");
 
   return (
-    <div className="ml-70 px-6 py-28 space-y-6">
+    <div className="ml-70 py-4">
       {sortedHistory.map((item) => {
         const color = getColorStatus(item.maxLevel);
         const label = getStatusLabel(color);

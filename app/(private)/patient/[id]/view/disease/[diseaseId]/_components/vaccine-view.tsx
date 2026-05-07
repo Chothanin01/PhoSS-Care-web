@@ -88,11 +88,11 @@ export default function VaccineView() {
   }, [patientId]);
 
   if (loading) {
-    return <div className="ml-70 px-6 py-28">กำลังโหลดข้อมูล...</div>;
+    return <div className="ml-70 py-4">กำลังโหลดข้อมูล...</div>;
   }
 
   if (!vaccines || vaccines.length === 0) {
-    return <div className="ml-70 px-6 py-28">ไม่มีประวัติวัคซีน</div>;
+    return <div className="ml-70 py-4">ไม่มีประวัติวัคซีน</div>;
   }
 
   const sortedHistory = [...vaccines].sort(

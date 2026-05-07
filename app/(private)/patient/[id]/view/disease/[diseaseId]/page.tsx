@@ -29,7 +29,7 @@ export default async function Page({ params }: PageProps) {
   const disease = result?.data?.data?.[0];
 
   if (!disease) {
-    return <div className="ml-70 px-6 py-28">ไม่พบข้อมูล</div>;
+    return <div className="ml-70 py-4">ไม่พบข้อมูล</div>;
   }
 
   if (disease.disease_name?.includes("วัคซีน")) {
