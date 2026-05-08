@@ -5,7 +5,7 @@ import Appointment from "@/app/(private)/patient/_components/appointment-viewdat
 export default function Page() {
   return (
     <div className="ml-70 py-4">
-      <div className="w-297.5 bg-white p-6 rounded-lg shadow">
+      <div className="w-full md:w-full bg-white p-6 rounded-lg shadow">
         <Appointment />
       </div>
     </div>

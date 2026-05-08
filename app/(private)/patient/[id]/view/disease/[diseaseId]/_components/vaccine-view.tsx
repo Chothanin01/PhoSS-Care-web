@@ -107,7 +107,7 @@ export default function VaccineView() {
         return (
           <div
             key={item.id}
-            className="w-[1375px] bg-white p-6 rounded-lg shadow px-14 py-14"
+            className="w-full md:w-full bg-white p-6 rounded-lg shadow"
           >
             <h2 className="text-xl font-semibold mb-6">
               ประวัติการฉีด {item.vaccine_name}
