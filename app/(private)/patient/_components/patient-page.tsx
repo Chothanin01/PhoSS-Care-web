@@ -7,7 +7,7 @@ import { SelectField } from "@/components/selectfield";
 import { Button } from "@/shadcn/ui/button";
 import { StepForward } from "lucide-react";
 import DiseaseSelector from './select-disease';
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 interface PatientDataProp {
   onNext: () => void;
@@ -86,15 +86,13 @@ export default function PatientData({
   useEffect(() => {
     const fetchDiseases = async () => {
       try {
-        const token = Cookies.get("token");
 
-        const res = await fetch(
+        const res = await fetchWithRefresh(
           `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/diseases`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -179,9 +177,6 @@ export default function PatientData({
       return;
     }
 
-    const errorMessage =
-      newValue.trim() === "" ? `กรุณากรอก${label}` : "";
-
     setPatient((prev) => ({
       ...prev,
       [id]: newValue,
@@ -189,7 +184,7 @@ export default function PatientData({
 
     setErrors((prev) => ({
       ...prev,
-      [id]: errorMessage,
+      [id]: newValue.trim() === "" ? `กรุณากรอก${label}` : "",
     }));
   };
 
@@ -198,9 +193,6 @@ export default function PatientData({
   ) => {
     const { id, value } = e.target;
     const label = fieldLabels[id] || id;
-    const errorMessage =
-      value.trim() === "" ? `กรุณากรอก${label}` : "";
-
     setPatient((prev) => ({
       ...prev,
       address: {
@@ -210,7 +202,7 @@ export default function PatientData({
     }));
     setErrors((prev) => ({
       ...prev,
-      [id]: errorMessage,
+      [id]: value.trim() === "" ? `กรุณากรอก${label}` : "",
     }));
   };
 
@@ -245,10 +237,6 @@ export default function PatientData({
     }));
   };
 
-  const handleNext = () => {
-    onNext();
-  };
-
   return (
     <div className="w-full mx-auto p-4">
 
@@ -267,14 +255,14 @@ export default function PatientData({
         ข้อมูลผู้ป่วย
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 xl:gap-24">
         <div>
           <div className="mb-4 font-semibold text-md">
             ข้อมูลส่วนตัว
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="col-span-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="col-span-1 sm:col-span-2">
               <label className="text-muted-foreground text-sm font-medium">
                 เพศ<span className="text-red-500">*</span>
               </label>
@@ -286,39 +274,32 @@ export default function PatientData({
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="male" id="male" />
-                  <label htmlFor="male" className="text-sm cursor-pointer">
-                    ผู้ชาย
-                  </label>
+                  <label htmlFor="male" className="text-sm cursor-pointer">ผู้ชาย</label>
                 </div>
-
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="female" id="female" />
-                  <label htmlFor="female" className="text-sm cursor-pointer">
-                    ผู้หญิง
-                  </label>
+                  <label htmlFor="female" className="text-sm cursor-pointer">ผู้หญิง</label>
                 </div>
               </RadioGroup>
             </div>
 
-            <div className="col-span-2 flex">
-              <div className="w-78">
-                <SelectField
-                  id="title"
-                  name="title"
-                  label="คำนำหน้า"
-                  placeholder="เลือกคำนำหน้า"
-                  value={patient.title}
-                  onValueChange={handleSelectChange("title")}
-                  options={[
-                    { label: "นาย", value: "นาย" },
-                    { label: "นาง", value: "นาง" },
-                    { label: "นางสาว", value: "นางสาว" },
-                    { label: "เด็กชาย", value: "เด็กชาย" },
-                    { label: "เด็กหญิง", value: "เด็กหญิง" },
-                  ]}
-                  errorMessage={errors.title}
-                />
-              </div>
+            <div className="col-span-1 sm:col-span-2">
+              <SelectField
+                id="title"
+                name="title"
+                label="คำนำหน้า"
+                placeholder="เลือกคำนำหน้า"
+                value={patient.title}
+                onValueChange={handleSelectChange("title")}
+                options={[
+                  { label: "นาย", value: "นาย" },
+                  { label: "นาง", value: "นาง" },
+                  { label: "นางสาว", value: "นางสาว" },
+                  { label: "เด็กชาย", value: "เด็กชาย" },
+                  { label: "เด็กหญิง", value: "เด็กหญิง" },
+                ]}
+                errorMessage={errors.title}
+              />
             </div>
 
             <InputField
@@ -353,7 +334,7 @@ export default function PatientData({
               max={new Date().toISOString().split("T")[0]}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="col-span-1 sm:col-span-2 md:col-span-1 grid grid-cols-2 gap-4">
               <InputField
                 id="weight"
                 name="weight"
@@ -454,10 +435,10 @@ export default function PatientData({
         </div>
 
         <div>
-          <div className="mb-4 font-semibold text-md mt-10">
+          <div className="mb-4 font-semibold text-md mt-0 lg:mt-10">
             ที่อยู่
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <InputField
               id="house_number"
               name="house_number"
@@ -477,9 +458,7 @@ export default function PatientData({
               onChange={handleAddressChange}
               errorMessage={errors.village_number}
             />
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6.5">
             <InputField
               id="alley"
               name="alley"
@@ -495,9 +474,7 @@ export default function PatientData({
               value={patient.address.road}
               onChange={handleAddressChange}
             />
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6.5">
             <InputField
               id="subdistrict"
               name="subdistrict"
@@ -517,9 +494,7 @@ export default function PatientData({
               onChange={handleAddressChange}
               errorMessage={errors.district}
             />
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <InputField
               id="province"
               name="province"
@@ -545,8 +520,8 @@ export default function PatientData({
 
       <div className="flex justify-end mt-8">
         <Button
-          onClick={handleNext}
-          className="text-Bamboo-100 bg-white border-2 border-Bamboo-100 font-semibold hover:bg-gray-200"
+          onClick={onNext}
+          className="text-Bamboo-100 bg-white border-2 border-Bamboo-100 font-semibold hover:bg-gray-200 w-full sm:w-auto"
           disabled={!isFormValid}
         >
           ถัดไป

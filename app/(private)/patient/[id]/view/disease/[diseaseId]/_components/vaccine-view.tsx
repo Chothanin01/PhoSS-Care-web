@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 type VaccineHistory = {
   id: string;
@@ -37,21 +37,14 @@ export default function VaccineView() {
   useEffect(() => {
     const fetchVaccines = async () => {
       try {
-        const token = Cookies.get("token");
 
-        const res = await fetch(
+        const res = await fetchWithRefresh(
           `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${patientId}/vaccines`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
         );
 
         const result = await res.json();
-        const appointmentRes = await fetch(
+        const appointmentRes = await fetchWithRefresh(
           `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/${patientId}/vaccination`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
         );
 
         const appointmentResult = await appointmentRes.json();
@@ -95,11 +88,11 @@ export default function VaccineView() {
   }, [patientId]);
 
   if (loading) {
-    return <div className="ml-70 px-6 py-28">กำลังโหลดข้อมูล...</div>;
+    return <div className="ml-70 py-4">กำลังโหลดข้อมูล...</div>;
   }
 
   if (!vaccines || vaccines.length === 0) {
-    return <div className="ml-70 px-6 py-28">ไม่มีประวัติวัคซีน</div>;
+    return <div className="ml-70 py-4">ไม่มีประวัติวัคซีน</div>;
   }
 
   const sortedHistory = [...vaccines].sort(
@@ -114,7 +107,7 @@ export default function VaccineView() {
         return (
           <div
             key={item.id}
-            className="w-[1375px] bg-white p-6 rounded-lg shadow px-14 py-14"
+            className="w-full md:w-full bg-white p-6 rounded-lg shadow"
           >
             <h2 className="text-xl font-semibold mb-6">
               ประวัติการฉีด {item.vaccine_name}

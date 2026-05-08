@@ -9,7 +9,7 @@ import AddAppoint from "@/app/(private)/patient/_components/appoint";
 import VaccineHistory from "@/app/(private)/patient/_components/vaccine-history";
 import AddVaccineAppoint from "@/app/(private)/patient/_components/appoint-vaccine";
 import { FileText, FileCheckCorner } from "lucide-react";
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 export default function Page() {
   const params = useParams();
@@ -91,12 +91,6 @@ export default function Page() {
 
   const handleSubmit = async (): Promise<boolean> => {
     try {
-      const token = Cookies.get("token");
-
-      if (!token) {
-        alert("กรุณา login ใหม่");
-        return false;
-      }
 
       if (!patientId) {
         alert("ไม่พบ patient id");
@@ -140,14 +134,12 @@ export default function Page() {
 
       console.log("Sending API Body:", JSON.stringify(body, null, 2));
 
-      const res = await fetch(
+      const res = await fetchWithRefresh(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments`,
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+            "Content-Type": "application/json",          },
           body: JSON.stringify(body),
         }
       );

@@ -8,7 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { DataTable } from "@/components/data-table";
 import { PatientFilter } from "@/components/filter";
 import type { PatientFilters } from "@/components/filter";
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 const diseaseColorMap: Record<string, string> = {
   "โรคเบาหวาน": "bg-red-100 text-red-600",
@@ -56,15 +56,9 @@ export function SortTablePatient() {
 
   useEffect(() => {
     const fetchDiseases = async () => {
-      const token = Cookies.get("token")
 
-      const res = await fetch(
+      const res = await fetchWithRefresh(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/diseases`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       )
       const data = await res.json()
 
@@ -105,15 +99,9 @@ export function SortTablePatient() {
           params.append("overdue", "true")
         }
 
-        const token = Cookies.get("token")
 
-        const res = await fetch(
+        const res = await fetchWithRefresh(
           `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients?${params.toString()}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
         )
 
         const data = await res.json()

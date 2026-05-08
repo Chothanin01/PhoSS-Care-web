@@ -2,11 +2,11 @@
 
 import { useMemo, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Cookies from "js-cookie";
 import { InputField } from "@/components/inputfield";
 import { SelectField } from "@/components/selectfield";
 import { Button } from "@/shadcn/ui/button";
 import { StepForward } from "lucide-react";
+import { fetchWithRefresh } from "@/lib/api";
 
 const DOCTOR_TITLES = [
   { label: "นายแพทย์", value: "นายเเพทย์" },
@@ -65,14 +65,11 @@ export default function HistoryPatient({
   useEffect(() => {
     const fetchPatientInfo = async () => {
       try {
-        const token = Cookies.get("token");
-
-        const res = await fetch(
+        const res = await fetchWithRefresh(
           `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${patientId}/info`,
           {
             method: "GET",
             headers: {
-              Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
           }
@@ -92,15 +89,9 @@ export default function HistoryPatient({
   useEffect(() => {
     const fetchDiseases = async () => {
       try {
-        const token = Cookies.get("token");
 
-        const res = await fetch(
+        const res = await fetchWithRefresh(
           `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${patientId}/diseases?type=noappoint`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
         );
 
         const data = await res.json();

@@ -5,7 +5,7 @@ import { UserRoundPen, UserRoundSearch } from "lucide-react";
 import { NavMain } from "./nav-main";
 import { Sidebar, SidebarContent } from "@/shadcn/ui/sidebar";
 import { useParams } from "next/navigation";
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 export function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>
@@ -20,15 +20,9 @@ export function AppSidebar(
   React.useEffect(() => {
     const fetchDiseases = async () => {
       try {
-        const token = Cookies.get("token");
 
-        const res = await fetch(
+        const res = await fetchWithRefresh(
           `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}/diseases`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
         );
 
         const result = await res.json();

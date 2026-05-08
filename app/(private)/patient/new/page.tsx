@@ -9,7 +9,7 @@ import RelativeData, { INITIAL_RELATIVE, Relative } from "../_components/relativ
 import HospitalData, { INITIAL_OFFICE, Officer } from "../_components/hospital-page";
 import { Separator } from "@/shadcn/ui/separator";
 import { Dialog, DialogContent, DialogTitle } from "@/shadcn/ui/dialog";
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 
 export default function Page() {
@@ -29,8 +29,6 @@ export default function Page() {
 
   const handleCreate = async () => {
   try {
-
-    const token = Cookies.get("token"); 
 
     const payload = {
       user: {
@@ -70,13 +68,12 @@ export default function Page() {
       created_by: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
     };
 
-    const res = await fetch(
+    const res = await fetchWithRefresh(
       `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, 
         },
         body: JSON.stringify(payload),
       }

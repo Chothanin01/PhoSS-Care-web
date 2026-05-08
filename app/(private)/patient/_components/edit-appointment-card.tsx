@@ -6,7 +6,7 @@ import { SelectField } from "@/components/selectfield";
 import { Button } from "@/shadcn/ui/button";
 import { Check, Save  } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/shadcn/ui/dialog";
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 type Appointment = {
   appoint_id: string
@@ -56,7 +56,6 @@ export default function EditAppointmentData({ appointment, onChange }: Props) {
   }, [openSuccess])
 
   const handleSubmit = async () => {
-    const token = Cookies.get("token")
 
     let url = `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments`
     let payload:any = {}
@@ -97,11 +96,10 @@ export default function EditAppointmentData({ appointment, onChange }: Props) {
 
     }
 
-    const res = await fetch(url,{
+    const res = await fetchWithRefresh(url,{
       method:"PATCH",
       headers:{
         "Content-Type":"application/json",
-        Authorization:`Bearer ${token}`
       },
       body: JSON.stringify(payload)
     })
@@ -122,11 +120,11 @@ export default function EditAppointmentData({ appointment, onChange }: Props) {
           : `แก้ไขข้อมูลใบนัด${appointment.disease_name}`}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-80">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div>
           {appointment.is_vaccine ? (
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
               <InputField
                 id="vaccine_type"
@@ -165,7 +163,7 @@ export default function EditAppointmentData({ appointment, onChange }: Props) {
 
           ) : (
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
               <InputField
                 id="purpose"
@@ -192,7 +190,7 @@ export default function EditAppointmentData({ appointment, onChange }: Props) {
                 onChange={(e)=>updateField("date",e.target.value)}
               />
 
-              <div className="flex gap-3">
+              <div className="flex items-end gap-3">
                 <InputField
                   name="startTime"
                   id="startTime"
@@ -201,17 +199,14 @@ export default function EditAppointmentData({ appointment, onChange }: Props) {
                   value={appointment.startTime}
                   onChange={(e)=>updateField("startTime",e.target.value)}
                 />
-
-                <div className="mt-5">
-                  <InputField
-                    id="endTime"
-                    name="endTime"
-                    label=""
-                    type="time"
-                    value={appointment.endTime}
-                    onChange={(e)=>updateField("endTime",e.target.value)}
-                  />
-                </div>
+                <InputField
+                  id="endTime"
+                  name="endTime"
+                  label=""
+                  type="time"
+                  value={appointment.endTime}
+                  onChange={(e)=>updateField("endTime",e.target.value)}
+                />
               </div>
 
             </div>
@@ -223,7 +218,7 @@ export default function EditAppointmentData({ appointment, onChange }: Props) {
           <div className="mb-4 font-semibold text-md">
             ผู้นัด
           </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6.5"> 
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6"> 
               <div className="col-span-2 flex">
                 <div className="w-62">
                   <SelectField
@@ -264,7 +259,7 @@ export default function EditAppointmentData({ appointment, onChange }: Props) {
               แพทย์
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6.5"> 
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6"> 
               <div className="col-span-2 flex">
                 <div className="w-62">
                   <SelectField

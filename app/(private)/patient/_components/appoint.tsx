@@ -34,7 +34,7 @@ export default function AddAppoint({
 }: Props) {
   const router = useRouter();
   const [openSuccess, setOpenSuccess] = useState(false);
-  const [timeError, setTimeError] = useState("");
+  // const [timeError, setTimeError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -53,16 +53,24 @@ export default function AddAppoint({
       }));
     };
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   if (formData.time_start && formData.time_end) {
+  //     if (formData.time_end <= formData.time_start) {
+  //       setTimeError("ไม่สามารถเลือกเวลาสิ้นสุดก่อนเวลาเริ่มต้นได้");
+  //     } else {
+  //       setTimeError("");
+  //     }
+  //   } else {
+  //     setTimeError("");
+  //   }
+  // }, [formData.time_start, formData.time_end]);
+  const timeError = useMemo(() => {
     if (formData.time_start && formData.time_end) {
       if (formData.time_end <= formData.time_start) {
-        setTimeError("ไม่สามารถเลือกเวลาสิ้นสุดก่อนเวลาเริ่มต้นได้");
-      } else {
-        setTimeError("");
+        return "ไม่สามารถเลือกเวลาสิ้นสุดก่อนเวลาเริ่มต้นได้";
       }
-    } else {
-      setTimeError("");
     }
+    return "";
   }, [formData.time_start, formData.time_end]);
 
   const isFormValid = useMemo(() => {

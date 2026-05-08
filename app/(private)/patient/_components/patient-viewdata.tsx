@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Pencil } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 export default function PatientCard() {
   const router = useRouter();
@@ -18,15 +18,8 @@ export default function PatientCard() {
 
     const fetchPatient = async () => {
       try {
-        const token = Cookies.get("token")
-
-        const res = await fetch(
+        const res = await fetchWithRefresh(
           `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${patientId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
         )
 
         const data = await res.json()
@@ -106,12 +99,12 @@ export default function PatientCard() {
             <p>เลขบัตรประชาชน : {patient.nationalId}</p>
             <p>สิทธิการรักษา : {patient.right}</p>
 
-            <div className="flex gap-50">
+            <div className="flex flex-col sm:flex-row sm:gap-10 gap-2">
               <p>สัญชาติ : {patient.nationality}</p>
               <p>เชื้อชาติ : {patient.ethnicity}</p>
             </div>
 
-            <div className="flex gap-46">
+            <div className="flex flex-col sm:flex-row sm:gap-10 gap-2">
               <p>น้ำหนัก : {patient.weight} กก.</p>
               <p className="px-1">ส่วนสูง : {patient.height} ซม.</p>
             </div>

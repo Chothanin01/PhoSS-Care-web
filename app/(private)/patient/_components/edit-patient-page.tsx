@@ -9,7 +9,7 @@ import { Check, Save, CircleX, CircleCheck } from "lucide-react";
 import DiseaseSelector from './select-disease';
 import { useParams } from "next/navigation"
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/shadcn/ui/dialog";
-import Cookies from "js-cookie";
+import { fetchWithRefresh } from "@/lib/api";
 
 interface PatientDataProp {
   patient: Patient;
@@ -90,15 +90,9 @@ export default function EditPatientData({
 
   useEffect(() => {
     const fetchPatient = async () => {
-      const token = Cookies.get("token");
 
-      const res = await fetch(
+      const res = await fetchWithRefresh(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       )
 
       if (!res.ok) {
@@ -156,15 +150,9 @@ export default function EditPatientData({
 
   useEffect(() => {
     const fetchDiseases = async () => {
-      const token = Cookies.get("token");
 
-      const res = await fetch(
+      const res = await fetchWithRefresh(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/diseases`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       )
 
       const data = await res.json()
@@ -177,15 +165,8 @@ export default function EditPatientData({
 
   useEffect(() => {
     const fetchPatientDiseases = async () => {
-      const token = Cookies.get("token")
-
-      const res = await fetch(
+      const res = await fetchWithRefresh(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}/diseases?type=active`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       )
 
       const data = await res.json()
@@ -363,15 +344,13 @@ export default function EditPatientData({
 
   const submitUpdate = async () => {
 
-    const token = Cookies.get("token");
 
-    const res = await fetch(
+    const res = await fetchWithRefresh(
       `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/patients/${id}`,
       {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           title: patient.title,
@@ -426,14 +405,14 @@ export default function EditPatientData({
         แก้ไขข้อมูลผู้ป่วย
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 xl:gap-24">
         <div>
           <div className="mb-4 font-semibold text-md">
             ข้อมูลส่วนตัว
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="col-span-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="col-span-1 sm:col-span-2">
               <label className="text-muted-foreground text-sm font-medium">
                 เพศ<span className="text-red-500">*</span>
               </label>
@@ -459,8 +438,8 @@ export default function EditPatientData({
               </RadioGroup>
             </div>
 
-            <div className="col-span-2 flex">
-              <div className="w-78">
+            <div className="col-span-1 sm:col-span-2">
+              <div className="w-full sm:w-1/2">
                 <SelectField
                   id="title"
                   name="title"
@@ -500,19 +479,21 @@ export default function EditPatientData({
               errorMessage={errors.lastname}
             />
 
-            <InputField
-              id="dob"
-              name="dob"
-              label="วันเกิด"
-              type="date"
-              required
-              value={patient.dob}
-              onChange={handleChange}
-              errorMessage={errors.dob}
-              max={new Date().toISOString().split("T")[0]}
-            />  
+            <div className="col-span-1 sm:col-span-2 md:col-span-1">
+              <InputField
+                id="dob"
+                name="dob"
+                label="วันเกิด"
+                type="date"
+                required
+                value={patient.dob}
+                onChange={handleChange}
+                errorMessage={errors.dob}
+                max={new Date().toISOString().split("T")[0]}
+              />  
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="col-span-1 sm:col-span-2 md:col-span-1 grid grid-cols-2 gap-4">
               <InputField
                 id="weight"
                 name="weight"
@@ -613,92 +594,76 @@ export default function EditPatientData({
         </div>
 
         <div>
-          <div className="mb-4 font-semibold text-md mt-10">
+          <div className="mb-4 font-semibold text-md mt-0 lg:mt-10">
             ที่อยู่
           </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6.5"> 
-              <InputField
-                id="house_number"
-                name="house_number"
-                label="บ้านเลขที่"
-                required
-                value={patient.address.house_number}
-                onChange={handleAddressChange}
-                errorMessage={errors.house_number}
-              />
-              
-              <InputField
-                id="village_number"
-                name="village_number"
-                label="หมู่"
-                required
-                value={patient.address.village_number}
-                onChange={handleAddressChange}
-                errorMessage={errors.village_number}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6.5"> 
-              <InputField
-                id="alley"
-                name="alley"
-                label="ตรอก/ซอย"
-                value={patient.address.alley}
-                onChange={handleAddressChange}
-              />
-              
-              <InputField
-                  id="road"
-                  name="road"
-                  label="ถนน"
-                  value={patient.address.road}
-                  onChange={handleAddressChange}
-                />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6.5"> 
-              <InputField
-                id="subdistrict"
-                name="subdistrict"
-                label="เขต/อำเภอ"
-                required
-                value={patient.address.subdistrict}
-                onChange={handleAddressChange}
-                errorMessage={errors.subdistrict}
-              />
-              
-              <InputField
-                id="district"
-                name="district"
-                label="แขวง/ตำบล"
-                required
-                value={patient.address.district}
-                onChange={handleAddressChange}
-                errorMessage={errors.district}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> 
-              <InputField
-                id="province"
-                name="province"
-                label="จังหวัด"
-                required
-                value={patient.address.province}
-                onChange={handleAddressChange}
-                errorMessage={errors.province}
-              />
-              
-              <InputField
-                id="zipcode"
-                name="zipcode"
-                label="รหัสไปรษณีย์"
-                required
-                value={patient.address.zipcode}
-                onChange={handleAddressChange}
-                errorMessage={errors.zipcode}
-              />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <InputField
+              id="house_number"
+              name="house_number"
+              label="บ้านเลขที่"
+              required
+              value={patient.address.house_number}
+              onChange={handleAddressChange}
+              errorMessage={errors.house_number}
+            />
+            <InputField
+              id="village_number"
+              name="village_number"
+              label="หมู่" required
+              value={patient.address.village_number}
+              onChange={handleAddressChange}
+              errorMessage={errors.village_number} />
+              <InputField id="alley"
+              name="alley"
+              label="ตรอก/ซอย"
+              value={patient.address.alley}
+              onChange={handleAddressChange}
+            />
+            <InputField
+              id="road"
+              name="road"
+              label="ถนน"
+              value={patient.address.road}
+              onChange={handleAddressChange}
+            />
+            <InputField
+              id="subdistrict"
+              name="subdistrict" 
+              label="เขต/อำเภอ"
+              required
+              value={patient.address.subdistrict}
+              onChange={handleAddressChange}
+              errorMessage={errors.subdistrict}
+            />
+            <InputField
+              id="district"
+              name="district"
+              label="แขวง/ตำบล"
+              required
+              value={patient.address.district}
+              onChange={handleAddressChange}
+              errorMessage={errors.district}
+            />
+            <InputField
+              id="province"
+              name="province"
+              label="จังหวัด"
+              required
+              value={patient.address.province}
+              onChange={handleAddressChange}
+              errorMessage={errors.province}
+            />
+            <InputField
+              id="zipcode"
+              name="zipcode"
+              label="รหัสไปรษณีย์"
+              required
+              value={patient.address.zipcode}
+              onChange={handleAddressChange}
+              errorMessage={errors.zipcode}
+            />
+          </div>
         </div>
       </div>
 
@@ -770,7 +735,7 @@ export default function EditPatientData({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mt-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-8">
             <Button
               className="w-full bg-Bamboo-200 text-red-500 font-medium border-red-500 border-2 hover:bg-red-100"
               onClick={() => setOpenConfirmDisease(false)}
