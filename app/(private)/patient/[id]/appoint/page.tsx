@@ -82,7 +82,6 @@ export default function Page() {
   const handleNext = () => setStep(1);
   const handleBack = () => setStep(0);
 
-  const handleSubmit = async () => {
   const mapDoctorTitle = (title: string) => {
     if (title === "นายแพทย์") return "Dr.";
     if (title === "แพทย์หญิง") return "Dr.";
@@ -106,7 +105,10 @@ export default function Page() {
       const height = parseFloat(historyData.height);
       const pulse = parseInt(historyData.pulse);
       const bmi =
-        height > 0 ? Number((weight / ((height / 100) ** 2)).toFixed(2)) : 0;
+        height > 0
+          ? Number((weight / ((height / 100) ** 2)).toFixed(2))
+          : 0;
+
       const body = {
         patient_id: patientId,
         disease_id: historyData.disease,
@@ -132,21 +134,18 @@ export default function Page() {
         },
       };
 
-      console.log("Sending API Body:", JSON.stringify(body, null, 2));
-
       const res = await fetchWithRefresh(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments`,
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",          },
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(body),
         }
       );
 
       const data = await res.json();
-
-      console.log("API Response:", data);
 
       if (!res.ok) {
         throw new Error(data.message || "Create appointment failed");
@@ -204,4 +203,4 @@ export default function Page() {
       </div>
     </div>
   );
-}}
+}
