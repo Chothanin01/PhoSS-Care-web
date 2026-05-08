@@ -20,7 +20,6 @@ type Appointment = {
   doctor: string;
   status: string;
   place: string;
-  maxLevel?: number;
   color_status?: string;
   health: Health;
 };
@@ -74,7 +73,7 @@ const getStatusLabel = (color: string) => {
 const getStatusColorHex = (color: string) => {
   switch (color) {
     case "dark_green":
-      return "#2E7D32";
+      return "#468432";
     case "yellow":
       return "#FFD57B";
     case "orange":
@@ -142,7 +141,7 @@ export default function DiseasesView() {
   return (
     <div className="ml-70 px-6 py-28 space-y-6">
       {sortedHistory.map((item) => {
-        const color = getColorStatus(item.maxLevel);
+        const color = item.color_status || "none";
         const label = getStatusLabel(color);
         const bgColor = getStatusColorHex(color);
 
