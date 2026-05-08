@@ -84,12 +84,6 @@ export function SortTableRequest() {
     )
   }
 
-  const statusDisplayMap: Record<string, string> = {
-    pending: "Pending",
-    accepted: "Accepted",
-    decline: "Declined"
-  }
-
   const getStatusColor = (status: string) => {
     switch(status){
 
@@ -283,7 +277,7 @@ export function SortTableRequest() {
               getStatusColor(row.status)
             )}
           >
-            {statusDisplayMap[row.status]}
+            {statusDisplayMap[row.status as keyof typeof statusDisplayMap] || row.status}
           </span>
         </div>
       ),
@@ -344,7 +338,7 @@ export function SortTableRequest() {
                   getStatusColor(requestDetail?.status)
                 )}
               >
-                {statusDisplayMap[requestDetail?.status as RequestStatus]}
+                {statusDisplayMap[requestDetail?.status as keyof typeof statusDisplayMap]}
               </span>
             </DialogTitle>
             <Separator />
