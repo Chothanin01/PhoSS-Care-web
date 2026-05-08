@@ -157,6 +157,16 @@ export default function AppointmentCard() {
     if (patientId) fetchAppointments();
   }, [patientId]);
 
+  if (appointments.length === 0) {
+    return (
+      <div className="p-10 text-center">
+        <div className="text-lg font-semibold text-gray-600 mb-2">
+          ผู้ป่วยรายนี้ยังไม่มีข้อมูลใบนัดในระบบ
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       {appointments.map((appointment, index) => {
@@ -211,9 +221,7 @@ export default function AppointmentCard() {
             <div className="flex justify-end mt-8">
               <button
                 onClick={() =>
-                  router.push(
-                    `/patient/${patientId}/edit/patient?appointmentId=${appointment.appointment_id}&diseaseId=${appointment.disease_id}`
-                  )
+                  router.push(`/patient/${patientId}/edit/appointment`)
                 }
                 className="flex items-center gap-2 px-4 py-2 text-Bamboo-100 bg-white border-2 border-Bamboo-100 font-semibold rounded-lg hover:bg-Bamboo-100 hover:text-white"
               >

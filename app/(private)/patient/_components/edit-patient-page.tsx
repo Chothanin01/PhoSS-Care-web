@@ -117,7 +117,8 @@ export default function EditPatientData({
 
       const nameParts = remainingName.split(" ")
 
-      setPatient({
+      setPatient((prev) => ({
+        ...prev,
         sex: p.patient.sex,
         title: extractedTitle,
         firstname: nameParts[0] || "",
@@ -141,8 +142,7 @@ export default function EditPatientData({
           province: p.patient.address.province || "",
           zipcode: p.patient.address.zipcode || "",
         },
-        diseases: []
-      })
+      }))
     }
 
     if (id) fetchPatient()
@@ -387,6 +387,23 @@ export default function EditPatientData({
     }
   }, [openSuccess])
 
+  const isVaccine = patient.diseases.some(
+    (d) => d.name === "วัคซีน"
+  );
+
+  const titleOptions = isVaccine
+    ? [
+        { label: "เด็กชาย", value: "เด็กชาย" },
+        { label: "เด็กหญิง", value: "เด็กหญิง" },
+      ]
+    : [
+        { label: "นาย", value: "นาย" },
+        { label: "นาง", value: "นาง" },
+        { label: "นางสาว", value: "นางสาว" },
+        { label: "เด็กชาย", value: "เด็กชาย" },
+        { label: "เด็กหญิง", value: "เด็กหญิง" },
+      ];
+
   return (
     <div className="w-full mx-auto p-4">
 
@@ -447,13 +464,7 @@ export default function EditPatientData({
                   placeholder="เลือกคำนำหน้า"
                   value={patient.title}
                   onValueChange={handleSelectChange("title")}
-                  options={[
-                    { label: "นาย", value: "นาย" },
-                    { label: "นาง", value: "นาง" },
-                    { label: "นางสาว", value: "นางสาว" },
-                    { label: "เด็กชาย", value: "เด็กชาย" },
-                    { label: "เด็กหญิง", value: "เด็กหญิง" },
-                  ]}
+                  options={titleOptions}
                   errorMessage={errors.title}
                 />
               </div>
@@ -539,6 +550,7 @@ export default function EditPatientData({
               value={patient.idcard}
               onChange={handleChange}
               errorMessage={errors.idcard}
+              disabled
             />
 
             <InputField
@@ -706,11 +718,9 @@ export default function EditPatientData({
           <DialogTitle className="text-lg font-semibold">
             ยืนยันการเปลี่ยนแปลงโรคของผู้ป่วย
           </DialogTitle>
-          <DialogDescription />
-
-          <div className="mt-6 text-sm">
+          <div className="text-sm">
             <p className="mb-3 font-medium">จาก</p>
-            <div className="flex flex-wrap gap-2 justify-center">
+            <div className="flex flex-col gap-2 items-center">
               {originalDiseases.map((d) => (
                 <span
                   key={d.disease_id}
@@ -723,7 +733,7 @@ export default function EditPatientData({
 
             <p className="mt-6 mb-3 font-medium">เป็น</p>
 
-            <div className="flex flex-wrap gap-2 justify-center">
+            <div className="flex flex-col gap-2 items-center">
               {patient.diseases.map((d) => (
                 <span
                   key={d.disease_id}
@@ -735,7 +745,7 @@ export default function EditPatientData({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
             <Button
               className="w-full bg-Bamboo-200 text-red-500 font-medium border-red-500 border-2 hover:bg-red-100"
               onClick={() => setOpenConfirmDisease(false)}
@@ -745,7 +755,7 @@ export default function EditPatientData({
             </Button>
 
             <Button
-              className="w-full font-medium bg-Bamboo-200 border-Bamboo-100 border-2 text-Bamboo-100 hover:bg-gray-400"
+              className="w-full font-medium bg-Bamboo-200 border-Bamboo-100 border-2 text-Bamboo-100 hover:bg-gray-200"
               onClick={async () => {
                 setOpenConfirmDisease(false)
                 await submitUpdate()

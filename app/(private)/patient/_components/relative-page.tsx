@@ -79,6 +79,8 @@ const fieldLabels: Record<string, string> = {
   phonenumber: "เบอร์โทรศัพท์",
   house_number: "บ้านเลขที่",
   village_number: "หมู่",
+  alley: "ตรอก/ซอย",
+  road: "ถนน",
   subdistrict: "เขต/อำเภอ",
   district: "แขวง/ตำบล",
   province: "จังหวัด",
@@ -89,45 +91,47 @@ function AddressFields({
   data,
   section,
   errors,
+  required,
   onAddressChange,
 }: {
   data: RelativeData["address"];
   section: keyof Relative;
   errors: Partial<Record<string, string>>;
-  onAddressChange: (section: keyof Relative, field: keyof RelativeData["address"], value: string) => void;
+  required?: boolean;
+  onAddressChange: (
+    section: keyof Relative,
+    field: keyof RelativeData["address"],
+    value: string
+  ) => void;
 }) {
-  const f = (field: keyof RelativeData["address"]) => (
-    <InputField
-      id={field}
-      name={field}
-      label={fieldLabels[field] ?? field}
-      value={data[field]}
-      onChange={(e) => onAddressChange(section, field, e.target.value)}
-      errorMessage={errors[field]}
-    />
-  );
-  const fRequired = (field: keyof RelativeData["address"]) => (
-    <InputField
-      id={field}
-      name={field}
-      label={fieldLabels[field] ?? field}
-      required
-      value={data[field]}
-      onChange={(e) => onAddressChange(section, field, e.target.value)}
-      errorMessage={errors[field]}
-    />
-  );
+
+  const renderField = (
+  field: keyof RelativeData["address"],
+  isRequired = false
+) => (
+  <InputField
+    id={field}
+    name={field}
+    label={fieldLabels[field] ?? field}
+    required={isRequired}
+    value={data[field]}
+    onChange={(e) =>
+      onAddressChange(section, field, e.target.value)
+    }
+    errorMessage={errors[field]}
+  />
+);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {fRequired("house_number")}
-      {fRequired("village_number")}
-      {f("alley")}
-      {f("road")}
-      {fRequired("subdistrict")}
-      {fRequired("district")}
-      {fRequired("province")}
-      {fRequired("zipcode")}
+      {renderField("house_number", required)}
+      {renderField("village_number", required)}
+      {renderField("alley")}
+      {renderField("road")}
+      {renderField("subdistrict", required)}
+      {renderField("district", required)}
+      {renderField("province", required)}
+      {renderField("zipcode", required)}
     </div>
   );
 }
@@ -239,6 +243,7 @@ function RelativeSection({
           data={data.address}
           section={section}
           errors={errors}
+          required={required}
           onAddressChange={onAddressChange}
         />
       </div>

@@ -7,6 +7,7 @@ import { SelectField } from "@/components/selectfield";
 import { Button } from "@/shadcn/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/shadcn/ui/dialog";
 import { StepBack, UserPlus, Check } from "lucide-react";
+import { fetchWithRefresh } from "@/lib/api";
 
 type AppointmentFormData = {
   purpose: string;
@@ -14,9 +15,7 @@ type AppointmentFormData = {
   time_start: string;
   time_end: string;
   place: string;
-  next_doctor_title: string;
-  next_doctor_firstname: string;
-  next_doctor_lastname: string;
+  next_doctor_id: string;
 };
 
 type Props = {
@@ -34,7 +33,31 @@ export default function AddAppoint({
 }: Props) {
   const router = useRouter();
   const [openSuccess, setOpenSuccess] = useState(false);
-  // const [timeError, setTimeError] = useState("");
+  const [doctorOptions, setDoctorOptions] = useState<{ label: string; value: string }[]>([])
+
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const res = await fetchWithRefresh(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/doctors`
+        )
+
+        const data = await res.json()
+
+        const options = (data.data || []).map((doctor: any) => ({
+          label: doctor.full_name,
+          value: doctor.id,
+        }))
+
+        setDoctorOptions(options)
+
+      } catch (err) {
+        console.error("fetch doctors error:", err)
+      }
+    }
+
+    fetchDoctors()
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -53,17 +76,6 @@ export default function AddAppoint({
       }));
     };
 
-  // useEffect(() => {
-  //   if (formData.time_start && formData.time_end) {
-  //     if (formData.time_end <= formData.time_start) {
-  //       setTimeError("ไม่สามารถเลือกเวลาสิ้นสุดก่อนเวลาเริ่มต้นได้");
-  //     } else {
-  //       setTimeError("");
-  //     }
-  //   } else {
-  //     setTimeError("");
-  //   }
-  // }, [formData.time_start, formData.time_end]);
   const timeError = useMemo(() => {
     if (formData.time_start && formData.time_end) {
       if (formData.time_end <= formData.time_start) {
@@ -81,9 +93,7 @@ export default function AddAppoint({
       formData.time_end &&
       !timeError &&
       formData.place &&
-      formData.next_doctor_title &&
-      formData.next_doctor_firstname &&
-      formData.next_doctor_lastname
+      formData.next_doctor_id
     );
   }, [formData, timeError]);
 
@@ -174,64 +184,37 @@ export default function AddAppoint({
         <div>
           <h4 className="font-medium mb-2 -mt-8">แพทย์</h4>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-2">
             <SelectField
-              id="next_doctor_title"
-              name="next_doctor_title"
-              label="คำนำหน้า"
-              placeholder="เลือกคำนำหน้า"
-              value={formData.next_doctor_title || ""}
-              onValueChange={handleSelectChange("next_doctor_title")}
-              options={[
-                { label: "นายแพทย์", value: "นายแพทย์" },
-                { label: "แพทย์หญิง", value: "แพทย์หญิง" },
-              ]}
-            />
-
-            <div></div>
-
-            <InputField
-              id="next_doctor_firstname"
-              name="next_doctor_firstname"
-              label="ชื่อ"
-              required
-              value={formData.next_doctor_firstname || ""}
-              onChange={handleChange}
-            />
-
-            <InputField
-              id="next_doctor_lastname"
-              name="next_doctor_lastname"
-              label="นามสกุล"
-              required
-              value={formData.next_doctor_lastname || ""}
-              onChange={handleChange}
+              id="next_doctor_id"
+              name="next_doctor_id"
+              label="ชื่อแพทย์"
+              placeholder="เลือกแพทย์"
+              value={formData.next_doctor_id}
+              onValueChange={handleSelectChange("next_doctor_id")}
+              options={doctorOptions}
             />
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 mt-8">
-        <div className="flex justify-start">
-          <Button
-            onClick={onBack}
-            className="text-Bamboo-100 bg-white border-2 border-Bamboo-100 font-semibold hover:bg-gray-200"
-          >
-            <StepBack />
-            ย้อนกลับ
-          </Button>
-        </div>
+      <div className="flex justify-between items-center mt-8">
+        <Button
+          onClick={onBack}
+          className="text-Bamboo-100 bg-white border-2 border-Bamboo-100 font-semibold hover:bg-gray-200"
+        >
+          <StepBack />
+          ย้อนกลับ
+        </Button>
 
-        <div className="flex justify-end">
-          <Button
-            onClick={handleSubmit}
-            disabled={!isFormValid}
-            className="text-Bamboo-100 bg-white border-2 border-Bamboo-100 font-semibold hover:bg-gray-200 disabled:opacity-50"
-          >
-            สร้าง
-            <UserPlus className="ml-2" />
-          </Button>
-        </div>
+        <Button
+          onClick={handleSubmit}
+          disabled={!isFormValid}
+          className="text-Bamboo-100 bg-white border-2 border-Bamboo-100 font-semibold hover:bg-gray-200 disabled:opacity-50"
+        >
+          สร้าง
+          <UserPlus className="ml-2" />
+        </Button>
       </div>
 
       <Dialog open={openSuccess}>

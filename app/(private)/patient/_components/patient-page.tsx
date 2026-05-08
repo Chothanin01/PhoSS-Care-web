@@ -237,6 +237,23 @@ export default function PatientData({
     }));
   };
 
+  const isVaccine = patient.diseases.some(
+    (d) => d.name === "วัคซีน"
+  );
+
+  const titleOptions = isVaccine
+    ? [
+        { label: "เด็กชาย", value: "เด็กชาย" },
+        { label: "เด็กหญิง", value: "เด็กหญิง" },
+      ]
+    : [
+        { label: "นาย", value: "นาย" },
+        { label: "นาง", value: "นาง" },
+        { label: "นางสาว", value: "นางสาว" },
+        { label: "เด็กชาย", value: "เด็กชาย" },
+        { label: "เด็กหญิง", value: "เด็กหญิง" },
+      ];
+
   return (
     <div className="w-full mx-auto p-4">
 
@@ -291,13 +308,7 @@ export default function PatientData({
                 placeholder="เลือกคำนำหน้า"
                 value={patient.title}
                 onValueChange={handleSelectChange("title")}
-                options={[
-                  { label: "นาย", value: "นาย" },
-                  { label: "นาง", value: "นาง" },
-                  { label: "นางสาว", value: "นางสาว" },
-                  { label: "เด็กชาย", value: "เด็กชาย" },
-                  { label: "เด็กหญิง", value: "เด็กหญิง" },
-                ]}
+                options={titleOptions}
                 errorMessage={errors.title}
               />
             </div>
@@ -372,15 +383,25 @@ export default function PatientData({
               />
             </div>
 
-            <InputField
-              id="idcard"
-              name="idcard"
-              label="เลขบัตรประชาชน"
-              required
-              value={patient.idcard}
-              onChange={handleChange}
-              errorMessage={errors.idcard}
-            />
+            <div className="flex flex-col">
+              <InputField
+                id="idcard"
+                name="idcard"
+                label="เลขบัตรประชาชน"
+                required
+                value={patient.idcard}
+                onChange={handleChange}
+                errorMessage={errors.idcard}
+              />
+
+              {patient.diseases.some(
+                (d) => d.name === "วัคซีน"
+              ) && (
+                <span className="text-sm text-red-600 mt-1">
+                  กรุณาใส่เลขบัตรประชาชนของผู้ปกครอง
+                </span>
+              )}
+            </div>
 
             <InputField
               id="healthCoverage"

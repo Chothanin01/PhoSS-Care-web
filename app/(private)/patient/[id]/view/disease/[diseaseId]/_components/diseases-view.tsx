@@ -120,7 +120,15 @@ export default function DiseasesView() {
   }
 
   if (!data || data.appointment_info.length === 0) {
-    return <div className="ml-70 py-4 px-6">ไม่มีประวัติการรักษา</div>;
+    return (
+      <div className="ml-70 py-4">
+        <div className="bg-white p-10 rounded-lg border text-center">
+          <div className="text-lg font-semibold text-gray-600 mb-2">
+            ผู้ป่วยรายนี้ยังไม่มีข้อมูลประวัติการรักษาในระบบ
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const sortedHistory = [...data.appointment_info].sort(
@@ -141,7 +149,7 @@ export default function DiseasesView() {
         return (
           <div
             key={item.no}
-            className="w-full md:w-full bg-white p-6 rounded-lg shadow"
+            className="w-full bg-white p-6 rounded-lg shadow mb-4"
           >
             <h2 className="text-xl font-semibold mb-6">
               ประวัติการรักษา {data.disease_name} ครั้งที่ {item.no}
