@@ -121,7 +121,7 @@ export default function DiseasesView() {
   }
 
   if (!data || data.appointment_info.length === 0) {
-    return <div className="ml-70 px-6 py-28">ไม่มีประวัติการรักษา</div>;
+    return <div className="ml-70 py-4 px-6">ไม่มีประวัติการรักษา</div>;
   }
 
   const sortedHistory = [...data.appointment_info].sort(
@@ -133,7 +133,7 @@ export default function DiseasesView() {
     data.disease_name?.toLowerCase().includes("tuberculosis");
 
   return (
-    <div className="ml-70 px-6 py-28 space-y-6">
+    <div className="ml-70 py-4">
       {sortedHistory.map((item) => {
         const color = getColorStatus(item.maxLevel);
         const label = getStatusLabel(color);
@@ -142,7 +142,7 @@ export default function DiseasesView() {
         return (
           <div
             key={item.no}
-            className="w-[1360px] bg-white rounded-lg shadow px-14 py-14"
+            className="w-full md:w-full bg-white p-6 rounded-lg shadow"
           >
             <h2 className="text-xl font-semibold mb-6">
               ประวัติการรักษา {data.disease_name} ครั้งที่ {item.no}

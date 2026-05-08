@@ -99,12 +99,12 @@ export default function PatientCard() {
             <p>เลขบัตรประชาชน : {patient.nationalId}</p>
             <p>สิทธิการรักษา : {patient.right}</p>
 
-            <div className="flex gap-50">
+            <div className="flex flex-col sm:flex-row sm:gap-10 gap-2">
               <p>สัญชาติ : {patient.nationality}</p>
               <p>เชื้อชาติ : {patient.ethnicity}</p>
             </div>
 
-            <div className="flex gap-46">
+            <div className="flex flex-col sm:flex-row sm:gap-10 gap-2">
               <p>น้ำหนัก : {patient.weight} กก.</p>
               <p className="px-1">ส่วนสูง : {patient.height} ซม.</p>
             </div>

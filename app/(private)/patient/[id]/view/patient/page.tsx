@@ -6,16 +6,16 @@ import OfficerSection from "@/app/(private)/patient/_components/hospital-viewdat
 
 export default function Page() {
   return (
-    <div className="ml-70 px-6 py-28 space-y-3">
-      <div className="w-[1190px] bg-white p-6 rounded-lg shadow">
+    <div className="ml-70 py-4">
+      <div className="w-full md:w-full bg-white p-6 rounded-lg shadow mb-6">
         <PatientCard />
       </div>
 
-      <div className="w-full bg-white p-6 rounded-lg shadow">
+      <div className="w-full md:w-full bg-white p-6 rounded-lg shadow mb-6">
         <RelativeSection />
       </div>
 
-      <div className="w-full bg-white p-6 rounded-lg shadow">
+      <div className="w-full md:w-full bg-white p-6 rounded-lg shadow">
         <OfficerSection />
       </div>
     </div>

@@ -88,11 +88,11 @@ export default function VaccineView() {
   }, [patientId]);
 
   if (loading) {
-    return <div className="ml-70 px-6 py-28">กำลังโหลดข้อมูล...</div>;
+    return <div className="ml-70 py-4">กำลังโหลดข้อมูล...</div>;
   }
 
   if (!vaccines || vaccines.length === 0) {
-    return <div className="ml-70 px-6 py-28">ไม่มีประวัติวัคซีน</div>;
+    return <div className="ml-70 py-4">ไม่มีประวัติวัคซีน</div>;
   }
 
   const sortedHistory = [...vaccines].sort(
@@ -107,7 +107,7 @@ export default function VaccineView() {
         return (
           <div
             key={item.id}
-            className="w-[1375px] bg-white p-6 rounded-lg shadow px-14 py-14"
+            className="w-full md:w-full bg-white p-6 rounded-lg shadow"
           >
             <h2 className="text-xl font-semibold mb-6">
               ประวัติการฉีด {item.vaccine_name}

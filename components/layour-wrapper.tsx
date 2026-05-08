@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider, SidebarInset } from "@/shadcn/ui/sidebar";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/shadcn/ui/sidebar";
 
 export function LayoutWrapper({
   children,
@@ -19,12 +19,12 @@ export function LayoutWrapper({
 
   return (
     <SidebarProvider>
-      <div>
-        <AppSidebar />
-        <SidebarInset>
+      <AppSidebar />
+      <SidebarInset>
+        <main className="pt-24 px-6 pb-6">
           {children}
-        </SidebarInset>
-      </div>
+        </main>
+      </SidebarInset>
     </SidebarProvider>
   );
 }
