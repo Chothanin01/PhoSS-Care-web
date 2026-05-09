@@ -9,7 +9,6 @@ export default function PatientCard() {
   const router = useRouter();
   const params = useParams();
   const patientId = params.id;
-  console.log("id:", patientId);
 
   const [patient, setPatient] = useState<any>(null);
 
@@ -23,8 +22,6 @@ export default function PatientCard() {
         )
 
         const data = await res.json()
-
-        console.log("patient api:", data)
 
         const p = data?.data?.[0]?.patient
         if (!p) return

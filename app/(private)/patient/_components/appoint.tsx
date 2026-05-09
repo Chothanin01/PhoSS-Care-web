@@ -16,6 +16,7 @@ type AppointmentFormData = {
   time_end: string;
   place: string;
   next_doctor_id: string;
+  prepare: string;
 };
 
 type Props = {
@@ -179,6 +180,26 @@ export default function AddAppoint({
             value={formData.place || ""}
             onChange={handleChange}
           />
+          
+          <div>
+            <label className="block mb-2 text-sm font-medium">
+              การเตรียมตัวก่อนพบแพทย์
+            </label>
+
+            <textarea
+              id="prepare"
+              name="prepare"
+              rows={4}
+              value={formData.prepare || ""}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  prepare: e.target.value,
+                }))
+              }
+              className="w-full border rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-300 resize-none"
+            />
+          </div>
         </div>
 
         <div>

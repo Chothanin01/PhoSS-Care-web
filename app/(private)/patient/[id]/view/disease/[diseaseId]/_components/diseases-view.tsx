@@ -10,6 +10,7 @@ type Health = {
   bmi: number;
   pulse: number;
   sugar: number;
+  pressure: number;
 };
 
 type Appointment = {
@@ -180,7 +181,7 @@ export default function DiseasesView() {
                   <p>ส่วนสูง : {item.health?.height ?? "-"} ซม.</p>
                   <p>ชีพจร : {item.health?.pulse ?? "-"} ครั้ง/นาที</p>
                    <p>
-                    ความดัน : {item.symptom || "-"}
+                    ความดัน : {item.health?.pressure || "-"}
                   </p>
                   <p>ดัชนีมวลกาย : {item.health?.bmi ?? "-"} kg/m²</p>
 

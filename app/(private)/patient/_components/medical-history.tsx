@@ -21,11 +21,13 @@ type HistoryFormData = {
   treatment: string;
   doctor_id: string;
   disease: string;
+  old_appoint_id: string;
 };
 
 type DiseaseOption = {
   label: string;
   value: string;
+  appoint_id?: string;
 };
 
 type PatientInfo = {
@@ -89,11 +91,10 @@ export default function HistoryPatient({
 
         const data = await res.json();
 
-        console.log("disease api:", data);
-
         const options = (data.data || []).map((item: any) => ({
           label: item.name,
           value: String(item.disease_id),
+          appoint_id: item.appoint_id || null,
         }));
 
         setDiseaseOptions(options);
@@ -142,10 +143,16 @@ export default function HistoryPatient({
 
   const handleSelectChange =
     (field: keyof HistoryFormData) => (value: string) => {
-      setFormData((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
+      if (field === "disease") {
+        const selected = diseaseOptions.find((d) => d.value === value);
+        setFormData((prev) => ({
+          ...prev,
+          disease: value,
+          old_appoint_id: selected?.appoint_id || "",
+        }));
+        return;
+      }
+      setFormData((prev) => ({ ...prev, [field]: value }));
     };
 
   const isFormValid = useMemo(() => {

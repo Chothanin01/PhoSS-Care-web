@@ -127,8 +127,6 @@ export default function VaccineForm({
 
                 const data = await res.json();
 
-                console.log("vaccination history:", data);
-
                 if (data?.data) {
                     const vaccine = data.data;
 

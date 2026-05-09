@@ -28,6 +28,7 @@ export default function Page() {
     treatment: "",
     doctor_id: "",
     disease: "",
+    old_appoint_id: "",
   });
 
   const [appointData, setAppointData] = useState({
@@ -37,6 +38,7 @@ export default function Page() {
     time_end: "",
     place: "",
     next_doctor_id: "",
+    prepare: "",
   });
 
   const handleNext = () => setStep(1);
@@ -66,7 +68,9 @@ export default function Page() {
       const body = {
         patient_id: patientId,
         disease_id: historyData.disease,
+        old_appoint_id: historyData.old_appoint_id || null,
         doctor_id: historyData.doctor_id,
+        old_date: historyData.exam_date,
         next_doctor_id: appointData.next_doctor_id,
         purpose: appointData.purpose || "-",
         place: appointData.place || "-",
@@ -81,7 +85,9 @@ export default function Page() {
           bmi,
           pulse: pulse || 0,
           sugar: 0,
+          pressure: parseInt(historyData.pressure) || 0,
         },
+        prepare: appointData.prepare || "-",
       };
 
       const res = await fetchWithRefresh(
