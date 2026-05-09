@@ -1,13 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import { ProgressNav } from "@/components/progress-nav";
 import { ProgressNavItem } from "@/components/progress-nav-item";
 import HistoryPatient from "@/app/(private)/patient/_components/medical-history";
 import AddAppoint from "@/app/(private)/patient/_components/appoint";
-import VaccineHistory from "@/app/(private)/patient/_components/vaccine-history";
-import AddVaccineAppoint from "@/app/(private)/patient/_components/appoint-vaccine";
 import { FileText, FileCheckCorner } from "lucide-react";
 import { fetchWithRefresh } from "@/lib/api";
 
@@ -28,9 +26,7 @@ export default function Page() {
     symptom: "",
     status: "",
     treatment: "",
-    doctor_title: "",
-    doctor_firstname: "",
-    doctor_lastname: "",
+    doctor_id: "",
     disease: "",
   });
 
@@ -40,53 +36,11 @@ export default function Page() {
     time_start: "",
     time_end: "",
     place: "",
-    next_doctor_title: "",
-    next_doctor_firstname: "",
-    next_doctor_lastname: "",
-  });
-
-  const [vaccineHistoryData, setVaccineHistoryData] = useState({
-    vaccine_id: "",
-    old_vaccine_id: "",
-    dose_number: 1,
-    next_dose_number: 2,
-    vaccine_doctor_title: "",
-    vaccine_doctor_firstname: "",
-    vaccine_doctor_lastname: "",
-    doctor_title: "",
-    doctor_firstname: "",
-    doctor_lastname: "",
-    place: "",
-    date: "",
-    time_start: "",
-    time_end: "",
-  });
-
-  const [vaccineAppointData, setVaccineAppointData] = useState({
-    vaccine_id: "",
-    old_vaccine_id: "",
-    dose_number: 1,
-    next_dose_number: 2,
-    vaccine_doctor_title: "",
-    vaccine_doctor_firstname: "",
-    vaccine_doctor_lastname: "",
-    doctor_title: "",
-    doctor_firstname: "",
-    doctor_lastname: "",
-    place: "",
-    date: "",
-    time_start: "",
-    time_end: "",
+    next_doctor_id: "",
   });
 
   const handleNext = () => setStep(1);
   const handleBack = () => setStep(0);
-
-  const mapDoctorTitle = (title: string) => {
-    if (title === "นายแพทย์") return "Dr.";
-    if (title === "แพทย์หญิง") return "Dr.";
-    return title;
-  };
 
   const handleSubmit = async (): Promise<boolean> => {
     try {
@@ -112,12 +66,8 @@ export default function Page() {
       const body = {
         patient_id: patientId,
         disease_id: historyData.disease,
-        doctor_title: mapDoctorTitle(historyData.doctor_title),
-        doctor_firstname: historyData.doctor_firstname || "-",
-        doctor_lastname: historyData.doctor_lastname || "-",
-        next_doctor_title: mapDoctorTitle(appointData.next_doctor_title),
-        next_doctor_firstname: appointData.next_doctor_firstname || "-",
-        next_doctor_lastname: appointData.next_doctor_lastname || "-",
+        doctor_id: historyData.doctor_id,
+        next_doctor_id: appointData.next_doctor_id,
         purpose: appointData.purpose || "-",
         place: appointData.place || "-",
         date: appointData.date,

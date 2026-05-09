@@ -8,13 +8,6 @@ import { Button } from "@/shadcn/ui/button";
 import { StepForward } from "lucide-react";
 import { fetchWithRefresh } from "@/lib/api";
 
-const DOCTOR_TITLES = [
-  { label: "นายแพทย์", value: "นายเเพทย์" },
-  { label: "แพทย์หญิง", value: "เเพทย์หญิง" },
-];
-
-type DoctorTitle = "นายเเพทย์" | "เเพทย์หญิง";
-
 type HistoryFormData = {
   exam_date: string;
   visit_no: string;
@@ -26,9 +19,7 @@ type HistoryFormData = {
   symptom: string;
   status: string;
   treatment: string;
-  doctor_title: string;
-  doctor_firstname: string;
-  doctor_lastname: string;
+  doctor_id: string;
   disease: string;
 };
 
@@ -61,6 +52,7 @@ export default function HistoryPatient({
 
   const [diseaseOptions, setDiseaseOptions] = useState<DiseaseOption[]>([]);
   const [patientInfo, setPatientInfo] = useState<PatientInfo | null>(null);
+  const [doctorOptions, setDoctorOptions] = useState< { label: string; value: string }[]>([])
 
   useEffect(() => {
     const fetchPatientInfo = async () => {
@@ -86,6 +78,7 @@ export default function HistoryPatient({
 
     if (patientId) fetchPatientInfo();
   }, [patientId]);
+
   useEffect(() => {
     const fetchDiseases = async () => {
       try {
@@ -112,6 +105,30 @@ export default function HistoryPatient({
     if (patientId) fetchDiseases();
   }, [patientId]);
 
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const res = await fetchWithRefresh(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/doctors`
+        )
+
+        const data = await res.json()
+
+        const options = (data.data || []).map((doctor: any) => ({
+          label: doctor.full_name,
+          value: doctor.id,
+        }))
+
+        setDoctorOptions(options)
+
+      } catch (err) {
+        console.error("fetch doctors error:", err)
+      }
+    }
+
+    fetchDoctors()
+  }, [])
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -135,9 +152,7 @@ export default function HistoryPatient({
     return (
       formData.disease &&
       formData.exam_date &&
-      formData.doctor_title &&
-      formData.doctor_firstname &&
-      formData.doctor_lastname &&
+      formData.doctor_id &&
       formData.weight &&
       formData.height &&
       formData.pulse &&
@@ -196,37 +211,17 @@ export default function HistoryPatient({
               max={new Date().toISOString().split("T")[0]}
             />
 
-            <h2 className="col-span-2 font-medium -mt-3">ผู้ตรวจ</h2>
-
-            <div className="-mt-5">
+            <h2 className="col-span-2 font-medium mt-3 mb-3">แพทย์ผู้ตรวจ</h2>
+            <div className="grid grid-cols-1 -mt-5">
               <SelectField
-                id="doctor_title"
-                name="doctor_title"
-                label="คำนำหน้า"
-                placeholder="เลือกคำนำหน้า"
-                value={formData.doctor_title}
-                onValueChange={handleSelectChange("doctor_title")}
-                options={DOCTOR_TITLES}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 col-span-2">
-              <InputField
-                id="doctor_firstname"
-                name="doctor_firstname"
-                label="ชื่อ"
+                id="doctor_id"
+                name="doctor_id"
+                label="ชื่อแพทย์"
+                placeholder="เลือกแพทย์"
+                value={formData.doctor_id}
+                onValueChange={handleSelectChange("doctor_id")}
+                options={doctorOptions}
                 required
-                value={formData.doctor_firstname}
-                onChange={handleChange}
-              />
-
-              <InputField
-                id="doctor_lastname"
-                name="doctor_lastname"
-                label="นามสกุล"
-                required
-                value={formData.doctor_lastname}
-                onChange={handleChange}
               />
             </div>
           </div>

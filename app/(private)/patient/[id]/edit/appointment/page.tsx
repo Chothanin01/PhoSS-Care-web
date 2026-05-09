@@ -36,43 +36,40 @@ export default function Page() {
       const diseaseMapped = list.flatMap((d: any) =>
         (d.appointments || []).map((appoint: any) => {
 
-          const doctor = appoint.doctor || ""
-          const [first, last] = doctor.split(" ")
-
-          let doctor_title = ""
-          let doctor_firstname = ""
-
-          if (first?.startsWith("แพทย์หญิง")) {
-            doctor_title = "แพทย์หญิง"
-            doctor_firstname = first.replace("แพทย์หญิง", "")
-          } 
-          else if (first?.startsWith("นายแพทย์")) {
-            doctor_title = "นายแพทย์"
-            doctor_firstname = first.replace("นายแพทย์", "")
-          }
-
-          const doctor_lastname = last || ""
-
           const officer = appoint.officer || ""
-          const [ofirst, olast] = officer.split(" ")
 
           let officer_title = ""
           let officer_firstname = ""
+          let officer_lastname = ""
 
-          if (ofirst?.startsWith("นาย")) {
+          if (officer.startsWith("Mr.")) {
             officer_title = "นาย"
-            officer_firstname = ofirst.replace("นาย", "")
-          } 
-          else if (ofirst?.startsWith("นางสาว")) {
-            officer_title = "นางสาว"
-            officer_firstname = ofirst.replace("นางสาว", "")
-          } 
-          else if (ofirst?.startsWith("นาง")) {
-            officer_title = "นาง"
-            officer_firstname = ofirst.replace("นาง", "")
-          }
 
-          const officer_lastname = olast || ""
+            const fullname = officer.replace("Mr.", "").trim()
+            const parts = fullname.split(" ")
+
+            officer_firstname = parts[0] || ""
+            officer_lastname = parts.slice(1).join(" ") || ""
+
+          } else if (officer.startsWith("Mrs.")) {
+            officer_title = "นาง"
+
+            const fullname = officer.replace("Mrs.", "").trim()
+            const parts = fullname.split(" ")
+
+            officer_firstname = parts[0] || ""
+            officer_lastname = parts.slice(1).join(" ") || ""
+
+          } else if (officer.startsWith("Ms.")) {
+            officer_title = "นางสาว"
+
+            const fullname = officer.replace("Ms.", "").trim()
+            const parts = fullname.split(" ")
+
+            officer_firstname = parts[0] || ""
+            officer_lastname = parts.slice(1).join(" ") || ""
+
+          }
 
           return {
             appoint_id: appoint.id,
@@ -82,9 +79,8 @@ export default function Page() {
             startTime: appoint.start_time || "",
             endTime: appoint.end_time || "",
 
-            doctor_title,
-            doctor_firstname,
-            doctor_lastname,
+            doctor_id: appoint.doctor_id || "",
+            doctor_name: appoint.doctor || "",
 
             officer_title,
             officer_firstname,
@@ -137,19 +133,28 @@ export default function Page() {
 
   return (
     <div className="ml-70 py-4">
-
       <div className="w-full mx-auto space-y-6">
-        {appointments.map((appoint,index)=>(
-          <div
-            key={`${appoint.appoint_id}-${index}`}
-            className="bg-white p-6 rounded-lg shadow border"
-          >
-            <EditAppointmentData
-              appointment={appoint}
-              onChange={(updated)=>updateAppointment(index,updated)}
-            />
+        {appointments.length === 0 ? (
+          <div className="bg-white p-10 rounded-lg border text-center">
+            <div className="text-lg font-semibold text-gray-600 mb-2">
+              ผู้ป่วยรายนี้ยังไม่มีข้อมูลใบนัดในระบบ
+            </div>
           </div>
-        ))}
+        ) : (
+          appointments.map((appoint, index) => (
+            <div
+              key={`${appoint.appoint_id}-${index}`}
+              className="bg-white p-6 rounded-lg border"
+            >
+              <EditAppointmentData
+                appointment={appoint}
+                onChange={(updated) =>
+                  updateAppointment(index, updated)
+                }
+              />
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

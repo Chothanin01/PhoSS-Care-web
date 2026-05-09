@@ -17,9 +17,8 @@ type Appointment = {
   date: string
   startTime: string
   endTime: string
-  doctor_title: string
-  doctor_firstname: string
-  doctor_lastname: string
+  doctor_id: string
+  doctor_name?: string
   officer_title: string
   officer_firstname: string
   officer_lastname: string
@@ -37,6 +36,7 @@ interface Props {
 export default function EditAppointmentData({ appointment, onChange }: Props) {
 
   const [openSuccess, setOpenSuccess] = useState(false);
+  const [doctorOptions, setDoctorOptions] = useState<{ label: string; value: string }[]>([])
 
   const updateField = (key: keyof Appointment, value: string) => {
     onChange({
@@ -44,6 +44,45 @@ export default function EditAppointmentData({ appointment, onChange }: Props) {
       [key]: value
     })
   }
+
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const res = await fetchWithRefresh(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/doctors`
+        )
+
+        const data = await res.json()
+
+        const options = (data.data || []).map((doctor: any) => ({
+          label: doctor.full_name,
+          value: doctor.id,
+        }))
+
+        setDoctorOptions(options)
+
+      } catch (err) {
+        console.error("fetch doctors error:", err)
+      }
+    }
+
+    fetchDoctors()
+  }, [])
+
+  useEffect(() => {
+    if (!appointment.doctor_name || doctorOptions.length === 0) return
+
+    const matchedDoctor = doctorOptions.find(
+      (doctor) => doctor.label === appointment.doctor_name
+    )
+
+    if (matchedDoctor && appointment.doctor_id !== matchedDoctor.value) {
+      onChange({
+        ...appointment,
+        doctor_id: matchedDoctor.value,
+      })
+    }
+  }, [doctorOptions, appointment.doctor_name])
 
   useEffect(() => {
     if (openSuccess) {
@@ -74,9 +113,7 @@ export default function EditAppointmentData({ appointment, onChange }: Props) {
         start_time: appointment.startTime,
         end_time: appointment.endTime,
 
-        doctor_title: appointment.doctor_title,
-        doctor_firstname: appointment.doctor_firstname,
-        doctor_lastname: appointment.doctor_lastname
+        doctor_id: appointment.doctor_id
       }
 
     } else {
@@ -89,9 +126,7 @@ export default function EditAppointmentData({ appointment, onChange }: Props) {
         start_time: appointment.startTime,
         end_time: appointment.endTime,
 
-        doctor_title: appointment.doctor_title,
-        doctor_firstname: appointment.doctor_firstname,
-        doctor_lastname: appointment.doctor_lastname
+        doctor_id: appointment.doctor_id
       }
 
     }
@@ -120,7 +155,7 @@ export default function EditAppointmentData({ appointment, onChange }: Props) {
           : `แก้ไขข้อมูลใบนัด${appointment.disease_name}`}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         <div>
           {appointment.is_vaccine ? (
 
@@ -218,9 +253,9 @@ export default function EditAppointmentData({ appointment, onChange }: Props) {
           <div className="mb-4 font-semibold text-md">
             ผู้นัด
           </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6"> 
-              <div className="col-span-2 flex">
-                <div className="w-62">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"> 
+              <div className="md:col-span-2">
+                <div className="w-full md:w-64">
                   <SelectField
                     id="title"
                     name="title"
@@ -259,38 +294,15 @@ export default function EditAppointmentData({ appointment, onChange }: Props) {
               แพทย์
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6"> 
-              <div className="col-span-2 flex">
-                <div className="w-62">
-                  <SelectField
-                    id="title"
-                    name="title"
-                    label="คำนำหน้า"
-                    placeholder="เลือกคำนำหน้า"
-                    value={appointment.doctor_title}
-                    onValueChange={(v)=>updateField("doctor_title",v)}
-                    options={[
-                      {label:"นายแพทย์",value:"นายแพทย์"},
-                      {label:"แพทย์หญิง",value:"แพทย์หญิง"}
-                    ]}
-                  />
-                </div>
-              </div>
-              
-              <InputField
-                id="firstname"
-                name="firstname"
-                label="ชื่อ"
-                value={appointment.doctor_firstname}
-                onChange={(e)=>updateField("doctor_firstname",e.target.value)}
-              />
-              
-              <InputField
-                id="lastname"
-                name="lastname"
-                label="นามสกุล"
-                value={appointment.doctor_lastname}
-                onChange={(e)=>updateField("doctor_lastname",e.target.value)}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <SelectField
+                id="doctor_id"
+                name="doctor_id"
+                label="ชื่อแพทย์"
+                placeholder="เลือกแพทย์"
+                value={appointment.doctor_id}
+                onValueChange={(v) => updateField("doctor_id", v)}
+                options={doctorOptions}
               />
             </div>
         </div>

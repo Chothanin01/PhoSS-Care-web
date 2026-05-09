@@ -92,7 +92,15 @@ export default function VaccineView() {
   }
 
   if (!vaccines || vaccines.length === 0) {
-    return <div className="ml-70 py-4">ไม่มีประวัติวัคซีน</div>;
+    return (
+      <div className="ml-70 py-4">
+        <div className="bg-white p-10 rounded-lg border text-center">
+          <div className="text-lg font-semibold text-gray-600">
+            ผู้ป่วยรายนี้ยังไม่มีข้อมูลประวัติวัคซีนในระบบ
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const sortedHistory = [...vaccines].sort(
@@ -107,7 +115,7 @@ export default function VaccineView() {
         return (
           <div
             key={item.id}
-            className="w-full md:w-full bg-white p-6 rounded-lg shadow"
+            className="w-full bg-white p-6 rounded-lg shadow mb-4"
           >
             <h2 className="text-xl font-semibold mb-6">
               ประวัติการฉีด {item.vaccine_name}

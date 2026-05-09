@@ -20,18 +20,19 @@ interface Request {
   diseaseName: string;
   hnNumber: string;
   status: RequestStatus;
+  createAt: string;
 }
 
 enum RequestStatus {
   PENDING = "pending",
   ACCEPTED = "accepted",
-  DECLINED = "declined",
+  CANCELED = "canceled",
 }
 
 const statusDisplayMap = {
   pending: "กำลังรอพิจารณา",
   accepted: "อนุมัติคำขอ",
-  declined: "ยกเลิกคำขอ",
+  canceled: "ยกเลิกคำขอ",
 }
 
 export function SortTableRequest() {
@@ -59,7 +60,7 @@ export function SortTableRequest() {
     { value: "all", label: "สถานะทั้งหมด" },
     { value: "pending", label: "กำลังรอพิจารณา" },
     { value: "accepted", label: "อนุมัติคำขอ" },
-    { value: "declined", label: "ยกเลิกคำขอ" },
+    { value: "canceled", label: "ยกเลิกคำขอ" },
   ]
 
   const requestTypeDisplayMap: Record<string, string> = {
@@ -93,7 +94,7 @@ export function SortTableRequest() {
       case "accepted":
         return "bg-green-100 text-green-700"
 
-      case "declined":
+      case "canceled":
         return "bg-red-100 text-red-700"
 
       default:
@@ -140,7 +141,8 @@ export function SortTableRequest() {
           lastName: nameParts.slice(1).join(" ") || "",
           diseaseName: r.disease_name,
           hnNumber: r.hn_number,
-          status: r.status
+          status: r.status,
+          createAt: r.created_at,
         }
       })
 
@@ -191,7 +193,7 @@ export function SortTableRequest() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          status: "declined",
+          status: "canceled",
           description: declineReason
         }),
       }
@@ -225,6 +227,16 @@ export function SortTableRequest() {
   }
 
   const RequestColumn = [
+
+    {
+      id: "createAt",
+      header: "วันที่ขอ",
+      cell: (row: Request) => (
+        <div className="text-xs whitespace-nowrap">
+          {formatThaiDate(row.createAt)}
+        </div>
+      ),
+    },
 
     {
       id: "reqType",
@@ -361,7 +373,7 @@ export function SortTableRequest() {
                 นัดก่อนเลื่อน : {formatThaiDate(requestDetail?.appoint_date)} เวลา {requestDetail?.appoint_start_time} - {requestDetail?.appoint_end_time} น.
               </div>
             )}
-            {requestDetail?.status === RequestStatus.DECLINED && requestDetail?.description && (
+            {requestDetail?.status === RequestStatus.CANCELED && requestDetail?.description && (
               <div className="col-span-12">
                 เหตุผลที่ยกเลิกคำขอ : {requestDetail.description}
               </div>
