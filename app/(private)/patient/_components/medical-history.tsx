@@ -55,7 +55,7 @@ export default function HistoryPatient({
 
   const [diseaseOptions, setDiseaseOptions] = useState<DiseaseOption[]>([]);
   const [patientInfo, setPatientInfo] = useState<PatientInfo | null>(null);
-  const [doctorOptions, setDoctorOptions] = useState< { label: string; value: string }[]>([])
+  const [doctorOptions, setDoctorOptions] = useState<{ label: string; value: string }[]>([])
 
   useEffect(() => {
     const fetchPatientInfo = async () => {
@@ -278,7 +278,7 @@ export default function HistoryPatient({
               id="pressure"
               name="pressure"
               label="ความดัน"
-              type="number"
+              type="text"
               endAdornmentLabel="มม.ปรอท"
               required
               value={formData.pressure}
