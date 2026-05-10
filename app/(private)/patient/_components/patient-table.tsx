@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/shadcn/ui/button";
 import { InputField } from "@/components/inputfield";
-import { Edit, EllipsisVertical, FileText, Server } from "lucide-react";
+import { Edit, EllipsisVertical, FileText, Server, Syringe } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/shadcn/ui/dropdown-menu";
 import { DataTable } from "@/components/data-table";
 import { PatientFilter } from "@/components/filter";
@@ -219,45 +219,82 @@ export function SortTablePatient() {
     {
       id: "action",
       header: "",
-      cell: (patient: Patient) => (
-        <div className="whitespace-nowrap text-center text-xs">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <EllipsisVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => {
-                  router.push(`/patient/${patient.id}/edit/patient`);
-                }}
-                className="cursor-pointer"
-              >
-                <Edit className="text-Bamboo-100 mr-2 h-4 w-4" /> แก้ไข
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  router.push(`/patient/${patient.id}/appoint`);
-                }}
-                className="cursor-pointer"
-              >
-                <FileText className="text-Bamboo-100 mr-2 h-4 w-4" /> เพิ่มใบนัด
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  router.push(`/patient/${patient.id}/view/patient`);
-                }}
-                className="cursor-pointer"
-              >
-                <Server className="text-Bamboo-100 mr-2 h-4 w-4" /> ดูข้อมูลทั้งหมด
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      ),
-    },
+      cell: (patient: Patient) => {
+
+        const hasVaccine = patient.diseases.some(
+          (d) => d.name === "วัคซีน"
+        );
+
+        const nonVaccineDiseases = patient.diseases.filter(
+          (d) => d.name !== "วัคซีน"
+        );
+
+        const hasOtherDiseases =
+          nonVaccineDiseases.length > 0;
+
+        return (
+          <div className="whitespace-nowrap text-center text-xs">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <EllipsisVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent align="end">
+
+                <DropdownMenuItem
+                  onClick={() => {
+                    router.push(`/patient/${patient.id}/edit/patient`);
+                  }}
+                  className="cursor-pointer"
+                >
+                  <Edit className="text-Bamboo-100 mr-2 h-4 w-4" /> แก้ไข
+                </DropdownMenuItem>
+
+                {hasOtherDiseases && (
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push(`/patient/${patient.id}/appoint`);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <FileText className="text-Bamboo-100 mr-2 h-4 w-4" />
+                    เพิ่มใบนัด
+                  </DropdownMenuItem>
+                )}
+
+                {hasVaccine && (
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push(
+                        `/patient/${patient.id}/appoint?vaccine=true`
+                      );
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <Syringe className="text-Bamboo-100 mr-2 h-4 w-4" />
+                    เพิ่มใบนัดวัคซีน
+                  </DropdownMenuItem>
+                )}
+
+                <DropdownMenuItem
+                  onClick={() => {
+                    router.push(`/patient/${patient.id}/view/patient`);
+                  }}
+                  className="cursor-pointer"
+                >
+                  <Server className="text-Bamboo-100 mr-2 h-4 w-4" />
+                  ดูข้อมูลทั้งหมด
+                </DropdownMenuItem>
+
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        );
+      },
+    }
   ];
 
   return (

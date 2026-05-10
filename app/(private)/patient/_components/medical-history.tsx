@@ -21,11 +21,14 @@ type HistoryFormData = {
   treatment: string;
   doctor_id: string;
   disease: string;
+  old_appoint_id: string;
+  sugar: string;
 };
 
 type DiseaseOption = {
   label: string;
   value: string;
+  appoint_id?: string;
 };
 
 type PatientInfo = {
@@ -52,7 +55,7 @@ export default function HistoryPatient({
 
   const [diseaseOptions, setDiseaseOptions] = useState<DiseaseOption[]>([]);
   const [patientInfo, setPatientInfo] = useState<PatientInfo | null>(null);
-  const [doctorOptions, setDoctorOptions] = useState< { label: string; value: string }[]>([])
+  const [doctorOptions, setDoctorOptions] = useState<{ label: string; value: string }[]>([])
 
   useEffect(() => {
     const fetchPatientInfo = async () => {
@@ -89,11 +92,10 @@ export default function HistoryPatient({
 
         const data = await res.json();
 
-        console.log("disease api:", data);
-
         const options = (data.data || []).map((item: any) => ({
           label: item.name,
           value: String(item.disease_id),
+          appoint_id: item.appoint_id || null,
         }));
 
         setDiseaseOptions(options);
@@ -109,13 +111,13 @@ export default function HistoryPatient({
     const fetchDoctors = async () => {
       try {
         const res = await fetchWithRefresh(
-          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/doctors`
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/doctors?role=doctor`
         )
 
         const data = await res.json()
 
         const options = (data.data || []).map((doctor: any) => ({
-          label: doctor.full_name,
+          label: doctor.fullname,
           value: doctor.id,
         }))
 
@@ -142,10 +144,16 @@ export default function HistoryPatient({
 
   const handleSelectChange =
     (field: keyof HistoryFormData) => (value: string) => {
-      setFormData((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
+      if (field === "disease") {
+        const selected = diseaseOptions.find((d) => d.value === value);
+        setFormData((prev) => ({
+          ...prev,
+          disease: value,
+          old_appoint_id: selected?.appoint_id || "",
+        }));
+        return;
+      }
+      setFormData((prev) => ({ ...prev, [field]: value }));
     };
 
   const isFormValid = useMemo(() => {
@@ -270,7 +278,7 @@ export default function HistoryPatient({
               id="pressure"
               name="pressure"
               label="ความดัน"
-              type="number"
+              type="text"
               endAdornmentLabel="มม.ปรอท"
               required
               value={formData.pressure}
@@ -288,6 +296,19 @@ export default function HistoryPatient({
               onChange={handleChange}
             />
 
+            <InputField
+              id="sugar"
+              name="sugar"
+              label="ระดับน้ำตาลในเลือด"
+              type="number"
+              required
+              endAdornmentLabel="mg/dL"
+              value={formData.sugar}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="mt-6">
             <InputField
               id="symptom"
               name="symptom"

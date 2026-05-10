@@ -16,6 +16,7 @@ type AppointmentFormData = {
   time_end: string;
   place: string;
   next_doctor_id: string;
+  prepare: string;
 };
 
 type Props = {
@@ -39,13 +40,13 @@ export default function AddAppoint({
     const fetchDoctors = async () => {
       try {
         const res = await fetchWithRefresh(
-          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/doctors`
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/doctors?role=doctor`
         )
 
         const data = await res.json()
 
         const options = (data.data || []).map((doctor: any) => ({
-          label: doctor.full_name,
+          label: doctor.fullname,
           value: doctor.id,
         }))
 
@@ -181,9 +182,8 @@ export default function AddAppoint({
           />
         </div>
 
-        <div>
+        <div className="space-y-6">
           <h4 className="font-medium mb-2 -mt-8">แพทย์</h4>
-
           <div className="grid grid-cols-2">
             <SelectField
               id="next_doctor_id"
@@ -193,6 +193,26 @@ export default function AddAppoint({
               value={formData.next_doctor_id}
               onValueChange={handleSelectChange("next_doctor_id")}
               options={doctorOptions}
+              required
+            />
+          </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium text-muted-foreground">
+              การเตรียมตัวก่อนพบแพทย์
+            </label>
+
+            <textarea
+              id="prepare"
+              name="prepare"
+              rows={4}
+              value={formData.prepare || ""}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  prepare: e.target.value,
+                }))
+              }
+              className="w-full border rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-300 resize-none"
             />
           </div>
         </div>
