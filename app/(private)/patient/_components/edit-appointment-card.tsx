@@ -49,13 +49,13 @@ export default function EditAppointmentData({ appointment, onChange }: Props) {
     const fetchDoctors = async () => {
       try {
         const res = await fetchWithRefresh(
-          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/doctors`
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/doctors?role=doctor`
         )
 
         const data = await res.json()
 
         const options = (data.data || []).map((doctor: any) => ({
-          label: doctor.full_name,
+          label: doctor.fullname,
           value: doctor.id,
         }))
 
