@@ -110,7 +110,7 @@ export default function VaccineView() {
   );
 
   return (
-    <div className="ml-70 px-6 py-28 space-y-3">
+    <div className="ml-70 py-4">
       {sortedHistory.map((item) => {
         return (
           <div

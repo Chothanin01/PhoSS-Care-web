@@ -22,6 +22,7 @@ type HistoryFormData = {
   doctor_id: string;
   disease: string;
   old_appoint_id: string;
+  sugar: string;
 };
 
 type DiseaseOption = {
@@ -110,13 +111,13 @@ export default function HistoryPatient({
     const fetchDoctors = async () => {
       try {
         const res = await fetchWithRefresh(
-          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/doctors`
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/doctors?role=doctor`
         )
 
         const data = await res.json()
 
         const options = (data.data || []).map((doctor: any) => ({
-          label: doctor.full_name,
+          label: doctor.fullname,
           value: doctor.id,
         }))
 
@@ -295,6 +296,19 @@ export default function HistoryPatient({
               onChange={handleChange}
             />
 
+            <InputField
+              id="sugar"
+              name="sugar"
+              label="ระดับน้ำตาลในเลือด"
+              type="number"
+              required
+              endAdornmentLabel="mg/dL"
+              value={formData.sugar}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="mt-6">
             <InputField
               id="symptom"
               name="symptom"

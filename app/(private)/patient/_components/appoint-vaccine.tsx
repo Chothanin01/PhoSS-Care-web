@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-
 import { InputField } from "@/components/inputfield";
 import { SelectField } from "@/components/selectfield";
 import { Button } from "@/shadcn/ui/button";
@@ -27,18 +26,10 @@ type VaccineData = {
 type VaccineFormData = {
   vaccine_id: string;
   old_vaccine_id: string;
-
   dose_number: number;
   next_dose_number: number;
-
-  vaccine_doctor_title: string;
-  vaccine_doctor_firstname: string;
-  vaccine_doctor_lastname: string;
-
-  doctor_title: string;
-  doctor_firstname: string;
-  doctor_lastname: string;
-
+  vaccine_doctor_id: string;
+  doctor_id: string;
   place: string;
   date: string;
   time_start: string;
@@ -51,11 +42,6 @@ type Props = {
   onNext: () => Promise<boolean>;
   onBack: () => void;
 };
-
-const DOCTOR_TITLES = [
-  { label: "นายแพทย์", value: "นายแพทย์" },
-  { label: "แพทย์หญิง", value: "แพทย์หญิง" },
-];
 
 export default function AddVaccineAppoint({
   formData,
@@ -70,6 +56,7 @@ export default function AddVaccineAppoint({
   const [vaccineOptions, setVaccineOptions] = useState<any[]>([]);
   const [selectedVaccine, setSelectedVaccine] = useState<VaccineData | null>(null);
   const [timeError, setTimeError] = useState("");
+  const [doctorOptions, setDoctorOptions] = useState< { label: string; value: string }[]>([])
 
   useEffect(() => {
     const fetchVaccines = async () => {
@@ -81,7 +68,7 @@ export default function AddVaccineAppoint({
       setVaccineList(list);
 
       const options = list.map((v: VaccineData) => ({
-        label: v.type,
+        label: v.name,
         value: v.vaccine_id,
       }));
 
@@ -109,20 +96,33 @@ export default function AddVaccineAppoint({
     });
   };
 
-  const handleSelectChange = (value: string) => {
-    const vaccine = vaccineList.find((v) => v.vaccine_id === value);
+  const handleSelectChange =
+    (field: keyof VaccineFormData) => (value: string) => {
 
-    if (vaccine) {
-      setSelectedVaccine(vaccine);
+      if (field === "vaccine_id") {
+        const vaccine = vaccineList.find(
+          (v) => v.vaccine_id === value
+        );
+
+        if (vaccine) {
+          setSelectedVaccine(vaccine);
+
+          setFormData((prev) => ({
+            ...prev,
+            vaccine_id: vaccine.vaccine_id,
+            old_vaccine_id: vaccine.vaccine_id,
+          }));
+        }
+
+        return;
+      }
+
       setFormData((prev) => ({
         ...prev,
-        vaccine_id: vaccine.vaccine_id,
-        old_vaccine_id: vaccine.vaccine_id,
+        [field]: value,
       }));
-
-    }
-
   };
+
   const isFormValid = useMemo(() => {
     return (
       formData.vaccine_id &&
@@ -131,9 +131,7 @@ export default function AddVaccineAppoint({
       formData.time_start &&
       formData.time_end &&
       !timeError &&
-      formData.doctor_title &&
-      formData.doctor_firstname &&
-      formData.doctor_lastname
+      formData.doctor_id
     );
 
   }, [formData, timeError]);
@@ -149,6 +147,30 @@ export default function AddVaccineAppoint({
     }
   };
 
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const res = await fetchWithRefresh(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/doctors?role=doctor`
+        )
+
+        const data = await res.json()
+
+        const options = (data.data || []).map((doctor: any) => ({
+          label: doctor.fullname,
+          value: doctor.id,
+        }))
+
+        setDoctorOptions(options)
+
+      } catch (err) {
+        console.error("fetch doctors error:", err)
+      }
+    }
+
+    fetchDoctors()
+  }, [])
+
   return (
 
     <div className="px-6 py-6">
@@ -159,21 +181,21 @@ export default function AddVaccineAppoint({
           <div className="grid grid-cols-2 gap-6">
             <SelectField
               id="vaccine_id"
-              label="ชนิดวัคซีน"
+              label="ชื่อวัคซีน"
               placeholder="เลือกวัคซีน"
               required
               value={formData.vaccine_id}
-              onValueChange={handleSelectChange}
+              onValueChange={handleSelectChange("vaccine_id")}
               options={vaccineOptions}
               name="vaccine_id"
             />
             <InputField
               id="vaccine_name"
-              label="ชื่อวัคซีน"
-              value={selectedVaccine?.name || ""}
+              label="ชนิดวัคซีน"
+              value={selectedVaccine?.type || ""}
               readOnly
               name="vaccine_name"
-              className="text-black"
+              disabled={!!selectedVaccine}
             />
             <InputField
               id="date"
@@ -242,37 +264,18 @@ export default function AddVaccineAppoint({
             />
           </div>
         </div>
-        <div className="-mt-6">
-          <h4 className="font-medium">แพทย์</h4>
-          <div className="grid grid-cols-2 gap-6">
+        <div className="-mt-8">
+          <h4 className="font-medium mb-2">แพทย์</h4>
+          <div className="grid grid-cols-1">
             <SelectField
-              id="doctor_title"
-              label="คำนำหน้า"
-              required
-              placeholder="เลือกคำนำหน้า"
-              value={formData.doctor_title}
-              onValueChange={(v) =>
-                setFormData((prev) => ({ ...prev, doctor_title: v }))
-              }
-              options={DOCTOR_TITLES}
-              name="doctor_title"
-            />
-            <div />
-            <InputField
-              id="doctor_firstname"
-              label="ชื่อ"
-              required
-              name="doctor_firstname"
-              value={formData.doctor_firstname}
-              onChange={handleChange}
-            />
-            <InputField
-              id="doctor_lastname"
-              label="นามสกุล"
-              required
-              name="doctor_lastname"
-              value={formData.doctor_lastname}
-              onChange={handleChange}
+                id="doctor_id"
+                name="doctor_id"
+                label="ชื่อแพทย์"
+                placeholder="เลือกแพทย์"
+                value={formData.doctor_id}
+                onValueChange={handleSelectChange("doctor_id")}
+                options={doctorOptions}
+                required
             />
           </div>
         </div>

@@ -94,28 +94,26 @@ export default function AppointmentCard() {
 
           if (!diseaseAppointments?.length) return;
 
-          const futureAppointments = diseaseAppointments
-            .sort(
-              (a: any, b: any) =>
-                new Date(a.date).getTime() - new Date(b.date).getTime()
-            );
+          const sortedAppointments = diseaseAppointments.sort(
+            (a: any, b: any) =>
+              new Date(b.date).getTime() -
+              new Date(a.date).getTime()
+          );
 
-          if (futureAppointments.length === 0) return;
-
-          const nextAppointment = futureAppointments[0];
-
-          validAppointments.push({
-            appointment_id: nextAppointment.id,
-            disease_id: disease.disease_id,
-            disease_name: disease.disease_name,
-            date: nextAppointment.date,
-            start_time: nextAppointment.start_time,
-            end_time: nextAppointment.end_time,
-            place: nextAppointment.place,
-            purpose: nextAppointment.purpose,
-            doctor: nextAppointment.doctor,
-            status: nextAppointment.status,
-            delay: nextAppointment.delay,
+          sortedAppointments.forEach((appointment: any) => {
+            validAppointments.push({
+              appointment_id: appointment.id,
+              disease_id: disease.disease_id,
+              disease_name: disease.disease_name,
+              date: appointment.date,
+              start_time: appointment.start_time,
+              end_time: appointment.end_time,
+              place: appointment.place,
+              purpose: appointment.purpose,
+              doctor: appointment.doctor,
+              status: appointment.status,
+              delay: appointment.delay,
+            });
           });
         });
 

@@ -40,13 +40,13 @@ export default function AddAppoint({
     const fetchDoctors = async () => {
       try {
         const res = await fetchWithRefresh(
-          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/doctors`
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/doctors?role=doctor`
         )
 
         const data = await res.json()
 
         const options = (data.data || []).map((doctor: any) => ({
-          label: doctor.full_name,
+          label: doctor.fullname,
           value: doctor.id,
         }))
 
@@ -180,9 +180,24 @@ export default function AddAppoint({
             value={formData.place || ""}
             onChange={handleChange}
           />
-          
+        </div>
+
+        <div className="space-y-6">
+          <h4 className="font-medium mb-2 -mt-8">แพทย์</h4>
+          <div className="grid grid-cols-2">
+            <SelectField
+              id="next_doctor_id"
+              name="next_doctor_id"
+              label="ชื่อแพทย์"
+              placeholder="เลือกแพทย์"
+              value={formData.next_doctor_id}
+              onValueChange={handleSelectChange("next_doctor_id")}
+              options={doctorOptions}
+              required
+            />
+          </div>
           <div>
-            <label className="block mb-2 text-sm font-medium">
+            <label className="block mb-2 text-sm font-medium text-muted-foreground">
               การเตรียมตัวก่อนพบแพทย์
             </label>
 
@@ -198,22 +213,6 @@ export default function AddAppoint({
                 }))
               }
               className="w-full border rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-300 resize-none"
-            />
-          </div>
-        </div>
-
-        <div>
-          <h4 className="font-medium mb-2 -mt-8">แพทย์</h4>
-
-          <div className="grid grid-cols-2">
-            <SelectField
-              id="next_doctor_id"
-              name="next_doctor_id"
-              label="ชื่อแพทย์"
-              placeholder="เลือกแพทย์"
-              value={formData.next_doctor_id}
-              onValueChange={handleSelectChange("next_doctor_id")}
-              options={doctorOptions}
             />
           </div>
         </div>

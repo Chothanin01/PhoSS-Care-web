@@ -18,12 +18,8 @@ type VaccineFormData = {
     old_vaccine_id: string;
     dose_number: number;
     next_dose_number: number;
-    vaccine_doctor_title: string;
-    vaccine_doctor_firstname: string;
-    vaccine_doctor_lastname: string;
-    doctor_title: string;
-    doctor_firstname: string;
-    doctor_lastname: string;
+    vaccine_doctor_id: string;
+    doctor_id: string;
     place: string;
     date: string;
     time_start: string;
@@ -69,7 +65,7 @@ export default function VaccineForm({
     const [patientInfo, setPatientInfo] = useState<PatientInfo | null>(null);
     const [vaccineOptions, setVaccineOptions] = useState<VaccineOption[]>([]);
     const [vaccineList, setVaccineList] = useState<VaccineData[]>([]);
-    // const [selectedVaccine, setSelectedVaccine] = useState<VaccineData | null>(null);
+    const [doctorOptions, setDoctorOptions] = useState< { label: string; value: string }[]>([])
     const selectedVaccine = useMemo(() => {
         if (!formData.vaccine_id) return null;
 
@@ -106,7 +102,7 @@ export default function VaccineForm({
                 setVaccineList(list);
 
                 const options = list.map((v: VaccineData) => ({
-                    label: v.type,
+                    label: v.name,
                     value: v.vaccine_id,
                 }));
 
@@ -170,6 +166,29 @@ export default function VaccineForm({
     //     }
     // }, [formData.vaccine_id, vaccineList]);
 
+    useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const res = await fetchWithRefresh(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/appointments/doctors?role=nurse`
+        )
+
+        const data = await res.json()
+
+        const options = (data.data || []).map((doctor: any) => ({
+          label: doctor.fullname,
+          value: doctor.id,
+        }))
+
+        setDoctorOptions(options)
+
+      } catch (err) {
+        console.error("fetch doctors error:", err)
+      }
+    }
+
+    fetchDoctors()
+  }, [])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -197,9 +216,7 @@ export default function VaccineForm({
     const isFormValid = useMemo(() => {
         return (
             formData.vaccine_id &&
-            formData.vaccine_doctor_title &&
-            formData.vaccine_doctor_firstname &&
-            formData.vaccine_doctor_lastname &&
+            formData.vaccine_doctor_id &&
             formData.date
         );
     }, [formData]);
@@ -226,21 +243,20 @@ export default function VaccineForm({
                     <div className="grid grid-cols-2 gap-4">
                         <SelectField
                             id="vaccine_id"
-                            label="ชนิดวัคซีน"
+                            label="ชื่อวัคซีน"
                             name="vaccine_id"
-                            placeholder="เลือกวัคซีน"
                             value={formData.vaccine_id || ""}
                             onValueChange={handleSelectChange("vaccine_id")}
                             options={vaccineOptions}
-                            disabled={!!selectedVaccine}
-                            className="text-black"
+                            required
                         />
                         <InputField
                             id="vaccine_name"
-                            label="ชื่อวัคซีน"
-                            value={selectedVaccine?.name || ""}
+                            label="ชนิดวัคซีน"
+                            value={selectedVaccine?.type || ""}
                             readOnly
-                            name=""
+                            name="vaccine_name"
+                            disabled={!!selectedVaccine}
                         />
                         <InputField
                             id="date"
@@ -271,32 +287,16 @@ export default function VaccineForm({
                     </div>
                 </div>
                 <div>
-                    <h3 className="font-semibold -mt-1">เจ้าหน้าที่ฉีดวัคซีน</h3>
-                    <div className="grid grid-cols-2 gap-4 mt-3">
+                    <h3 className="font-semibold mb-2">เจ้าหน้าที่ฉีดวัคซีน</h3>
+                    <div className="grid grid-cols-1">
                         <SelectField
-                            id="vaccine_doctor_title"
-                            label="คำนำหน้า"
-                            name="vaccine_doctor_title"
-                            placeholder="เลือกคำนำหน้า"
-                            value={formData.vaccine_doctor_title || ""}
-                            onValueChange={handleSelectChange("vaccine_doctor_title")}
-                            options={DOCTOR_TITLES}
-                        />
-                        <div />
-                        <InputField
-                            id="vaccine_doctor_firstname"
-                            label="ชื่อ"
-                            name="vaccine_doctor_firstname"
-                            value={formData.vaccine_doctor_firstname || ""}
-                            onChange={handleChange}
-                            required
-                        />
-                        <InputField
-                            id="vaccine_doctor_lastname"
-                            label="นามสกุล"
-                            name="vaccine_doctor_lastname"
-                            value={formData.vaccine_doctor_lastname || ""}
-                            onChange={handleChange}
+                            id="vaccine_doctor_id"
+                            name="vaccine_doctor_id"
+                            label="ชื่อเจ้าหน้าที่"
+                            placeholder="เลือกเจ้าหน้าที่"
+                            value={formData.vaccine_doctor_id}
+                            onValueChange={handleSelectChange("vaccine_doctor_id")}
+                            options={doctorOptions}
                             required
                         />
                     </div>
