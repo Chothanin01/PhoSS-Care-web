@@ -131,6 +131,26 @@ export default function HistoryPatient({
     fetchDoctors()
   }, [])
 
+  useEffect(() => {
+    const weight = parseFloat(formData.weight);
+    const heightCm = parseFloat(formData.height);
+
+    if (weight > 0 && heightCm > 0) {
+      const heightM = heightCm / 100;
+      const bmi = weight / (heightM * heightM);
+
+      setFormData((prev) => ({
+        ...prev,
+        bmi: bmi.toFixed(2),
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        bmi: "",
+      }));
+    }
+  }, [formData.weight, formData.height, setFormData]);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -294,6 +314,7 @@ export default function HistoryPatient({
               required
               value={formData.bmi}
               onChange={handleChange}
+              disabled
             />
 
             <InputField
