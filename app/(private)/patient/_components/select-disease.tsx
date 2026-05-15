@@ -12,17 +12,21 @@ interface DiseaseSelectorProps {
   options: Disease[]
   value: Disease[]
   onChange: (value: Disease[]) => void
+  disabled?: boolean
 }
 
 export default function DiseaseSelector({
   options,
   value,
   onChange,
+  disabled = false,
 }: DiseaseSelectorProps) {
   const isSelected = (id: string) =>
     value.some((d) => d.disease_id === id)
 
   const toggleDisease = (checked: boolean, disease: Disease) => {
+    if (disabled) return
+
     if (checked) {
       onChange([...value, disease])
     } else {
@@ -44,13 +48,15 @@ export default function DiseaseSelector({
             <label
               key={option.disease_id}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-sm border cursor-pointer transition-all duration-200 text-sm font-medium",
-                checked
-                  ? "bg-white border-Bamboo-100/20 text-Bamboo-100"
-                  : "bg-gray-50 border-gray-300 text-gray-600 hover:bg-gray-100"
+                "flex items-center gap-2 px-4 py-2 rounded-sm border transition-all duration-200 text-sm font-medium",
+                "bg-gray-50 border-gray-300 text-gray-600",
+                !disabled && "cursor-pointer hover:bg-gray-100",
+                checked &&
+                  "bg-white border-Bamboo-100/20 text-Bamboo-100"
               )}
             >
               <Checkbox
+                disabled={disabled}
                 checked={checked}
                 onCheckedChange={(val) =>
                   toggleDisease(!!val, option)

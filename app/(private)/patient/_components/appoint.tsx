@@ -94,7 +94,8 @@ export default function AddAppoint({
       formData.time_end &&
       !timeError &&
       formData.place &&
-      formData.next_doctor_id
+      formData.next_doctor_id &&
+      formData.prepare
     );
   }, [formData, timeError]);
 
@@ -198,7 +199,7 @@ export default function AddAppoint({
           </div>
           <div>
             <label className="block mb-2 text-sm font-medium text-muted-foreground">
-              การเตรียมตัวก่อนพบแพทย์
+              การเตรียมตัวก่อนพบแพทย์ <span className="text-red-500">*</span>
             </label>
 
             <textarea

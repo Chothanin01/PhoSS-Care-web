@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { DataTable } from "@/components/data-table";
 import { SelectField } from "@/components/selectfield";
 import { Button } from "@/shadcn/ui/button";
-import { CircleX, BadgeCheck } from "lucide-react";
+import { CircleX, BadgeCheck, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils"
 import { Separator } from "@/shadcn/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription  } from "@/shadcn/ui/dialog"
@@ -51,6 +51,8 @@ export function SortTableRequest() {
   const [requestDetail, setRequestDetail] = useState<any>(null)
   const [filterType, setFilterType] = useState("all")
   const [filterStatus, setFilterStatus] = useState("all")
+  const [openSuccess, setOpenSuccess] = useState(false)
+  const [openDeclineSuccess, setOpenDeclineSuccess] = useState(false)
 
   const [totalPages, setTotalPages] = useState(1)
 
@@ -180,8 +182,19 @@ export function SortTableRequest() {
     )
 
     setIsModalOpen(false)
+    setOpenSuccess(true)
     fetchRequests()
   }
+
+  useEffect(() => {
+    if (openSuccess) {
+      const timer = setTimeout(() => {
+        setOpenSuccess(false)
+      }, 3000)
+
+      return () => clearTimeout(timer)
+    }
+  }, [openSuccess])
 
   const confirmDecline = async () => {
 
@@ -201,8 +214,19 @@ export function SortTableRequest() {
 
     setDeclineReason("")
     setIsDeclineModalOpen(false)
+    setOpenDeclineSuccess(true)
     fetchRequests()
   }
+
+  useEffect(() => {
+    if (openDeclineSuccess) {
+      const timer = setTimeout(() => {
+        setOpenDeclineSuccess(false)
+      }, 3000)
+
+      return () => clearTimeout(timer)
+    }
+  }, [openDeclineSuccess])
 
   const fetchRequestDetail = async (id: string) => {    const res = await fetchWithRefresh(
       `${process.env.NEXT_PUBLIC_API_URL}/v1/admins/requests/${id}`,
@@ -510,6 +534,50 @@ export function SortTableRequest() {
             >
               ยืนยันการปฏิเสธ
             </Button>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={openSuccess}>
+        <DialogContent
+          showCloseButton={false}
+          className="sm:max-w-md text-center"
+        >
+          <DialogTitle />
+          <DialogDescription />
+
+          <div className="flex justify-center mb-6 mt-4">
+            <div className="flex items-center justify-center w-20 h-20 rounded-full bg-[#b2e0a6]">
+              <div className="flex items-center justify-center w-14 h-14 rounded-full bg-Bamboo-400">
+                <Check className="w-8 h-8 text-white" strokeWidth={3} />
+              </div>
+            </div>
+          </div>
+
+          <p className="text-lg font-semibold">
+            ระบบได้อนุมัติคำขอเรียบร้อยแล้ว
+          </p>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={openDeclineSuccess}>
+        <DialogContent
+          showCloseButton={false}
+          className="sm:max-w-md text-center"
+        >
+          <DialogTitle />
+          <DialogDescription />
+
+          <div className="flex justify-center mb-6 mt-4">
+            <div className="flex items-center justify-center w-20 h-20 rounded-full bg-red-100">
+              <div className="flex items-center justify-center w-14 h-14 rounded-full bg-red-500">
+                <X className="w-8 h-8 text-white" strokeWidth={3} />
+              </div>
+            </div>
+          </div>
+
+          <p className="text-lg font-semibold">
+            ระบบได้ปฏิเสธคำขอเรียบร้อยแล้ว
+          </p>
         </DialogContent>
       </Dialog>
     </div>
