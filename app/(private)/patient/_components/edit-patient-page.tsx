@@ -410,7 +410,6 @@ export default function EditPatientData({
       <DiseaseSelector
         options={diseaseOptions}
         value={patient.diseases}
-        disabled
         onChange={(val) =>
           setPatient((prev) => ({
             ...prev,
